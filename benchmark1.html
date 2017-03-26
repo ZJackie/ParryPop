@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Parry Pop Benchmark 1</title>
+    <h1 align="center">Parry Pop</h1>
+    <h2 align="center">Game Design Document</h2>
+    <h3 align="center">By Jazzy Guo, Steven Li, Jackie Wang</h3>
+</head>
+
+<body>
+    <div id="content">
+        <h2 align="left">INTRODUCTION</h2>
+        <p>This document describes a game called "Parry Pop", which is designed to be a 2D top-down shooter, built to explore new-game mechanics. The game focuses on aspects such as reaction time, accuracy, and quick decision-making. The game will employ
+            sprite-based animation, tiled backgrounds, collision detection, projectiles, physics, AI and more basic 2D game techniques.
+        </p>
+        <h2 align="left">TECHNOLOGY</h2>
+        <p>Parry Pop is an original HTML5 game developed using the Phaser game engine. A program to be decided will be used for all music and sound effects management. Artwork will be simple pixelated art made using Pisksel.
+        </p>
+        <h2 align="left">BACKSTORY</h2>
+        <p>After her home-planet is destroyed by Emperor Hades and his evil empire, Intergalactic Fencing Champion took on the name “Pandora, Goddess of Night”. She trained until her sword could pierce a black hole and she vowed to destroy all that is Evil
+            - starting with the very empire that destroyed her home. Pretending to be a defenseless girl, Pandora sneaks into the Tower of Hell, a base where Hades conducts his evil operations. She must climb to the top in order put an end to Hades and
+            his wrath.
+        </p>
+        <h2 align="left">OBJECTIVE</h2>
+        <p>Armed with a fencing foil and a revolver, Pandora’s goal is to reach the top of the tower and defeat Emperor Hades. Those that stand in her way consist of Hades's guard dog, Cerberus, and his demon wife, Persephone, as well as his entire evil
+            army. Pandora will have to fight through each level by dodging, parrying, or by shooting bullets coming towards her. She must defeat all enemies on the current floor before being able to advance to the next floor.
+        </p>
+        <h2 align="left">GAMEPLAY</h2>
+        <p>The game will work as a top down shooter, with Pandora being able to run in all four directions. She has the ability to control two weapons, a revolver and a fencing foil. Pandora will have to time her actions right in order to parry and riposte
+            various bullets shot at her.
+        </p>
+        <p><b>Only upon successful parries</b> with perfect timing will Pandora be able to riposte and destroy the bullet.
+            <br>Upon destroying a bullet, Pandora is able to receive ammo for her revolver.
+            <br>
+            <ul>
+                <li>If Pandora messes up her parry timing, she simply reflects the bullet and is temporarily left unable to use her foil.</li>
+                <li>If Pandora does not parry the bullet and it hits her she takes damage.</li>
+            </ul>
+        </p>
+        <p>Besides using her sword, <b>Pandora can also destroy bullets using her gun</b>.
+            <ul>
+                <li>Pandora’s trusty revolver is capable of destroying enemies in one hit as long as she gets the timing right.</li>
+                <li>Although her ammo is limited, destroying other bullets with perfect timing will yield her large amounts of ammo.</li>
+            </ul>
+        </p>
+        <h3 align="middle">Core Mechanic Timing</h3>
+        <p>Everything in Parry Pop comes down to timing. Hades has supplied all of his goons with bullets which have powerful and protective force fields. Pandora is only able to damage them with by successfully timing her attacks. Every bullet/enemy will
+            have a concentric circle around it, whose radius will slowly decrease over time until the radius reaches zero and then it resets to its full size. When Pandora attacks as the outer circle radius equals the radius of the bullet/enemy, Pandora
+            will get a critical hit and in most cases destroy the bullet/enemy.
+        </p>
+        <p><b>Ex.</b> In this example, when the Outer Circle is Red, Pandora will perform a critical hit.
+            <br>
+            <IMG width="200" height="200" SRC="circle.gif">
+        </p>
+        <p><b>Ultimate:</b> <em>Bullet Time</em> <br> Pandora charges up her ultimate as she destroys bullets and enemies. When her ultimate is fully charged, she can activate it to heighten her senses for a few seconds. While in this focused state, all
+            bullets and enemies (including concentric hit zones) appear to move in slow motion.
+        </p>
+        <h2 align="left">CONTROLS</h2>
+        <p>This game will be played using both a keyboard and mouse.
+            <ul>
+                <li><b>W</b> - Move Up</li>
+                <li><b>A</b> - Move Left</li>
+                <li><b>S</b> - Move down</li>
+                <li><b>D</b> - Move Right</li>
+                <li><b>R</b> - Activate Ultimate</li>
+                <li><b>LEFT-MOUSE-CLICK</b> - Shoot</li>
+                <li><b>RIGHT-MOUSE-CLICK</b> - Parry</li>
+                <li><b>ESC</b> - Pause the game.</li>
+            </ul>
+        </p>
+        <h2 align="left">GRAPHICAL USER INTERFACE</h2>
+        <p>The game will consist of 6 screens.
+            <ul>
+                <li><b>SPLASH SCREEN</b> - Shown when the game first loads.<br>
+                    <IMG width="450" height="300" SRC="splash.png"><br>
+                </li>
+                <li><b>MAIN MENU</b> - Consists of the Play, Help, and About buttons.<br>
+                  <IMG width="450" height="300" SRC="menu.png"><br>
+                </li>
+                <li><b>LEVELS SELECTION SCREEN</b> - Screen where the player can choose between the various levels (Cerberus, Persephone, Hades)<br>
+                  <IMG width="450" height="300" SRC="levels.png"><br>
+                </li>
+                <li><b>CONTROLS SCREEN</b> - Displays all user keyboard and mouse controls.<br>
+                  <IMG width="450" height="300" SRC="controls.png"><br>
+                </li>
+                <li><b>HELP SCREEN</b> - Displays information about Parry Pop.<br>
+                  <IMG width="450" height="300" SRC="about.png"><br>
+                </li>
+                <li><b>IN-GAME SCREEN</b> - The In-Game User Interface.<br>
+                  <IMG width="450" height="300" SRC="ui.png"><br>
+                </li>
+            </ul>
+        </p>
+        <h2 align="left">ARTWORK</h2>
+        <p>All artwork in the game will be original. The following needs to be created:<br>
+            <ul>
+                <li><b>Pandora</b> - Top-down Sprite with the following animations:</li>
+                <ul>
+                    <li>Walking</li>
+                    <li>Shooting</li>
+                    <li>Taking Damage</li>
+                    <li>Parrying</li>
+                    <li>Ultimate</li>
+                    <li>Death</li>
+                </ul>
+                <li><b>Enemies</b> - Top-down Sprites with the following animations:</li>
+                <ul>
+                    <li>Walking</li>
+                    <li>Shooting</li>
+                    <li>Taking Damage</li>
+                    <li>Death</li>
+                </ul>
+                <li><b>Bullets</b> - Circle sprites with the following animations:</li>
+                <ul>
+                    <li>Destruction</li>
+                </ul>
+                <li><b>Splash Art</b></li>
+                <li><b>Levels</b></li>
+            </ul>
+        </p>
+        <h2 align="left">SOUND EFFECTS </h2>
+        <p>All sound effects will be original. Sounds must be made to coincide with each of the following events:
+            <ul><b>
+                <li>Walking</li>
+                <li>Shooting</li>
+                <li>Bullet Popping</li>
+                <li>Parrying - Successful parrying</li>
+                <li>Riposte</li>
+                <li>Taking Damage</li>
+                <li>Pandora Dying</li>
+                <li>Enemies Dying</li>
+                <li>Clearing Level</li>
+              </b>
+            </ul>
+        </p>
+        <h2 align="left">MUSIC</h2>
+        <p>Game Music will be added when time permits.
+        </p>
+    </div>
+</body>
+</html>
