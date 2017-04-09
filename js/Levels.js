@@ -24,6 +24,9 @@ Levels.prototype = {
                 if (tileX < 1090 && tileX > 903 && tileY < 510 && tileY > 350) {
                     console.log("Level 3");
                 }
+                if (tileX < 126 && tileX > 12 && tileY < 70 && tileY > 16) {
+                    this.game.state.start('MainMenu');
+                }
             }
         });
     },
