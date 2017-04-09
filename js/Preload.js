@@ -14,6 +14,7 @@ Preload.prototype = {
         game.load.tilemap('Map', 'assets/water.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('gameTiles', 'assets/Water.png');
         game.load.spritesheet('player', 'assets/player.png', 64, 64);
+        game.load.image('bullet', 'assets/other_sprites/Projectile1.png');
     },
 
     create: function() {

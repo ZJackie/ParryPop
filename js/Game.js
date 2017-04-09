@@ -1,5 +1,9 @@
 var player;
 var cursors;
+var bullets;
+var fireRate = 500;
+var nextFire = 0;
+var bulletspeed = 300;
 
 Game = function() {};
 
@@ -21,41 +25,64 @@ Game.prototype = {
         //Add my Robot player
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
 
-        player.animations.add('idle', [0, 1, 2, 3, 4], 10, true);
-        player.animations.add('down', [5, 6, 7, 8, 9], 10, true);
-        player.animations.add('up', [10, 11, 12, 13, 14], 10, true);
-        player.animations.add('right', [15, 16, 17, 18, 19], 10, true);
-        player.animations.add('left', [20, 21, 22, 23, 24], 10, true);
+        player.animations.add('walk', [0, 1, 2, 3, 4], 10, true);
         game.physics.p2.enable(player, true);
-
+        player.body.setCircle(30);
         //the camera will follow the player in the world
         game.camera.follow(player);
 
         //move player with cursor keys
-        cursors = game.input.keyboard.createCursorKeys();
-    },
+        cursors = game.input.keyboard.addKeys({'W': Phaser.KeyCode.W, 'A': Phaser.KeyCode.A,'S': Phaser.KeyCode.S, 'D': Phaser.KeyCode.D});
+        //bullets
+        bullets = game.add.group();
+        bullets.enableBody = true;
+        bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        bullets.createMultiple(20, 'bullet');
+        bullets.setAll('checkWorldBounds', true);
+        bullets.setAll('outOfBoundsKill', true);
+  },
 
     update: function() {
         //player movement
+        pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
+        player.body.rotation = pointerangle;
         player.body.setZeroVelocity();
-        if (cursors.up.isDown) {
+        if (cursors.W.isDown) {
             if (player.body.y > 275) {
                 player.body.moveUp(800);
+                player.animations.play('walk',false)
             }
-        } else if (cursors.down.isDown) {
+        } else if (cursors.S.isDown) {
             if (player.body.y < 1325) {
                 player.body.moveDown(800);
+                player.animations.play('walk',false)
             }
         }
-        if (cursors.left.isDown) {
+        if (cursors.A.isDown) {
             if (player.body.x > 275) {
                 player.body.moveLeft(800);
+                player.animations.play('walk',false)
             }
-        } else if (cursors.right.isDown) {
+        } else if (cursors.D.isDown) {
             if (player.body.x < 1325) {
                 player.body.moveRight(800);
+                player.animations.play('walk',false)
             }
         }
-    }
+        if (game.input.activePointer.isDown)
+         {
+                if (game.time.now > nextFire && bullets.countDead() > 0)
+         {
+        nextFire = game.time.now + fireRate;
+
+        var bullet = bullets.getFirstExists(false);
+        if(bullet){
+        bullet.lifespan = 500;
+        bullet.reset(player.body.x + 8, player.body.y + 8);
+        game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
+        }
+         }
+        }
+    },
 
 };
