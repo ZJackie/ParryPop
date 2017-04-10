@@ -64,17 +64,17 @@ Game.prototype = {
         player.body.rotation = pointerangle;
         player.body.setZeroVelocity();
         if (cursors.W.isDown) {
-                player.body.moveUp(800);
+                player.body.moveUp(300);
                 player.animations.play('walk',false)
         } else if (cursors.S.isDown) {
-                player.body.moveDown(800);
+                player.body.moveDown(300);
                 player.animations.play('walk',false)
         }
         if (cursors.A.isDown) {
-                player.body.moveLeft(800);
+                player.body.moveLeft(300);
                 player.animations.play('walk',false)
         } else if (cursors.D.isDown) {
-                player.body.moveRight(800);
+                player.body.moveRight(300);
                 player.animations.play('walk',false)
         }
         if (game.input.mousePointer.leftButton.isDown)
