@@ -15,6 +15,7 @@ var enemyCollisionGroup;
 var borderCollisionGroup;
 var swordCollisionGroup;
 var bulletCollisionGroup;
+var hearts;
 
 Game = function() {};
 
@@ -55,6 +56,7 @@ Game.prototype = {
         player.animations.add('shoot', [10, 11, 12, 13, 14], 10, true);
         game.physics.p2.enable(player, true);
         player.body.setCircle(20);
+        player.health = 10;
         player.body.setCollisionGroup(playerCollisionGroup);   
         //the camera will follow the player in the world
         game.camera.follow(player);
@@ -83,6 +85,12 @@ Game.prototype = {
         bullets.setAll('anchor.x', 0.5);
         bullets.setAll('anchor.y', 0.5);
         
+        hearts = game.add.group();
+
+        for (var i = 0; i < player.health; i++){
+            var heart = hearts.create(i * 30, 0, 'heart');
+            heart.fixedToCamera = true;
+        }
   },
 
     update: function() {
@@ -124,7 +132,7 @@ Game.prototype = {
         bullet.body.setCircle(5)
         bullet.body.setCollisionGroup(bulletCollisionGroup);
         bullet.body.collides([borderCollisionGroup,swordCollisionGroup])
-        bullet.body.collides(enemyCollisionGroup, killEnemies, this);
+        //bullet.body.collides(enemyCollisionGroup, killEnemies, this);
         //game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
     }
          }
@@ -171,15 +179,17 @@ function initEnemies(){
         game.physics.p2.enable(slime, true);
         slime.body.setCircle(30);
         slime.body.setCollisionGroup(enemyCollisionGroup);
-        slime.body.collides([enemyCollisionGroup, swordCollisionGroup,bulletCollisionGroup,borderCollisionGroup]);
+        slime.body.collides(swordCollisionGroup, killEnemies, this);
+        slime.body.collides(playerCollisionGroup, takeDamage, this);
+        slime.body.collides([enemyCollisionGroup,bulletCollisionGroup,borderCollisionGroup, playerCollisionGroup]);
     }
     
 }
 
 function killEnemies(body1, body2){
-    if(body2.isVulnerable == true){
-        body2.clearShapes();
-        body2.sprite.destroy();
+    if(body1.isVulnerable == true){
+        body1.clearShapes();
+        body1.sprite.destroy();
     }
 }
 
@@ -208,4 +218,14 @@ function handleEnemyMovements(){
         }
         
     }, this);
+}
+
+function takeDamage () {
+    // decrement health, handle heart graphic in update
+    if(player.health > 0){
+        console.log(player.health);
+        console.log();
+        hearts.children[player.health - 1].kill();
+        player.health--;
+    }
 }
