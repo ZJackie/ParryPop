@@ -159,6 +159,9 @@ Game.prototype = {
         }
         //handle enemies
         handleEnemies();
+        if(player.health <= 0){
+            game.state.start('MainMenu');
+        }
     },
 
 };
