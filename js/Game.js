@@ -5,6 +5,7 @@ var fireRate = 500;
 var nextFire = 0;
 var bulletspeed = 300;
 var enemies;
+var spinInt = 0;
 
 Game = function() {};
 
@@ -95,7 +96,7 @@ Game.prototype = {
 
 function initEnemies(){
     enemies = game.add.group();
-    enemies.enableBody = true;
+    //enemies.enableBody = true;
 
     for(var i = 0; i < 10; i++){
         var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
@@ -104,6 +105,9 @@ function initEnemies(){
             arr.push(j);
         }
         slime.animations.add('blueSlimeIdle', arr, 12, true);
+        slime.currentRadius = slime.width;
+           game.physics.p2.enable(slime, true);
+        slime.body.setCircle(30);
     }
 }
 
@@ -114,5 +118,11 @@ function handleEnemies(){
 function handleEnemyMovements(){
     enemies.forEach(function(enemy){
         enemy.animations.play('blueSlimeIdle');
+        enemy.currentRadius = enemy.currentRadius - 0.2;
+        enemy.body.setCircle(enemy.currentRadius);
+        if(enemy.currentRadius <= (enemy.width/2 - enemy.width * 0.1)){
+            enemy.currentRadius = enemy.width;
+        }
+        
     }, this);
 }
