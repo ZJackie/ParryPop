@@ -4,6 +4,7 @@ var bullets;
 var fireRate = 500;
 var nextFire = 0;
 var bulletspeed = 300;
+var enemies;
 
 Game = function() {};
 
@@ -40,6 +41,9 @@ Game.prototype = {
         bullets.createMultiple(20, 'bullet');
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
+        
+        //enemies
+        initEnemies();
   },
 
     update: function() {
@@ -83,6 +87,32 @@ Game.prototype = {
         }
          }
         }
+        //handle enemies
+        handleEnemies();
     },
 
 };
+
+function initEnemies(){
+    enemies = game.add.group();
+    enemies.enableBody = true;
+
+    for(var i = 0; i < 10; i++){
+        var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
+        var arr = [];
+        for(var j = 0; j < 22; j++){
+            arr.push(j);
+        }
+        slime.animations.add('blueSlimeIdle', arr, 12, true);
+    }
+}
+
+function handleEnemies(){
+    handleEnemyMovements();
+}
+
+function handleEnemyMovements(){
+    enemies.forEach(function(enemy){
+        enemy.animations.play('blueSlimeIdle');
+    }, this);
+}
