@@ -9,6 +9,11 @@ var nextSwing = 0;
 var bulletspeed = 300;
 var enemies;
 var spinInt = 0;
+var swordhitbox = new p2.Circle(1.5)
+var playerCollisionGroup; 
+var enemyCollisionGroup; 
+var borderCollisionGroup;
+var swordCollisionGroup;
 
 Game = function() {};
 
@@ -27,6 +32,19 @@ Game.prototype = {
         //P2 Physics Engine
         game.physics.startSystem(Phaser.Physics.P2JS);
 
+        //Collision Groups
+        game.physics.p2.setImpactEvents(true);
+        game.physics.p2.restitution = 0.8;
+        playerCollisionGroup = game.physics.p2.createCollisionGroup();
+        enemyCollisionGroup = game.physics.p2.createCollisionGroup();
+        borderCollisionGroup = game.physics.p2.createCollisionGroup();
+        swordCollisionGroup = game.physics.p2.createCollisionGroup();
+
+        game.physics.p2.updateBoundsCollisionGroup();
+
+        //enemies
+        initEnemies();
+
         //Add my Robot player
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
 
@@ -35,6 +53,7 @@ Game.prototype = {
         player.animations.add('shoot', [10, 11, 12, 13, 14], 10, true);
         game.physics.p2.enable(player, true);
         player.body.setCircle(20);
+        player.body.setCollisionGroup(playerCollisionGroup);   
         //the camera will follow the player in the world
         game.camera.follow(player);
 
@@ -43,6 +62,11 @@ Game.prototype = {
         game.physics.p2.enable(border);
         border.body.clearShapes();
         border.body.loadPolygon('data', 'Border');
+        border.body.setCollisionGroup(borderCollisionGroup); 
+        border.body.collides([enemyCollisionGroup, playerCollisionGroup]);
+
+        player.body.collides(borderCollisionGroup);
+        player.body.collides(enemyCollisionGroup, killEnemies, this, swordhitbox);
 
         //move player with cursor keys
         cursors = game.input.keyboard.addKeys({'W': Phaser.KeyCode.W, 'A': Phaser.KeyCode.A,'S': Phaser.KeyCode.S, 'D': Phaser.KeyCode.D});
@@ -54,8 +78,6 @@ Game.prototype = {
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
         
-        //enemies
-        initEnemies();
   },
 
     update: function() {
@@ -95,7 +117,8 @@ Game.prototype = {
               if (game.time.now > nextSwing){
                 nextSwing = game.time.now + swingRate;
                 if(swung == false){
-                player.body.addCircle(15,0,20);
+                player.body.addShape(swordhitbox,0,20);
+                player.body.setCollisionGroup(swordCollisionGroup,swordhitbox)
                 swung = true;
                 player.animations.play('attack',true)
                 }
@@ -103,10 +126,11 @@ Game.prototype = {
     }
         else{
             player.animations.play('walk',true)
+            if (game.time.now > nextSwing-500){
             if(swung == true){
-            player.body.clearShapes();
-            player.body.setCircle(20);
+            player.body.removeShape(swordhitbox);
             swung = false;
+            }
     }
         }
         //handle enemies
@@ -118,6 +142,7 @@ Game.prototype = {
 function initEnemies(){
     enemies = game.add.group();
     //enemies.enableBody = true;
+    enemies.physicsBodyType = Phaser.Physics.P2JS;
 
     for(var i = 0; i < 10; i++){
         var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
@@ -127,10 +152,18 @@ function initEnemies(){
         }
         slime.animations.add('blueSlimeIdle', arr, 12, true);
         slime.currentRadius = slime.width;
-           game.physics.p2.enable(slime, true);
+        game.physics.p2.enable(slime, true);
         slime.body.setCircle(30);
+        slime.body.setCollisionGroup(enemyCollisionGroup);
+        slime.body.collides([enemyCollisionGroup, swordCollisionGroup ,borderCollisionGroup]);
     }
+    
 }
+
+function killEnemies(body1, body2) {
+            body2.clearShapes();
+            body2.sprite.destroy();
+        }
 
 function handleEnemies(){
     handleEnemyMovements();
@@ -141,6 +174,8 @@ function handleEnemyMovements(){
         enemy.animations.play('blueSlimeIdle');
         enemy.currentRadius = enemy.currentRadius - 0.2;
         enemy.body.setCircle(enemy.currentRadius);
+        enemy.body.setCollisionGroup(enemyCollisionGroup);
+        enemy.body.collides([enemyCollisionGroup, swordCollisionGroup ,borderCollisionGroup]);
         if(enemy.currentRadius <= (enemy.width/2 - enemy.width * 0.1)){
             enemy.currentRadius = enemy.width;
         }
