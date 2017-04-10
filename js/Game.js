@@ -9,6 +9,7 @@ var nextSwing = 0;
 var bulletspeed = 300;
 var enemies;
 var spinInt = 0;
+var isCrit = false;
 
 Game = function() {};
 
@@ -127,7 +128,7 @@ function initEnemies(){
         }
         slime.animations.add('blueSlimeIdle', arr, 12, true);
         slime.currentRadius = slime.width;
-           game.physics.p2.enable(slime, true);
+        game.physics.p2.enable(slime, true);
         slime.body.setCircle(30);
     }
 }
@@ -141,8 +142,17 @@ function handleEnemyMovements(){
         enemy.animations.play('blueSlimeIdle');
         enemy.currentRadius = enemy.currentRadius - 0.2;
         enemy.body.setCircle(enemy.currentRadius);
-        if(enemy.currentRadius <= (enemy.width/2 - enemy.width * 0.1)){
+        var lowerBound = enemy.width/2 - enemy.width * 0.1;
+        var upperBound = enemy.width/2 + enemy.width * 0.1;
+        if(enemy.currentRadius <= lowerBound){
             enemy.currentRadius = enemy.width;
+        }
+
+        if(enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound){
+            isCrit = true;
+        }
+        else{
+            isCrit = false;
         }
         
     }, this);
