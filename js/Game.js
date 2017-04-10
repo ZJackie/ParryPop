@@ -3,6 +3,9 @@ var cursors;
 var bullets;
 var fireRate = 500;
 var nextFire = 0;
+var swingRate = 1000;
+var swung = false;
+var nextSwing = 0;
 var bulletspeed = 300;
 var enemies;
 var spinInt = 0;
@@ -12,6 +15,9 @@ Game = function() {};
 Game.prototype = {
 
     create: function() {
+        //disable right click menu
+        game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
+
         var map = game.add.tilemap('Map');
         //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
         map.addTilesetImage('Water', 'gameTiles');
@@ -20,18 +26,23 @@ Game.prototype = {
         backgroundlayer.resizeWorld();
         //P2 Physics Engine
         game.physics.startSystem(Phaser.Physics.P2JS);
-        //Draw Rectangle Boundary
-        var graphics = game.add.graphics(0, 0);
-        graphics.lineStyle(4, 0x031b49, 1);
-        graphics.drawRect(250, 250, 1100, 1100);
+
         //Add my Robot player
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
 
         player.animations.add('walk', [0, 1, 2, 3, 4], 10, true);
+        player.animations.add('attack', [5, 6, 7, 8, 9], 10, true);
+        player.animations.add('shoot', [10, 11, 12, 13, 14], 10, true);
         game.physics.p2.enable(player, true);
-        player.body.setCircle(30);
+        player.body.setCircle(20);
         //the camera will follow the player in the world
         game.camera.follow(player);
+
+        //border
+        border = game.add.sprite(0,0,null);
+        game.physics.p2.enable(border);
+        border.body.clearShapes();
+        border.body.loadPolygon('data', 'Border');
 
         //move player with cursor keys
         cursors = game.input.keyboard.addKeys({'W': Phaser.KeyCode.W, 'A': Phaser.KeyCode.A,'S': Phaser.KeyCode.S, 'D': Phaser.KeyCode.D});
@@ -53,28 +64,20 @@ Game.prototype = {
         player.body.rotation = pointerangle;
         player.body.setZeroVelocity();
         if (cursors.W.isDown) {
-            if (player.body.y > 275) {
                 player.body.moveUp(800);
                 player.animations.play('walk',false)
-            }
         } else if (cursors.S.isDown) {
-            if (player.body.y < 1325) {
                 player.body.moveDown(800);
                 player.animations.play('walk',false)
-            }
         }
         if (cursors.A.isDown) {
-            if (player.body.x > 275) {
                 player.body.moveLeft(800);
                 player.animations.play('walk',false)
-            }
         } else if (cursors.D.isDown) {
-            if (player.body.x < 1325) {
                 player.body.moveRight(800);
                 player.animations.play('walk',false)
-            }
         }
-        if (game.input.activePointer.isDown)
+        if (game.input.mousePointer.leftButton.isDown)
          {
                 if (game.time.now > nextFire && bullets.countDead() > 0)
          {
@@ -85,8 +88,26 @@ Game.prototype = {
         bullet.lifespan = 500;
         bullet.reset(player.body.x + 8, player.body.y + 8);
         game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
-        }
+    }
          }
+        }
+        if(game.input.mousePointer.rightButton.isDown){
+              if (game.time.now > nextSwing){
+                nextSwing = game.time.now + swingRate;
+                if(swung == false){
+                player.body.addCircle(15,0,20);
+                swung = true;
+                player.animations.play('attack',true)
+                }
+              }
+    }
+        else{
+            player.animations.play('walk',true)
+            if(swung == true){
+            player.body.clearShapes();
+            player.body.setCircle(20);
+            swung = false;
+    }
         }
         //handle enemies
         handleEnemies();

@@ -18,6 +18,7 @@ Preload.prototype = {
         game.load.image('waterDrop', 'assets/other_sprites/water_droplet.png');
         game.load.spritesheet('blueSlime', 'assets/other_sprites/blue_slime.png', 32, 32);
         game.load.spritesheet('bubbleTower', 'assets/other_sprites/bubble_tower.png', 64, 64);
+        game.load.physics('data', 'assets/data.json');
     },
 
     create: function() {
