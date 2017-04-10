@@ -9,7 +9,6 @@ var nextSwing = 0;
 var bulletspeed = 300;
 var enemies;
 var spinInt = 0;
-var isCrit = false;
 
 Game = function() {};
 
@@ -149,10 +148,10 @@ function handleEnemyMovements(){
         }
 
         if(enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound){
-            isCrit = true;
+            enemy.isVulnerable = true;
         }
         else{
-            isCrit = false;
+            enemy.isVulnerable = false;
         }
         
     }, this);
