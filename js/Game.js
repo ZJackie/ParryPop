@@ -78,18 +78,18 @@ Game.prototype = {
                 player.animations.play('walk',false)
         }
         if (game.input.mousePointer.leftButton.isDown)
-         {
-                if (game.time.now > nextFire && bullets.countDead() > 0)
-         {
-        nextFire = game.time.now + fireRate;
+        {
+            if (game.time.now > nextFire && bullets.countDead() > 0)
+            {
+            nextFire = game.time.now + fireRate;
 
-        var bullet = bullets.getFirstExists(false);
-        if(bullet){
-        bullet.lifespan = 500;
-        bullet.reset(player.body.x + 8, player.body.y + 8);
-        game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
-    }
-         }
+            var bullet = bullets.getFirstExists(false);
+                if(bullet){
+                    bullet.lifespan = 500;
+                    bullet.reset(player.body.x + 8, player.body.y + 8);
+                    game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
+                }
+            }
         }
         if(game.input.mousePointer.rightButton.isDown){
               if (game.time.now > nextSwing){
@@ -104,10 +104,10 @@ Game.prototype = {
         else{
             player.animations.play('walk',true)
             if(swung == true){
-            player.body.clearShapes();
-            player.body.setCircle(20);
-            swung = false;
-    }
+                player.body.clearShapes();
+                player.body.setCircle(20);
+                swung = false;
+            }
         }
         //handle enemies
         handleEnemies();
