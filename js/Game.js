@@ -14,6 +14,7 @@ var playerCollisionGroup;
 var enemyCollisionGroup; 
 var borderCollisionGroup;
 var swordCollisionGroup;
+var bulletCollisionGroup;
 
 Game = function() {};
 
@@ -39,6 +40,7 @@ Game.prototype = {
         enemyCollisionGroup = game.physics.p2.createCollisionGroup();
         borderCollisionGroup = game.physics.p2.createCollisionGroup();
         swordCollisionGroup = game.physics.p2.createCollisionGroup();
+        bulletCollisionGroup = game.physics.p2.createCollisionGroup();
 
         game.physics.p2.updateBoundsCollisionGroup();
 
@@ -63,20 +65,23 @@ Game.prototype = {
         border.body.clearShapes();
         border.body.loadPolygon('data', 'Border');
         border.body.setCollisionGroup(borderCollisionGroup); 
-        border.body.collides([enemyCollisionGroup, playerCollisionGroup]);
+        border.body.collides([enemyCollisionGroup, playerCollisionGroup,bulletCollisionGroup]);
 
         player.body.collides(borderCollisionGroup);
         player.body.collides(enemyCollisionGroup, killEnemies, this, swordhitbox);
+        player.body.collides(bulletCollisionGroup);
 
         //move player with cursor keys
         cursors = game.input.keyboard.addKeys({'W': Phaser.KeyCode.W, 'A': Phaser.KeyCode.A,'S': Phaser.KeyCode.S, 'D': Phaser.KeyCode.D});
         //bullets
         bullets = game.add.group();
         bullets.enableBody = true;
-        bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        bullets.physicsBodyType = Phaser.Physics.P2JS;
         bullets.createMultiple(20, 'bullet');
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
+        bullets.setAll('anchor.x', 0.5);
+        bullets.setAll('anchor.y', 0.5);
         
   },
 
@@ -104,12 +109,23 @@ Game.prototype = {
                 if (game.time.now > nextFire && bullets.countDead() > 0)
          {
         nextFire = game.time.now + fireRate;
-
+        var point1 = new Phaser.Point(player.body.x, player.body.y);
+        var point2 = new Phaser.Point(player.body.x + 13, player.body.y - 40);
+        point2.rotate(point1.x, point1.y, pointerangle + game.math.degToRad(180), false);
         var bullet = bullets.getFirstExists(false);
         if(bullet){
-        bullet.lifespan = 500;
-        bullet.reset(player.body.x + 8, player.body.y + 8);
-        game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
+        game.physics.p2.enable(bullet, true);
+        bullet.body.fixedRotation=true;  
+        bullet.lifespan = 3000;
+        bullet.reset(point2.x, point2.y);
+        bullet.rotation = pointerangle;
+        bullet.body.velocity.x = 500 * Math.cos(pointerangle + game.math.degToRad(-270));  
+        bullet.body.velocity.y = 500 * Math.sin(pointerangle + game.math.degToRad(-270));
+        bullet.body.setCircle(5)
+        bullet.body.setCollisionGroup(bulletCollisionGroup);
+        bullet.body.collides([borderCollisionGroup,swordCollisionGroup])
+        bullet.body.collides(enemyCollisionGroup, killEnemies, this);
+        //game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
     }
          }
         }
@@ -155,15 +171,17 @@ function initEnemies(){
         game.physics.p2.enable(slime, true);
         slime.body.setCircle(30);
         slime.body.setCollisionGroup(enemyCollisionGroup);
-        slime.body.collides([enemyCollisionGroup, swordCollisionGroup ,borderCollisionGroup]);
+        slime.body.collides([enemyCollisionGroup, swordCollisionGroup,bulletCollisionGroup,borderCollisionGroup]);
     }
     
 }
 
-function killEnemies(body1, body2) {
-            body2.clearShapes();
-            body2.sprite.destroy();
-        }
+function killEnemies(body1, body2){
+    if(body2.isVulnerable == true){
+        body2.clearShapes();
+        body2.sprite.destroy();
+    }
+}
 
 function handleEnemies(){
     handleEnemyMovements();
@@ -183,10 +201,10 @@ function handleEnemyMovements(){
         }
 
         if(enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound){
-            enemy.isVulnerable = true;
+            enemy.body.isVulnerable = true;
         }
         else{
-            enemy.isVulnerable = false;
+            enemy.body.isVulnerable = false;
         }
         
     }, this);
