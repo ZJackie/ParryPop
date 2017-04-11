@@ -3,19 +3,21 @@ var cursors;
 var bullets;
 var fireRate = 500;
 var nextFire = 0;
-var swingRate = 1000;
+var swingRate = 3000;
 var swung = false;
 var nextSwing = 0;
 var bulletspeed = 300;
 var enemies;
 var spinInt = 0;
 var swordhitbox = new p2.Circle(1.5)
-var playerCollisionGroup; 
-var enemyCollisionGroup; 
+var playerCollisionGroup;
+var enemyCollisionGroup;
 var borderCollisionGroup;
 var swordCollisionGroup;
 var bulletCollisionGroup;
 var hearts;
+var invulnerability = false;
+var shield;
 
 Game = function() {};
 
@@ -51,13 +53,17 @@ Game.prototype = {
         //Add my Robot player
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
 
-        player.animations.add('walk', [0, 1, 2, 3, 4], 10, true);
-        player.animations.add('attack', [5, 6, 7, 8, 9], 10, true);
-        player.animations.add('shoot', [10, 11, 12, 13, 14], 10, true);
+        player.animations.add('idle', [0, 1, 2, 3, 4], 10, true);
+        player.animations.add('walk', [5, 6, 7, 8, 9], 10, false);
+        player.animations.add('attack', [10, 11, 12, 13, 14], 10, false);
+        player.animations.add('attackwalk', [15, 16, 17, 18, 19], 10, false);
+        player.animations.add('shoot', [20,21,22,23,24], 10, false);
+        player.animations.add('shootwalk', [25,26,27,28,29], 10, false);
+
         game.physics.p2.enable(player, true);
         player.body.setCircle(20);
         player.health = 10;
-        player.body.setCollisionGroup(playerCollisionGroup);   
+        player.body.setCollisionGroup(playerCollisionGroup);
         //the camera will follow the player in the world
         game.camera.follow(player);
 
@@ -66,7 +72,7 @@ Game.prototype = {
         game.physics.p2.enable(border);
         border.body.clearShapes();
         border.body.loadPolygon('data', 'Border');
-        border.body.setCollisionGroup(borderCollisionGroup); 
+        border.body.setCollisionGroup(borderCollisionGroup);
         border.body.collides([enemyCollisionGroup, playerCollisionGroup,bulletCollisionGroup]);
 
         player.body.collides(borderCollisionGroup);
@@ -84,7 +90,7 @@ Game.prototype = {
         bullets.setAll('outOfBoundsKill', true);
         bullets.setAll('anchor.x', 0.5);
         bullets.setAll('anchor.y', 0.5);
-        
+
         hearts = game.add.group();
 
         for (var i = 0; i < player.health; i++){
@@ -94,53 +100,81 @@ Game.prototype = {
   },
 
     update: function() {
+        console.log(shield);
         //player movement
         pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
         player.body.rotation = pointerangle;
         player.body.setZeroVelocity();
         if (cursors.W.isDown) {
                 player.body.moveUp(300);
-                player.animations.play('walk',false)
+                if(game.input.mousePointer.leftButton.isDown){
+                    player.animations.play('shootwalk',false);
+                }else if(game.input.mousePointer.rightButton.isDown){
+                    player.animations.play('attackwalk',false);
+                }else{
+                    player.animations.play('walk',false);
+                }
         } else if (cursors.S.isDown) {
                 player.body.moveDown(300);
-                player.animations.play('walk',false)
+                if(game.input.mousePointer.leftButton.isDown){
+                    player.animations.play('shootwalk',false);
+                }else if(game.input.mousePointer.rightButton.isDown){
+                    player.animations.play('attackwalk',false);
+                }else{
+                    player.animations.play('walk',false);
+                }
         }
         if (cursors.A.isDown) {
                 player.body.moveLeft(300);
-                player.animations.play('walk',false)
+                if(game.input.mousePointer.leftButton.isDown){
+                    player.animations.play('shootwalk',false);
+                }else if(game.input.mousePointer.rightButton.isDown){
+                    player.animations.play('attackwalk',false);
+                }else{
+                    player.animations.play('walk',false);
+                }
         } else if (cursors.D.isDown) {
                 player.body.moveRight(300);
-                player.animations.play('walk',false)
+                if(game.input.mousePointer.leftButton.isDown){
+                    player.animations.play('shootwalk',false);
+                }else if(game.input.mousePointer.rightButton.isDown){
+                    player.animations.play('attackwalk',false);
+                }else{
+                    player.animations.play('walk',false);
+                }
+
         }
         if (game.input.mousePointer.leftButton.isDown)
          {
                 if (game.time.now > nextFire && bullets.countDead() > 0)
-         {
-        nextFire = game.time.now + fireRate;
-        var point1 = new Phaser.Point(player.body.x, player.body.y);
-        var point2 = new Phaser.Point(player.body.x + 13, player.body.y - 40);
-        point2.rotate(point1.x, point1.y, pointerangle + game.math.degToRad(180), false);
-        var bullet = bullets.getFirstExists(false);
-        if(bullet){
-        game.physics.p2.enable(bullet, true);
-        bullet.body.fixedRotation=true;  
-        bullet.lifespan = 3000;
-        bullet.reset(point2.x, point2.y);
-        bullet.rotation = pointerangle;
-        bullet.body.velocity.x = 500 * Math.cos(pointerangle + game.math.degToRad(-270));  
-        bullet.body.velocity.y = 500 * Math.sin(pointerangle + game.math.degToRad(-270));
-        bullet.body.setCircle(5)
-        bullet.body.setCollisionGroup(bulletCollisionGroup);
-        bullet.body.collides([borderCollisionGroup,swordCollisionGroup])
-        //bullet.body.collides(enemyCollisionGroup, killEnemies, this);
-        //game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
-    }
-         }
+                    {
+                    nextFire = game.time.now + fireRate;
+                    var point1 = new Phaser.Point(player.body.x, player.body.y);
+                    var point2 = new Phaser.Point(player.body.x + 13, player.body.y - 40);
+                    point2.rotate(point1.x, point1.y, pointerangle + game.math.degToRad(180), false);
+                    var bullet = bullets.getFirstExists(false);
+                    if(bullet){
+                        game.physics.p2.enable(bullet, true);
+                        bullet.body.fixedRotation=true;
+                        bullet.lifespan = 3000;
+                        bullet.reset(point2.x, point2.y);
+                        bullet.rotation = pointerangle;
+                        bullet.body.velocity.x = 500 * Math.cos(pointerangle + game.math.degToRad(-270));
+                        bullet.body.velocity.y = 500 * Math.sin(pointerangle + game.math.degToRad(-270));
+                        bullet.body.setCircle(5)
+                        bullet.body.setCollisionGroup(bulletCollisionGroup);
+                        bullet.body.collides([enemyCollisionGroup,borderCollisionGroup,swordCollisionGroup])
+                        player.animations.play('shoot',false);
+                        //bullet.body.collides(enemyCollisionGroup, killEnemies, this);
+                        //game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
+                    }
+                 }
         }
         if(game.input.mousePointer.rightButton.isDown){
               if (game.time.now > nextSwing){
                 nextSwing = game.time.now + swingRate;
                 if(swung == false){
+                shield = 5;
                 player.body.addShape(swordhitbox,0,20);
                 player.body.setCollisionGroup(swordCollisionGroup,swordhitbox)
                 swung = true;
@@ -151,11 +185,12 @@ Game.prototype = {
         else{
             player.animations.play('walk',true)
             if (game.time.now > nextSwing-500){
-            if(swung == true){
-            player.body.removeShape(swordhitbox);
-            swung = false;
+                if(swung == true){
+                    shield = 0;
+                    player.body.removeShape(swordhitbox);
+                    swung = false;
+                }
             }
-    }
         }
         //handle enemies
         handleEnemies();
@@ -182,11 +217,34 @@ function initEnemies(){
         game.physics.p2.enable(slime, true);
         slime.body.setCircle(30);
         slime.body.setCollisionGroup(enemyCollisionGroup);
+        slime.body.collides(swordCollisionGroup, smackEnemies, this);
+        slime.body.collides(playerCollisionGroup, takeDamage, this);
+        slime.body.collides(bulletCollisionGroup, killEnemies, this);
+        slime.body.collides([enemyCollisionGroup,borderCollisionGroup, playerCollisionGroup]);
+        slime.enemyType = 0;
+        //slime.body.static = true;
+    }
+
+
+    for(var i = 0; i < 10; i++){
+        var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
+        var arr = [];
+        for(var j = 0; j < 22; j++){
+            arr.push(j);
+        }
+        slime.animations.add('blueSlimeIdle', arr, 12, true);
+        slime.currentRadius = slime.width;
+        game.physics.p2.enable(slime, true);
+        slime.body.setCircle(30);
+        slime.body.setCollisionGroup(enemyCollisionGroup);
         slime.body.collides(swordCollisionGroup, killEnemies, this);
         slime.body.collides(playerCollisionGroup, takeDamage, this);
-        slime.body.collides([enemyCollisionGroup,bulletCollisionGroup,borderCollisionGroup, playerCollisionGroup]);
+        slime.body.collides(bulletCollisionGroup, killEnemies, this);
+        slime.body.collides([enemyCollisionGroup,borderCollisionGroup, playerCollisionGroup]);
+        slime.enemyType = 1;
+        //slime.body.static = true;
     }
-    
+
 }
 
 function killEnemies(body1, body2){
@@ -194,6 +252,15 @@ function killEnemies(body1, body2){
         body1.clearShapes();
         body1.sprite.destroy();
     }
+}
+function smackEnemies(body1, body2){
+        if(shield > 0){
+            shield --;
+        }
+        else{
+            player.body.removeShape(swordhitbox);
+            swung = false;
+        }
 }
 
 function handleEnemies(){
@@ -219,16 +286,30 @@ function handleEnemyMovements(){
         else{
             enemy.body.isVulnerable = false;
         }
-        
+        console.log(enemy.enemyType);
+        if(enemy.enemyType == 0){
+            
+        }
+        else if(enemy.enemyType == 1){
+            game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
+        }
+
     }, this);
 }
 
 function takeDamage () {
     // decrement health, handle heart graphic in update
     if(player.health > 0){
+        if(invulnerability == false){
         console.log(player.health);
         console.log();
         hearts.children[player.health - 1].kill();
         player.health--;
+        invulnerability = true;
+        game.time.events.add(500, removeInvulnerability, this);
+        }
     }
+
+function removeInvulnerability(){
+    invulnerability = false;}
 }
