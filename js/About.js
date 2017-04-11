@@ -4,7 +4,7 @@ About.prototype = {
     create: function() {
         this.splash = this.add.sprite(0, 0, 'about');
         this.splash.width = 1200;
-        this.splash.height = 900;
+        this.splash.height = 800;
 
     },
     update: function() {

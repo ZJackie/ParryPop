@@ -4,7 +4,7 @@ MainMenu.prototype = {
     create: function() {
         this.splash = this.add.sprite(0, 0, 'menu');
         this.splash.width = 1200;
-        this.splash.height = 900;
+        this.splash.height = 800;
         game.input.onDown.add(function(pointer, event) {
             var tileworldX = pointer.worldX - (pointer.worldX);
             var tileworldY = pointer.worldY - (pointer.worldY);
