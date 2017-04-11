@@ -202,7 +202,7 @@ function initEnemies(){
     //enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.P2JS;
 
-    for(var i = 0; i < 50; i++){
+    for(var i = 0; i < 10; i++){
         var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
         var arr = [];
         for(var j = 0; j < 22; j++){
@@ -217,6 +217,27 @@ function initEnemies(){
         slime.body.collides(playerCollisionGroup, takeDamage, this);
         slime.body.collides(bulletCollisionGroup, killEnemies, this);
         slime.body.collides([enemyCollisionGroup,borderCollisionGroup, playerCollisionGroup]);
+        slime.enemyType = 0;
+        //slime.body.static = true;
+    }
+
+
+    for(var i = 0; i < 10; i++){
+        var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
+        var arr = [];
+        for(var j = 0; j < 22; j++){
+            arr.push(j);
+        }
+        slime.animations.add('blueSlimeIdle', arr, 12, true);
+        slime.currentRadius = slime.width;
+        game.physics.p2.enable(slime, true);
+        slime.body.setCircle(30);
+        slime.body.setCollisionGroup(enemyCollisionGroup);
+        slime.body.collides(swordCollisionGroup, killEnemies, this);
+        slime.body.collides(playerCollisionGroup, takeDamage, this);
+        slime.body.collides(bulletCollisionGroup, killEnemies, this);
+        slime.body.collides([enemyCollisionGroup,borderCollisionGroup, playerCollisionGroup]);
+        slime.enemyType = 1;
         //slime.body.static = true;
     }
     
@@ -253,8 +274,13 @@ function handleEnemyMovements(){
         else{
             enemy.body.isVulnerable = false;
         }
-
-        game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
+        console.log(enemy.enemyType);
+        if(enemy.enemyType == 0){
+            
+        }
+        else if(enemy.enemyType == 1){
+            game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
+        }
         
     }, this);
 }
