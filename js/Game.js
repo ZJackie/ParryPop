@@ -16,7 +16,7 @@ var borderCollisionGroup;
 var swordCollisionGroup;
 var bulletCollisionGroup;
 var hearts;
-var invulnerability = false;
+var invulnerability;
 var shield;
 
 Game = function() {};
@@ -24,6 +24,7 @@ Game = function() {};
 Game.prototype = {
 
     create: function() {
+        invulnerability = false;
         //disable right click menu
         game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
 
@@ -100,7 +101,6 @@ Game.prototype = {
   },
 
     update: function() {
-        console.log(shield);
         //player movement
         pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
         player.body.rotation = pointerangle;
@@ -206,7 +206,42 @@ function initEnemies(){
     //enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.P2JS;
 
-    for(var i = 0; i < 10; i++){
+    for(var i = 0; i < 20; i++){
+        var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
+        var arr = [];
+        for(var j = 0; j < 22; j++){
+            arr.push(j);
+        }
+        slime.animations.add('blueSlimeIdle', arr, 12, true);
+        slime.currentRadius = slime.width;
+        game.physics.p2.enable(slime, true);
+        slime.body.setCircle(30);
+        slime.body.setCollisionGroup(enemyCollisionGroup);
+        slime.body.collides(swordCollisionGroup, smackEnemies, this);
+        slime.body.collides(playerCollisionGroup, takeDamage, this);
+        slime.body.collides(bulletCollisionGroup, killEnemies, this);
+        slime.body.collides(borderCollisionGroup, bounce, this);
+        slime.body.collides([enemyCollisionGroup, playerCollisionGroup]);
+        slime.enemyType = 0;
+        slime.rate = Math.random * 0.4;
+        var num = Math.random();
+            if(num < 0.25){
+                slime.body.moveUp(500);
+            }
+            else if(num >= 0.25 && num <= 0.50){
+                slime.body.moveDown(500);
+            }
+            else if(num >= 0.5 && num <= 0.75){
+                slime.body.moveLeft(500);
+            }
+            else{
+                slime.body.moveRight(500);
+            }
+        //slime.body.static = true;
+    }
+
+
+    for(var i = 0; i < 15; i++){
         var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
         var arr = [];
         for(var j = 0; j < 22; j++){
@@ -221,27 +256,8 @@ function initEnemies(){
         slime.body.collides(playerCollisionGroup, takeDamage, this);
         slime.body.collides(bulletCollisionGroup, killEnemies, this);
         slime.body.collides([enemyCollisionGroup,borderCollisionGroup, playerCollisionGroup]);
-        slime.enemyType = 0;
-        //slime.body.static = true;
-    }
-
-
-    for(var i = 0; i < 10; i++){
-        var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
-        var arr = [];
-        for(var j = 0; j < 22; j++){
-            arr.push(j);
-        }
-        slime.animations.add('blueSlimeIdle', arr, 12, true);
-        slime.currentRadius = slime.width;
-        game.physics.p2.enable(slime, true);
-        slime.body.setCircle(30);
-        slime.body.setCollisionGroup(enemyCollisionGroup);
-        slime.body.collides(swordCollisionGroup, killEnemies, this);
-        slime.body.collides(playerCollisionGroup, takeDamage, this);
-        slime.body.collides(bulletCollisionGroup, killEnemies, this);
-        slime.body.collides([enemyCollisionGroup,borderCollisionGroup, playerCollisionGroup]);
         slime.enemyType = 1;
+        slime.rate = Math.random() * 0.4;
         //slime.body.static = true;
     }
     
@@ -263,6 +279,22 @@ function smackEnemies(body1, body2){
         }
 }
 
+function bounce(body1, body2){
+        var num = Math.random();
+            if(num < 0.25){
+                body1.moveUp(500);
+            }
+            else if(num >= 0.25 && num <= 0.50){
+                body1.moveDown(500);
+            }
+            else if(num >= 0.5 && num <= 0.75){
+                body1.moveLeft(500);
+            }
+            else{
+                body1.moveRight(500);
+            }
+}
+
 function handleEnemies(){
     handleEnemyMovements();
 }
@@ -270,7 +302,7 @@ function handleEnemies(){
 function handleEnemyMovements(){
     enemies.forEach(function(enemy){
         enemy.animations.play('blueSlimeIdle');
-        enemy.currentRadius = enemy.currentRadius - 0.2;
+        enemy.currentRadius = enemy.currentRadius - enemy.rate;
         enemy.body.setCircle(enemy.currentRadius);
         enemy.body.setCollisionGroup(enemyCollisionGroup);
         enemy.body.collides([enemyCollisionGroup, swordCollisionGroup ,borderCollisionGroup]);
@@ -286,9 +318,8 @@ function handleEnemyMovements(){
         else{
             enemy.body.isVulnerable = false;
         }
-        console.log(enemy.enemyType);
         if(enemy.enemyType == 0){
-            
+
         }
         else if(enemy.enemyType == 1){
             game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
@@ -301,8 +332,6 @@ function takeDamage () {
     // decrement health, handle heart graphic in update
     if(player.health > 0){
         if(invulnerability == false){
-        console.log(player.health);
-        console.log();
         hearts.children[player.health - 1].kill();
         player.health--;
         invulnerability = true;
