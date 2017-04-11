@@ -3,7 +3,7 @@ var cursors;
 var bullets;
 var fireRate = 500;
 var nextFire = 0;
-var swingRate = 1000;
+var swingRate = 3000;
 var swung = false;
 var nextSwing = 0;
 var bulletspeed = 300;
@@ -17,6 +17,7 @@ var swordCollisionGroup;
 var bulletCollisionGroup;
 var hearts;
 var invulnerability = false;
+var shield;
 
 Game = function() {};
 
@@ -99,6 +100,7 @@ Game.prototype = {
   },
 
     update: function() {
+        console.log(shield);
         //player movement
         pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
         player.body.rotation = pointerangle;
@@ -172,6 +174,7 @@ Game.prototype = {
               if (game.time.now > nextSwing){
                 nextSwing = game.time.now + swingRate;
                 if(swung == false){
+                shield = 5;
                 player.body.addShape(swordhitbox,0,20);
                 player.body.setCollisionGroup(swordCollisionGroup,swordhitbox)
                 swung = true;
@@ -183,6 +186,7 @@ Game.prototype = {
             player.animations.play('walk',true)
             if (game.time.now > nextSwing-500){
                 if(swung == true){
+                    shield = 0;
                     player.body.removeShape(swordhitbox);
                     swung = false;
                 }
@@ -213,7 +217,7 @@ function initEnemies(){
         game.physics.p2.enable(slime, true);
         slime.body.setCircle(30);
         slime.body.setCollisionGroup(enemyCollisionGroup);
-        slime.body.collides(swordCollisionGroup, killEnemies, this);
+        slime.body.collides(swordCollisionGroup, smackEnemies, this);
         slime.body.collides(playerCollisionGroup, takeDamage, this);
         slime.body.collides(bulletCollisionGroup, killEnemies, this);
         slime.body.collides([enemyCollisionGroup,borderCollisionGroup, playerCollisionGroup]);
@@ -249,7 +253,15 @@ function killEnemies(body1, body2){
         body1.sprite.destroy();
     }
 }
-
+function smackEnemies(body1, body2){
+        if(shield > 0){
+            shield --;
+        }
+        else{
+            player.body.removeShape(swordhitbox);
+            swung = false;
+        }
+}
 
 function handleEnemies(){
     handleEnemyMovements();
