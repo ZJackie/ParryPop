@@ -142,7 +142,11 @@ Game.prototype = {
                 }else{
                     player.animations.play('walk',false);
                 }
+<<<<<<< HEAD
 
+=======
+                    
+>>>>>>> c83573df8f7cffb2ce1b2a329d2c634cbec41281
         }
         if (game.input.mousePointer.leftButton.isDown)
          {
@@ -155,11 +159,19 @@ Game.prototype = {
                     var bullet = bullets.getFirstExists(false);
                     if(bullet){
                         game.physics.p2.enable(bullet, true);
+<<<<<<< HEAD
                         bullet.body.fixedRotation=true;
                         bullet.lifespan = 3000;
                         bullet.reset(point2.x, point2.y);
                         bullet.rotation = pointerangle;
                         bullet.body.velocity.x = 500 * Math.cos(pointerangle + game.math.degToRad(-270));
+=======
+                        bullet.body.fixedRotation=true;  
+                        bullet.lifespan = 3000;
+                        bullet.reset(point2.x, point2.y);
+                        bullet.rotation = pointerangle;
+                        bullet.body.velocity.x = 500 * Math.cos(pointerangle + game.math.degToRad(-270));  
+>>>>>>> c83573df8f7cffb2ce1b2a329d2c634cbec41281
                         bullet.body.velocity.y = 500 * Math.sin(pointerangle + game.math.degToRad(-270));
                         bullet.body.setCircle(5)
                         bullet.body.setCollisionGroup(bulletCollisionGroup);
@@ -293,7 +305,11 @@ function handleEnemyMovements(){
         else if(enemy.enemyType == 1){
             game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
         }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> c83573df8f7cffb2ce1b2a329d2c634cbec41281
     }, this);
 }
 
@@ -312,4 +328,8 @@ function takeDamage () {
 
 function removeInvulnerability(){
     invulnerability = false;}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c83573df8f7cffb2ce1b2a329d2c634cbec41281
