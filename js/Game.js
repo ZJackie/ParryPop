@@ -208,7 +208,6 @@ Game.prototype = {
         //handle enemies
         handleEnemies();
       }
-
         if(enemies.length == 0){
             setTimeout(function() {
             game.state.start('MainMenu');
@@ -225,7 +224,7 @@ Game.prototype = {
             game.state.start('MainMenu');
         }, 2000);
     }
-    
+
     },
 
 };
@@ -251,8 +250,9 @@ function initEnemies() {
         slime.body.collides(bulletCollisionGroup, killEnemies, this);
         slime.body.collides(borderCollisionGroup, bounce, this);
         slime.body.collides([enemyCollisionGroup, playerCollisionGroup]);
+
         slime.enemyType = 0;
-        slime.rate = Math.random * 0.4;
+        slime.rate = Math.random()*0.4 + 0.1
         var num = Math.random();
             if(num < 0.25){
                 slime.body.moveUp(500);
@@ -269,7 +269,6 @@ function initEnemies() {
         //slime.body.static = true;
     }
 
-
     for(var i = 0; i < 10; i++){
         var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
         var arr = [];
@@ -285,8 +284,9 @@ function initEnemies() {
         slime.body.collides(playerCollisionGroup, takeDamage, this);
         slime.body.collides(bulletCollisionGroup, killEnemies, this);
         slime.body.collides([enemyCollisionGroup, borderCollisionGroup, playerCollisionGroup]);
+
         slime.enemyType = 1;
-        slime.rate = Math.random() * 0.4;
+        slime.rate = Math.random() * 0.4 + 0.1;
         //slime.body.static = true;
     }
 
@@ -349,7 +349,7 @@ function handleEnemyMovements() {
         if(enemy.enemyType == 0){
 
         }
-        else if(enemy.enemyType == 1){
+        if(enemy.enemyType == 1){
             game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
         }
     }, this);
