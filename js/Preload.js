@@ -5,7 +5,7 @@ Preload.prototype = {
     preload: function() {
         this.splash = this.add.sprite(0, 0, 'splash');
         this.splash.width = 1200;
-        this.splash.height = 900;
+        this.splash.height = 800;
 
         this.load.image('about', 'assets/about.png');
         this.load.image('levels', 'assets/levels.png');
