@@ -62,6 +62,9 @@ Game.prototype = {
         player.animations.add('attackwalk', [15, 16, 17, 18, 19], 10, false);
         player.animations.add('shoot', [20, 21, 22, 23, 24], 10, false);
         player.animations.add('shootwalk', [25, 26, 27, 28, 29], 10, false);
+        player.animations.add('death', [30, 31, 32, 33, 34], 10, false);
+
+        player.dead = 0;
 
         game.physics.p2.enable(player, true);
         player.body.setCircle(20);
@@ -108,6 +111,8 @@ Game.prototype = {
     },
 
     update: function() {
+        if(player.dead == 0)
+        {
         //player movement
         pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
         player.body.rotation = pointerangle;
@@ -202,9 +207,25 @@ Game.prototype = {
         }
         //handle enemies
         handleEnemies();
-        if (player.health <= 0) {
+      }
+
+        if(enemies.length == 0){
+            setTimeout(function() {
             game.state.start('MainMenu');
+        }, 2000);
         }
+
+
+        if (player.health <= 0 && player.dead == 0) {
+            player.animations.play('death');
+            player.body.clearShapes();
+            player.dead = 1;
+
+            setTimeout(function() {
+            game.state.start('MainMenu');
+        }, 2000);
+    }
+    
     },
 
 };
@@ -214,7 +235,7 @@ function initEnemies() {
     //enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.P2JS;
 
-    for(var i = 0; i < 20; i++){
+    for(var i = 0; i < 15; i++){
         var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
         var arr = [];
         for (var j = 0; j < 22; j++) {
@@ -249,7 +270,7 @@ function initEnemies() {
     }
 
 
-    for(var i = 0; i < 15; i++){
+    for(var i = 0; i < 10; i++){
         var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
         var arr = [];
         for (var j = 0; j < 22; j++) {
