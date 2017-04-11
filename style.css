@@ -1,11 +1,16 @@
 body {
-    background: #000000;
-      width:100%
+    background-image: url("assets/space.png");
+    background-repeat: no-repeat;
+    width: 100%
 }
+
+
 /*center canvas*/
+
 canvas {
     margin: auto;
 }
+
 #container {
     top: 5%;
     left: 100px;
