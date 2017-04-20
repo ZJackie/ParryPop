@@ -15,7 +15,9 @@ Preload.prototype = {
         game.load.image('gameTiles', 'assets/Water.png');
         game.load.spritesheet('player', 'assets/player.png', 64, 64);
         game.load.image('bullet', 'assets/other_sprites/bullet.png');
+        game.load.image('bubblebullet', 'assets/other_sprites/Projectile1.png');
         game.load.image('heart', 'assets/other_sprites/heart.png');
+        game.load.image('healthbar', 'assets/other_sprites/healthbar.png');
         game.load.image('waterDrop', 'assets/other_sprites/water_droplet.png');
         game.load.spritesheet('blueSlime', 'assets/other_sprites/blue_slime.png', 32, 32);
         game.load.spritesheet('bubbleTower', 'assets/other_sprites/bubble_tower.png', 64, 64);
