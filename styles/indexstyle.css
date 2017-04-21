@@ -1,0 +1,53 @@
+body {
+    background-image: url("../assets/space.png");
+    background-repeat: no-repeat;
+}
+
+.logo {
+    border: 5px solid purple;
+    border-radius: 10em/15em;
+    width: 500px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container {
+    font-family: Arial, sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    width: 460px;
+    text-align: center;
+}
+
+.circle {
+    display: block;
+    width: 130px;
+    height: 115px;
+    border: 3px solid grey;
+    border-radius: 50%;
+    font-size: 18px;
+    color: white;
+    line-height: 100px;
+    background: purple;
+    margin: 0 auto 10px auto;
+    box-sizing: border-box;
+}
+
+.text {
+    text-align: center;
+    font-size: 16px;
+    color: white
+}
+
+a {
+    text-decoration: none;
+}
+
+
+@media only screen and (min-width:765px) {
+    .circle {
+        display: inline-block;
+        margin: 0 10px;
+    }
+}
