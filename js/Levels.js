@@ -18,11 +18,11 @@ Levels.prototype = {
                 }
                 //About
                 if (tileX < 850 && tileX > 682 && tileY < 509 && tileY > 350) {
-                    console.log("Level 2");
+                    this.game.state.start('Level2');
                 }
                 //Help
                 if (tileX < 1090 && tileX > 903 && tileY < 510 && tileY > 350) {
-                    console.log("Level 3");
+                    this.game.state.start('Level3');
                 }
                 if (tileX < 126 && tileX > 12 && tileY < 70 && tileY > 16) {
                     this.game.state.start('MainMenu');

@@ -20,9 +20,9 @@ var hearts;
 var invulnerability;
 var shield;
 
-Game = function() {};
+Level3 = function() {};
 
-Game.prototype = {
+Level3.prototype = {
 
     create: function() {
         invulnerability = false;
