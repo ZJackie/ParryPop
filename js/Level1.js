@@ -20,9 +20,9 @@ var hearts;
 var invulnerability;
 var shield;
 
-Game = function() {};
+Level1 = function() {};
 
-Game.prototype = {
+Level1.prototype = {
 
     create: function() {
         initAudio();
@@ -54,7 +54,7 @@ Game.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('redSlime','fireballTower');
+        initEnemies('redSlime','fireballTower', 1, 1);
         initPlayer();
 
         //border
@@ -77,6 +77,7 @@ Game.prototype = {
             'D': Phaser.KeyCode.D,
             'R': Phaser.KeyCode.R,
             'I': Phaser.KeyCode.I,
+            'K': Phaser.KeyCode.K
         });
         //bullets
         bullets = game.add.group();
@@ -98,7 +99,7 @@ Game.prototype = {
 
     update: function() {
         handleUpdate();
-        endGame("level1");
+        endGame("Level1");
     },
 
 };

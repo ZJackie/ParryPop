@@ -25,15 +25,16 @@ Level3 = function() {};
 Level3.prototype = {
 
     create: function() {
+        initAudio();
         invulnerability = false;
         //disable right click menu
         game.canvas.oncontextmenu = function(e) {
             e.preventDefault();
         }
 
-        var map = game.add.tilemap('Map');
+        var map = game.add.tilemap('persephoneMap');
         //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
-        map.addTilesetImage('Water', 'gameTiles');
+        map.addTilesetImage('Water', 'persephoneGameTiles');
         //Create Layers
         var backgroundlayer = map.createLayer('Background');
         backgroundlayer.resizeWorld();
@@ -53,7 +54,7 @@ Level3.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies();
+        initEnemies('voidSlime','voidTower', 10, 5);
         initPlayer();
 
         //border
@@ -74,7 +75,9 @@ Level3.prototype = {
             'A': Phaser.KeyCode.A,
             'S': Phaser.KeyCode.S,
             'D': Phaser.KeyCode.D,
-            'R': Phaser.KeyCode.R
+            'R': Phaser.KeyCode.R, 
+            'I': Phaser.KeyCode.I,
+            'K': Phaser.KeyCode.K
         });
         //bullets
         bullets = game.add.group();
@@ -96,6 +99,7 @@ Level3.prototype = {
 
     update: function() {
         handleUpdate();
+        endGame("Level3");
     },
 
 };

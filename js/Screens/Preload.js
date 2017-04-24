@@ -24,7 +24,7 @@ Preload.prototype = {
         game.load.spritesheet('redSlime', 'assets/other_sprites/red_slime.png', 32, 32);
         game.load.spritesheet('fireballTower', 'assets/other_sprites/fireball_tower.png', 64, 64);
         game.load.image('fireBullet', 'assets/other_sprites/fireBullet.png');
-        game.load.spritesheet('cerberus', 'assets/other_sprites/cerberus.png', 128,128);
+
 
         //level 2 
         game.load.tilemap('persephoneMap', 'assets/Levels/water.json', null, Phaser.Tilemap.TILED_JSON);
@@ -36,6 +36,10 @@ Preload.prototype = {
         game.load.spritesheet('persephone', 'assets/other_sprites/whale.png', 128, 128);
         game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32, 32);
         //level 3
+        game.load.spritesheet('hades', 'assets/other_sprites/hades.png', 64,64);
+        game.load.spritesheet('voidTower', 'assets/other_sprites/void_tower.png', 64, 64);
+        game.load.spritesheet('glitchSlime', 'assets/other_sprites/glitch_slime.png', 32, 32);
+        game.load.image('voidbullet', 'assets/other_sprites/voidBullet.png');
 
         //Sounds
         game.load.audio('button', 'assets/sounds/button.wav');

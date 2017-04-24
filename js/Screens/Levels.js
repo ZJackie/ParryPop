@@ -15,7 +15,7 @@ Levels.prototype = {
                 //Play
                 if (tileX < 630 && tileX > 442 && tileY < 509 && tileY > 347) {
                     button.play();
-                    this.game.state.start('Game');
+                    this.game.state.start('Level1');
                 }
                 //About
                 if (tileX < 850 && tileX > 682 && tileY < 509 && tileY > 350) {

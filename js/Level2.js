@@ -15,7 +15,7 @@ var enemyCollisionGroup;
 var borderCollisionGroup;
 var swordCollisionGroup;
 var bulletCollisionGroup;
-var enemybulletCollisionGroup 
+var enemybulletCollisionGroup
 var hearts;
 var invulnerability;
 var shield;
@@ -54,7 +54,7 @@ Level2.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('blueSlime','bubbleTower');
+        initEnemies('blueSlime', 'bubbleTower', 10, 5);
         //spawnPersephone();
         initPlayer();
 
@@ -66,7 +66,7 @@ Level2.prototype = {
         border.body.setCollisionGroup(borderCollisionGroup);
         border.body.collides([enemyCollisionGroup, playerCollisionGroup, bulletCollisionGroup, enemybulletCollisionGroup]);
 
-        player.body.collides([borderCollisionGroup,enemybulletCollisionGroup]);
+        player.body.collides([borderCollisionGroup, enemybulletCollisionGroup]);
         player.body.collides(enemyCollisionGroup);
         player.body.collides(bulletCollisionGroup);
 
@@ -78,6 +78,7 @@ Level2.prototype = {
             'D': Phaser.KeyCode.D,
             'R': Phaser.KeyCode.R,
             'I': Phaser.KeyCode.I,
+            'K': Phaser.KeyCode.K
         });
         //bullets
         bullets = game.add.group();
@@ -98,9 +99,7 @@ Level2.prototype = {
     },
 
     update: function() {
-      handleUpdate();
-      endGame("level2");
-  },
-
+        handleUpdate();
+        endGame("Level2");
+    },
 };
-
