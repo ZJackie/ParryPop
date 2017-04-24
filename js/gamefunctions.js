@@ -11,7 +11,7 @@ function initPlayer(){
         player.animations.add('death', [30, 31, 32, 33, 34], 10, false);
 
         player.dead = 0;     
-        player.ultimate = 8;   
+        player.ultimate = 0;   
         player.ultimateBar = game.add.sprite(3,30,'ultimatebar');
         player.ultimateBar.height = 20;
         player.ultimateBar.width = (player.ultimate / 10) * 100;
