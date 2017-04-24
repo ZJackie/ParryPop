@@ -38,6 +38,7 @@ Preload.prototype = {
         //level 3
 
         //Sounds
+        game.load.audio('button', 'assets/sounds/button.wav');
         game.load.audio('pandora_damaged', 'assets/sounds/pandora_damaged.wav');
         game.load.audio('pandora_sword', 'assets/sounds/pandora_sword_1.wav');
         game.load.audio('pandora_shoot', 'assets/sounds/projectile_2.wav');
@@ -51,8 +52,6 @@ Preload.prototype = {
         game.load.audio('tower_block', 'assets/sounds/tower_block.wav');
 
         game.load.audio('tower_damaged', 'assets/sounds/tower_damaged.wav');
-
-        initAudio();
     },
     create: function() {
         setTimeout(function() {
