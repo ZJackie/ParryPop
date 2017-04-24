@@ -455,6 +455,15 @@ function handleUpdate() {
         if (cursors.R.isDown) {
             useUltimate();
         }
+        if (cursors.I.isDown) {
+            invulnerability = true;
+            console.log("Invulnerability is on.")
+            game.time.events.add(6000, function(){
+                invulnerability=false; 
+                console.log("Invulnerability is off.")
+            }, this);
+
+        }
         if (game.input.mousePointer.leftButton.isDown) {
             if (game.time.now > nextFire && bullets.countDead() > 0) {
                 pandora_shoot.play();

@@ -75,7 +75,8 @@ Level2.prototype = {
             'A': Phaser.KeyCode.A,
             'S': Phaser.KeyCode.S,
             'D': Phaser.KeyCode.D,
-            'R': Phaser.KeyCode.R
+            'R': Phaser.KeyCode.R,
+            'I': Phaser.KeyCode.I,
         });
         //bullets
         bullets = game.add.group();
