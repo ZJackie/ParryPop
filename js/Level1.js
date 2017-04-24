@@ -15,7 +15,7 @@ var enemyCollisionGroup;
 var borderCollisionGroup;
 var swordCollisionGroup;
 var bulletCollisionGroup;
-var enemybulletCollisionGroup 
+var enemybulletCollisionGroup
 var hearts;
 var invulnerability;
 var shield;
@@ -54,7 +54,8 @@ Level1.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('redSlime','fireballTower', 8, 3);
+        //initEnemies('redSlime', 'fireballTower', 0, 0);
+        initEnemies('redSlime', 'fireballTower', 8, 3);
         initPlayer();
 
         //border
@@ -65,7 +66,7 @@ Level1.prototype = {
         border.body.setCollisionGroup(borderCollisionGroup);
         border.body.collides([enemyCollisionGroup, playerCollisionGroup, bulletCollisionGroup, enemybulletCollisionGroup]);
 
-        player.body.collides([borderCollisionGroup,enemybulletCollisionGroup]);
+        player.body.collides([borderCollisionGroup, enemybulletCollisionGroup]);
         player.body.collides(enemyCollisionGroup);
         player.body.collides(bulletCollisionGroup);
 
@@ -103,4 +104,3 @@ Level1.prototype = {
     },
 
 };
-

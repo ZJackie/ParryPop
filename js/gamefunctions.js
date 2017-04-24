@@ -35,6 +35,8 @@ function initAudio() {
     //Level 1
     fire_tower = game.add.audio('fire_tower');
     fire_tower_2 = game.add.audio('fire_tower_2');
+    cerberus_fire_storm = game.add.audio('cerberus_fire_storm');
+
     //Level 2
     water_tower = game.add.audio('water_tower');
     whale_hurt = game.add.audio('whale_hurt');
@@ -127,7 +129,7 @@ function spawnPersephone() {
     }
     persephone.mass = 20;
     persephone.maxhealth = 20;
-    persephone.health = 20;
+    persephone.health = 1;
 
     healthbar = game.add.sprite(300, 30, 'healthbar');
     healthbar.height = 10;
@@ -840,6 +842,7 @@ function handleCerberus(enemy) {
     //     enemy.body.velocity.y = 500 * Math.sin(angle);
     var bubblebullet = enemy.bullets.getFirstExists(false);
     if (bubblebullet) {
+        fire_tower_2.play();
         game.physics.p2.enable(bubblebullet, true);
         bubblebullet.enemyType = "enemyBullet";
         bubblebullet.body.fixedRotation = true;
@@ -861,6 +864,7 @@ function handleCerberus(enemy) {
         enemy.phase1 = true;
     }
     if (enemy.phase2 == false && enemy.health < 10) {
+        cerberus_fire_storm.play();
         enemy.bullets.createMultiple(15, 'fireBullet');
         enemy.phase2 = true;
     }
@@ -957,6 +961,11 @@ function handlePersephone(enemy) {
         var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
         if (enemy.currentRadius <= lowerBound) {
             enemy.currentRadius = enemy.width;
+        }
+        if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
+            enemy.body.isVulnerable = true;
+        } else {
+            enemy.body.isVulnerable = false;
         }
     }
 }
