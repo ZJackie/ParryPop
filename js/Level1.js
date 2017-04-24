@@ -54,7 +54,7 @@ Level1.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('redSlime','fireballTower', 1, 1);
+        initEnemies('redSlime','fireballTower', 8, 3);
         initPlayer();
 
         //border
