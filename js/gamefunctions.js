@@ -503,7 +503,7 @@ function fireEnemyBullet(enemy) {
     if (enemyBullet) {
         var random = Math.random();
         switch (currentGameState) {
-            case "Game":
+            case "Level1":
                 if (random > 0.5) {
                     fire_tower.play();
                 } else {
