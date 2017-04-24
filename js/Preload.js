@@ -54,7 +54,10 @@ Preload.prototype = {
         game.load.audio('slime_3', 'assets/sounds/slime_3.wav');
         game.load.audio('slime_hurt', 'assets/sounds/slime_hurt.wav');
         game.load.audio('tower_block', 'assets/sounds/tower_block.wav');
-
+        game.load.audio('whale_hurt', 'assets/sounds/whale_hurt.wav');
+        game.load.audio('whale_1','assets/sounds/whale_1.wav');
+        game.load.audio('whale_2','assets/sounds/whale_2.wav');
+        game.load.audio('whale_shoot', 'assets/sounds/whale_shoot.wav');
         game.load.audio('tower_damaged', 'assets/sounds/tower_damaged.wav');
     },
     create: function() {

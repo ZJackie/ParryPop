@@ -37,6 +37,10 @@ function initAudio() {
     fire_tower_2 = game.add.audio('fire_tower_2');
     //Level 2
     water_tower = game.add.audio('water_tower');
+    whale_hurt = game.add.audio('whale_hurt');
+    whale_1 = game.add.audio('whale_1');
+    whale_2 = game.add.audio('whale_2');
+    whale_shoot = game.add.audio('whale_shoot');
     //Level 3
 
     //Pandora Sounds
@@ -204,6 +208,7 @@ function killEnemies(body1, body2) {
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 50;
                 tower_damaged.play();
             } else if (body1.sprite.enemyType == "persephone") {
+                whale_hurt.play();
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 500;
             }
         }
@@ -311,6 +316,10 @@ function handleEnemyMovements() {
             }
         } else if (enemy.enemyType == "persephone") {
             enemy.animations.play('persephoneidle');
+            var random = Math.random()*5
+            if(random<2){
+                whale_2.play();
+            }
             if (enemy.shield == false) {
                 enemy.currentRadius = enemy.currentRadius - enemy.rate;
                 enemy.body.setCircle(enemy.currentRadius);
@@ -343,6 +352,7 @@ function handleEnemyMovements() {
                     angle = game.physics.arcade.angleBetween(enemy, player);
                     var bubblebullet = enemy.bullets.getFirstExists(false);
                     if (bubblebullet) {
+                        whale_shoot.play();
                         game.physics.p2.enable(bubblebullet, true);
                         bubblebullet.enemyType = "enemyBullet";
                         bubblebullet.body.fixedRotation = true;
@@ -716,11 +726,11 @@ function handleUpdate() {
 
         }
         if (cursors.K.isDown) {
-           enemies.forEach(function(enemy) {
+         enemies.forEach(function(enemy) {
            //enemy.destroy();
-        });
-       }
-       if (game.input.mousePointer.leftButton.isDown) {
+       });
+     }
+     if (game.input.mousePointer.leftButton.isDown) {
         if (game.time.now > nextFire && bullets.countDead() > 0) {
             pandora_shoot.play();
             nextFire = game.time.now + fireRate;
@@ -775,10 +785,10 @@ function handleUpdate() {
 }
 
 function endGame(level) {
-    if (level == "level2") {
+    if (level == "Level2") {
         if (enemies.length == 0) {
-            console.log(enemies.length);
             spawnPersephone();
+            whale_1.play();
             resetHealth();
             player.bossAlive = true;
         }
@@ -807,7 +817,6 @@ function endGame(level) {
             }, 2000);
         }
     }
-
 
     if (player.health <= 0 && player.dead == 0) {
         player.animations.play('death');
