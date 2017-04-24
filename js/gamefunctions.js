@@ -66,8 +66,6 @@ function initEnemies(slimeName, towerName, numSlimes, numTowers) {
 
 }
 
-<<<<<<< HEAD
-=======
 function spawnPersephone() {
     enemies = game.add.group();
     enemies.physicsBodyType = Phaser.Physics.P2JS;
@@ -173,15 +171,14 @@ function spawnHades(){
     hades.bullets.setAll('anchor.y', 0.5);
 
      //attacks
-    hades.ramAttack = false;
-    hades.invulnerability = false;
-    hades.phase1 = false;
-    hades.phase2 = false;
-    hades.phase3 = false;
-}
+     hades.ramAttack = false;
+     hades.invulnerability = false;
+     hades.phase1 = false;
+     hades.phase2 = false;
+     hades.phase3 = false;
+ }
 
->>>>>>> 7f9292418a021998e9b267bad314a3dcc869e25c
-function killEnemies(body1, body2) {
+ function killEnemies(body1, body2) {
     body2.sprite.kill();
     if (body1.isVulnerable == true) {
         if (player.ultimate < 10) {
@@ -220,15 +217,15 @@ function killEnemies(body1, body2) {
         if (body1.sprite.enemyType == "slime") {
             switch (currentGameState) {
                 case "Game":
-                    slime_1.play();
-                    break;
+                slime_1.play();
+                break;
                 case "Level2":
-                    slime_2.play();
+                slime_2.play();
 
-                    break;
+                break;
                 case "Level3":
-                    slime_3.play();
-                    break;
+                slime_3.play();
+                break;
                 default:
             }
         }
@@ -319,6 +316,8 @@ function handleEnemyMovements() {
             }
         } else if (enemy.enemyType == "persephone") {
             handlePersephone(enemy);
+        } else if (enemy.enemyType == "hades"){
+            //handleHades(enemy);
         }
     }, this);
 }
@@ -354,11 +353,11 @@ function spawnTowers(NumberOfTowers, towerName) {
         towers.bullets.physicsBodyType = Phaser.Physics.P2JS;
         switch (towerName) {
             case 'bubbleTower':
-                towers.bullets.createMultiple(5, 'bubblebullet');
-                break;
+            towers.bullets.createMultiple(5, 'bubblebullet');
+            break;
             case 'fireballTower':
-                towers.bullets.createMultiple(5, 'fireBullet');
-                break;
+            towers.bullets.createMultiple(5, 'fireBullet');
+            break;
             default:
         }
 
@@ -440,17 +439,17 @@ function fireEnemyBullet(enemy) {
         var random = Math.random();
         switch (currentGameState) {
             case "Game":
-                if (random > 0.5) {
-                    fire_tower.play();
-                } else {
-                    fire_tower_2.play();
-                }
-                break;
+            if (random > 0.5) {
+                fire_tower.play();
+            } else {
+                fire_tower_2.play();
+            }
+            break;
             case "Level2":
-                water_tower.play();
-                break;
+            water_tower.play();
+            break;
             case "Level3":
-                break;
+            break;
             default:
         }
         game.physics.p2.enable(enemyBullet, true);
@@ -514,73 +513,73 @@ function takeDamage(body1, body2) {
 function takeBulletDamage(body1, body2) {
     body1.sprite.kill()
         // decrement health, handle heart graphic in update
-    if (player.health > 0) {
-        if (invulnerability == false) {
-            hearts.children[player.health - 1].kill();
-            player.health--;
-            pandora_damaged.play();
-            invulnerability = true;
-            game.time.events.add(500, removeInvulnerability, this);
+        if (player.health > 0) {
+            if (invulnerability == false) {
+                hearts.children[player.health - 1].kill();
+                player.health--;
+                pandora_damaged.play();
+                invulnerability = true;
+                game.time.events.add(500, removeInvulnerability, this);
+            }
+        }
+
+        function removeInvulnerability() {
+            invulnerability = false;
         }
     }
 
-    function removeInvulnerability() {
-        invulnerability = false;
-    }
-}
-
-function ultimateReady() {
-    var handle;
-    var handle2;
-    if (player.ultimate == 10) {
-        handle = setInterval(function() {
-            ultimateBarInvert.bringToTop();
-            if (player.ultimate != 10) {
-                clearInterval(handle);
-                handle = 0;
-            }
-        }, 20);
-        handle2 = setInterval(function() {
-            player.ultimateBar.bringToTop();
-            if (player.ultimate != 10) {
-                clearInterval(handle2);
-                handle2 = 0;
-            }
-        }, 50);
-    }
-}
-
-function useUltimate() {
-    if (player.ultimate == 10) {
-        invulnerability = true;
-        player.ultimate = 0;
-        player.ultimateBar.width = (player.ultimate / 10) * 100;
-        player.body.setCircle(200);
-        player.body.setCollisionGroup(playerCollisionGroup);
-        game.time.events.add(500, removeInvulnerability, this);
-    } else {
-        console.log("Not enough energy");
+    function ultimateReady() {
+        var handle;
+        var handle2;
+        if (player.ultimate == 10) {
+            handle = setInterval(function() {
+                ultimateBarInvert.bringToTop();
+                if (player.ultimate != 10) {
+                    clearInterval(handle);
+                    handle = 0;
+                }
+            }, 20);
+            handle2 = setInterval(function() {
+                player.ultimateBar.bringToTop();
+                if (player.ultimate != 10) {
+                    clearInterval(handle2);
+                    handle2 = 0;
+                }
+            }, 50);
+        }
     }
 
-    function removeInvulnerability() {
-        player.body.setCircle(20);
-        player.body.setCollisionGroup(playerCollisionGroup);
-        invulnerability = false;
-    }
-}
+    function useUltimate() {
+        if (player.ultimate == 10) {
+            invulnerability = true;
+            player.ultimate = 0;
+            player.ultimateBar.width = (player.ultimate / 10) * 100;
+            player.body.setCircle(200);
+            player.body.setCollisionGroup(playerCollisionGroup);
+            game.time.events.add(500, removeInvulnerability, this);
+        } else {
+            console.log("Not enough energy");
+        }
 
-function resetHealth() {
-    player.health = 10;
-    hearts.removeAll();
-    for (var i = 0; i < player.health; i++) {
-        var heart = hearts.create(i * 30, 0, 'heart');
-        heart.fixedToCamera = true;
+        function removeInvulnerability() {
+            player.body.setCircle(20);
+            player.body.setCollisionGroup(playerCollisionGroup);
+            invulnerability = false;
+        }
     }
-}
 
-function handleUpdate() {
-    ultimateReady();
-    if (player.dead == 0) {
+    function resetHealth() {
+        player.health = 10;
+        hearts.removeAll();
+        for (var i = 0; i < player.health; i++) {
+            var heart = hearts.create(i * 30, 0, 'heart');
+            heart.fixedToCamera = true;
+        }
+    }
+
+    function handleUpdate() {
+        ultimateReady();
+        if (player.dead == 0) {
         //player movement
         pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
         player.body.rotation = pointerangle;
@@ -720,7 +719,7 @@ function endGame(level) {
             }, 2000);
         }
     }
-    else if(level == "level3"){
+    else if(level == "Level3"){
         if (enemies.length == 0) {
             console.log(enemies.length);
             spawnHades();
@@ -750,3 +749,100 @@ function endGame(level) {
         }, 2000);
     }
 }
+
+function handlePersephone(enemy) {
+    enemy.animations.play('persephoneidle');
+    var random = Math.random() * 5
+    if (random < 2) {
+        whale_2.play();
+    }
+    if (enemy.shield == false) {
+        enemy.currentRadius = enemy.currentRadius - enemy.rate;
+        enemy.body.setCircle(enemy.currentRadius);
+        enemy.body.setCollisionGroup(enemyCollisionGroup);
+        var lowerBound = enemy.width / 2 - enemy.width * 0.1 + 5;
+        var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
+        if (enemy.currentRadius <= lowerBound) {
+            enemy.currentRadius = enemy.width;
+        }
+
+        if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
+            enemy.body.isVulnerable = true;
+        } else {
+            enemy.body.isVulnerable = false;
+        }
+    } else {
+        enemy.currentRadius = enemy.width;
+        enemy.body.isVulnerable = false;
+    }
+
+    enemy.body.rotation = game.physics.arcade.angleBetween(enemy, player) + game.math.degToRad(-90);;
+    game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 50);
+    if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 200) {
+        if (enemy.ramAttack == false) {
+            currentrotation = enemy.body.rotation;
+            enemy.ramAttack = true;
+        } else {
+            enemy.body.velocity.x = 500 * Math.cos(currentrotation);
+            enemy.body.velocity.y = 500 * Math.sin(currentrotation);
+            angle = game.physics.arcade.angleBetween(enemy, player);
+            var bubblebullet = enemy.bullets.getFirstExists(false);
+            if (bubblebullet) {
+                whale_shoot.play();
+                game.physics.p2.enable(bubblebullet, true);
+                bubblebullet.enemyType = "enemyBullet";
+                bubblebullet.body.fixedRotation = true;
+                bubblebullet.lifespan = 2000;
+                bubblebullet.reset(enemy.x, enemy.y);
+                bubblebullet.rotation = angle + game.math.degToRad(-90);;
+                bubblebullet.body.velocity.x = 400 * Math.cos(angle);
+                bubblebullet.body.velocity.y = 400 * Math.sin(angle);
+                bubblebullet.isVulnerable = true;
+                bubblebullet.body.setCircle(10)
+                bubblebullet.body.setCollisionGroup(enemybulletCollisionGroup);
+                bubblebullet.body.collides([borderCollisionGroup])
+                bubblebullet.body.collides(swordCollisionGroup, parryBullets, this);
+                bubblebullet.body.collides(playerCollisionGroup, takeBulletDamage, this);
+                bubblebullet.body.collides(bulletCollisionGroup, destroyBullets, this);
+            }
+        }
+    } else {
+        game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 300);
+        enemy.ramAttack = false;
+    }
+    if (enemy.phase1 == false && enemy.health < 15) {
+        spawnTowers(8, 'bubbleTower');
+        enemy.phase1 = true;
+    }
+    if (enemy.phase2 == false && enemy.health < 10) {
+        spawnSlimes(8, 'blueSlime');
+        enemy.phase2 = true;
+    }
+    if (enemy.phase3 == false && enemy.health < 5) {
+        spawnTenctales(6);
+        player.tentaclecount = 6;
+        enemy.shield = true;
+        enemy.phase3 = true;
+    }
+    if (player.tentaclecount == 0) {
+        enemy.shield = false;
+    } else if (enemy.enemyType == "tentacles") {
+        enemy.animations.play('tentacleidle');
+        enemy.currentRadius = enemy.currentRadius - enemy.rate;
+        enemy.body.setCircle(enemy.currentRadius);
+        enemy.body.setCollisionGroup(enemyCollisionGroup);
+        enemy.body.collides([enemyCollisionGroup, swordCollisionGroup, borderCollisionGroup]);
+        var lowerBound = enemy.width / 2 - enemy.width * 0.1 + 5;
+        var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
+        if (enemy.currentRadius <= lowerBound) {
+            enemy.currentRadius = enemy.width;
+        }
+
+        if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
+            enemy.body.isVulnerable = true;
+        } else {
+            enemy.body.isVulnerable = false;
+        }
+    }
+}
+

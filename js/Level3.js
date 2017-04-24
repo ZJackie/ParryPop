@@ -96,7 +96,7 @@ Level3.prototype = {
 
     update: function() {
         handleUpdate();
-        endGame("level3");
+        endGame("Level3");
     },
 
 };
