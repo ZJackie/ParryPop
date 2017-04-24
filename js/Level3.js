@@ -25,6 +25,7 @@ Level3 = function() {};
 Level3.prototype = {
 
     create: function() {
+        initAudio();
         invulnerability = false;
         //disable right click menu
         game.canvas.oncontextmenu = function(e) {
@@ -74,7 +75,9 @@ Level3.prototype = {
             'A': Phaser.KeyCode.A,
             'S': Phaser.KeyCode.S,
             'D': Phaser.KeyCode.D,
-            'R': Phaser.KeyCode.R
+            'R': Phaser.KeyCode.R, 
+            'I': Phaser.KeyCode.I,
+            'K': Phaser.KeyCode.K
         });
         //bullets
         bullets = game.add.group();
