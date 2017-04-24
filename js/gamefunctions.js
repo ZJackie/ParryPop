@@ -367,6 +367,9 @@ function handleEnemyMovements() {
                 enemy.body.isVulnerable = true;
             } else {
                 enemy.body.isVulnerable = false;
+                if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 500) {
+                    fireEnemyBullet(enemy);
+                }
             }
         } else if (enemy.enemyType == "cerberus") {
             handleCerberus(enemy);
@@ -949,15 +952,6 @@ function handlePersephone(enemy) {
         var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
         if (enemy.currentRadius <= lowerBound) {
             enemy.currentRadius = enemy.width;
-        }
-
-        if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
-            enemy.body.isVulnerable = true;
-        } else {
-            enemy.body.isVulnerable = false;
-            if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 500) {
-                fireEnemyBullet(enemy);
-            }
         }
     }
 }
