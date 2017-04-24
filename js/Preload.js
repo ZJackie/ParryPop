@@ -33,6 +33,8 @@ Preload.prototype = {
         game.load.spritesheet('blueSlime', 'assets/other_sprites/blue_slime.png', 32, 32);
         game.load.spritesheet('bubbleTower', 'assets/other_sprites/bubble_tower.png', 64, 64);
         game.load.image('bubblebullet', 'assets/other_sprites/bubbleBullet.png');
+        game.load.spritesheet('persephone', 'assets/other_sprites/whale.png', 128,128);
+        game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32,32);
         //level 3
 
     },

@@ -54,6 +54,7 @@ Level2.prototype = {
 
         //enemies
         initEnemies('blueSlime','bubbleTower');
+        //spawnPersephone();
         initPlayer();
 
         //border
@@ -96,6 +97,7 @@ Level2.prototype = {
 
     update: function() {
       handleUpdate();
+      endGame("level2");
   },
 
 };

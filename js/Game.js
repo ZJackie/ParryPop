@@ -97,6 +97,7 @@ Game.prototype = {
 
     update: function() {
         handleUpdate();
+        endGame("level1");
     },
 
 };
