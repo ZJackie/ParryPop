@@ -424,6 +424,9 @@ function spawnTowers(NumberOfTowers, towerName) {
             case 'fireballTower':
                 towers.bullets.createMultiple(5, 'fireBullet');
                 break;
+            case 'voidTower':
+                towers.bullets.createMultiple(5, 'voidBullet');
+                break;
             default:
         }
 
