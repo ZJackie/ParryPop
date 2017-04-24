@@ -256,6 +256,10 @@ function killEnemies(body1, body2) {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
             }
+            if (body1.sprite.enemy == "hades") {
+                player.bossAlive = false;
+                body1.sprite.healthbar.kill();
+            }
             body1.sprite.destroy();
         } else {
             body1.sprite.health--;
@@ -266,6 +270,10 @@ function killEnemies(body1, body2) {
                 whale_hurt.play();
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 500;
             } else if (body1.sprite.enemyType == "cerberus") {
+                //cerberus hurt sound
+                body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 500;
+            } else if (body1.sprite.enemyType == "hades") {
+                //hades hurt sound
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 500;
             }
         }
@@ -278,7 +286,6 @@ function killEnemies(body1, body2) {
                     break;
                 case "Level2":
                     slime_2.play();
-
                     break;
                 case "Level3":
                     slime_3.play();
@@ -362,7 +369,6 @@ function handleEnemyMovements() {
             if (enemy.currentRadius <= lowerBound) {
                 enemy.currentRadius = enemy.width;
             }
-
             if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
                 enemy.body.isVulnerable = true;
             } else {
@@ -380,7 +386,6 @@ function handleEnemyMovements() {
         }
     }, this);
 }
-
 
 function spawnTowers(NumberOfTowers, towerName) {
     for (var i = 0; i < NumberOfTowers; i++) {

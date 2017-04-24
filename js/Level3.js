@@ -54,7 +54,7 @@ Level3.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('voidSlime','voidTower', 10, 5);
+        initEnemies('glitchSlime','voidTower', 10, 5);
         initPlayer();
 
         //border

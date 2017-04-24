@@ -35,12 +35,13 @@ Preload.prototype = {
         game.load.image('bubblebullet', 'assets/other_sprites/bubbleBullet.png');
         game.load.spritesheet('persephone', 'assets/other_sprites/whale.png', 128, 128);
         game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32, 32);
+        
         //level 3
         game.load.spritesheet('hades', 'assets/other_sprites/hades.png', 64,64);
         game.load.spritesheet('voidTower', 'assets/other_sprites/void_tower.png', 64, 64);
         game.load.spritesheet('glitchSlime', 'assets/other_sprites/glitch_slime.png', 32, 32);
         game.load.image('voidbullet', 'assets/other_sprites/voidBullet.png');
-
+        
         //Sounds
         game.load.audio('button', 'assets/sounds/button.wav');
         game.load.audio('pandora_damaged', 'assets/sounds/pandora_damaged.wav');
