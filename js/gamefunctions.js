@@ -309,6 +309,7 @@ function handleEnemyMovements() {
             if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 80) {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
             }
+        }
             else if(enemy.enemyType == "tower"){
              enemy.animations.play('toweridle', 10);
              enemy.currentRadius = enemy.currentRadius - enemy.rate;
@@ -326,7 +327,7 @@ function handleEnemyMovements() {
                 enemy.body.isVulnerable = false;
             }
             if(game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 500){
-             fireBubbleBullet(enemy);
+             fireEnemyBullet(enemy);
          }
      }
      else if (enemy.enemyType == "persephone"){
@@ -422,7 +423,6 @@ function handleEnemyMovements() {
             } else {
                 enemy.body.isVulnerable = false;
             }
-        }
         }
  }, this);
 }
