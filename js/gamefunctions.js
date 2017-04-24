@@ -66,6 +66,121 @@ function initEnemies(slimeName, towerName, numSlimes, numTowers) {
 
 }
 
+<<<<<<< HEAD
+=======
+function spawnPersephone() {
+    enemies = game.add.group();
+    enemies.physicsBodyType = Phaser.Physics.P2JS;
+
+    var persephone = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), 'persephone');
+    var arr = [];
+    for (var j = 0; j < 4; j++) {
+        arr.push(j);
+    }
+    persephone.mass = 20;
+    persephone.maxhealth = 20;
+    persephone.health = 20;
+
+    healthbar = game.add.sprite(300, 30, 'healthbar');
+    healthbar.height = 10;
+    healthbar.width = (persephone.health / persephone.maxhealth) * 500;
+    healthbar.fixedToCamera = true;
+    persephone.shield = false;
+    persephone.healthbar = healthbar;
+    persephone.animations.add('persephoneidle', arr, 12, true);
+    persephone.currentRadius = persephone.width;
+    game.physics.p2.enable(persephone, true);
+    persephone.body.setCircle(60);
+    persephone.body.setCollisionGroup(enemyCollisionGroup);
+    persephone.body.collides(swordCollisionGroup, smackEnemies, this);
+    persephone.body.collides(playerCollisionGroup, takeDamage, this);
+    persephone.body.collides(bulletCollisionGroup, killEnemies, this);
+    persephone.body.collides(borderCollisionGroup);
+    persephone.body.collides(playerCollisionGroup);
+    persephone.enemyType = "persephone";
+    persephone.rate = 0.5;
+    persephone.body.static = true;
+
+    //bullets
+    persephone.bullets = game.add.group();
+    persephone.bullets.enableBody = true;
+    persephone.bullets.physicsBodyType = Phaser.Physics.P2JS;
+    persephone.bullets.createMultiple(5, 'bubblebullet');
+    persephone.bullets.setAll('checkWorldBounds', true);
+    persephone.bullets.setAll('outOfBoundsKill', true);
+    persephone.bullets.setAll('anchor.x', 0.5);
+    persephone.bullets.setAll('anchor.y', 0.5);
+
+    //attacks
+    persephone.ramAttack = false;
+    persephone.invulnerability = false;
+    persephone.phase1 = false;
+    persephone.phase2 = false;
+    persephone.phase3 = false;
+}
+
+function spawnHades(){
+    enemies = game.add.group();
+    enemies.physicsBodyType = Phaser.Physics.P2JS;
+
+    var hades = enemies.create(game.world.centerX, game.world.centerY, 'hades');
+    var arr = [];
+    for (var j = 0; j < 3; j++) {
+        arr.push(j);
+    }
+    hades.mass = 20;
+    hades.maxhealth = 20;
+    hades.health = 20;
+
+    healthbar = game.add.sprite(300, 30, 'healthbar');
+    healthbar.height = 10;
+    healthbar.width = (hades.health / hades.maxhealth) * 500;
+    healthbar.fixedToCamera = true;
+    hades.shield = false;
+    hades.healthbar = healthbar;
+    hades.animations.add('hadesidle', arr, 12, true);
+    arr = [];
+    for (var j = 3; j < 6; j++) {
+        arr.push(j);
+    }
+    hades.animations.add('hades_open', arr, 12, true);
+    arr = [];
+    for (var j = 7; j < 20; j++) {
+        arr.push(j);
+    }
+    hades.animations.add('hades_tp', arr, 12, true);
+    hades.currentRadius = hades.width;
+    game.physics.p2.enable(hades, true);
+    hades.body.setCircle(60);
+    hades.body.setCollisionGroup(enemyCollisionGroup);
+    hades.body.collides(swordCollisionGroup, smackEnemies, this);
+    hades.body.collides(playerCollisionGroup, takeDamage, this);
+    hades.body.collides(bulletCollisionGroup, killEnemies, this);
+    hades.body.collides(borderCollisionGroup);
+    hades.body.collides(playerCollisionGroup);
+    hades.enemyType = "hades";
+    hades.rate = 0.5;
+    hades.body.static = true;
+
+    //bullets
+    hades.bullets = game.add.group();
+    hades.bullets.enableBody = true;
+    hades.bullets.physicsBodyType = Phaser.Physics.P2JS;
+    hades.bullets.createMultiple(5, 'voidbullet');
+    hades.bullets.setAll('checkWorldBounds', true);
+    hades.bullets.setAll('outOfBoundsKill', true);
+    hades.bullets.setAll('anchor.x', 0.5);
+    hades.bullets.setAll('anchor.y', 0.5);
+
+     //attacks
+    hades.ramAttack = false;
+    hades.invulnerability = false;
+    hades.phase1 = false;
+    hades.phase2 = false;
+    hades.phase3 = false;
+}
+
+>>>>>>> 7f9292418a021998e9b267bad314a3dcc869e25c
 function killEnemies(body1, body2) {
     body2.sprite.kill();
     if (body1.isVulnerable == true) {
@@ -600,6 +715,25 @@ function endGame(level) {
             player.bossAlive = true;
         }
         if (player.bossAlive == false) {
+            setTimeout(function() {
+                game.state.start('MainMenu');
+            }, 2000);
+        }
+    }
+    else if(level == "level3"){
+        if (enemies.length == 0) {
+            console.log(enemies.length);
+            spawnHades();
+            resetHealth();
+            player.bossAlive = true;
+        }
+        if (player.bossAlive == false) {
+            setTimeout(function() {
+                game.state.start('MainMenu');
+            }, 2000);
+        }
+    } else {
+        if (enemies.length == 0) {
             setTimeout(function() {
                 game.state.start('MainMenu');
             }, 2000);

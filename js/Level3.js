@@ -31,9 +31,9 @@ Level3.prototype = {
             e.preventDefault();
         }
 
-        var map = game.add.tilemap('Map');
+        var map = game.add.tilemap('persephoneMap');
         //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
-        map.addTilesetImage('Water', 'gameTiles');
+        map.addTilesetImage('Water', 'persephoneGameTiles');
         //Create Layers
         var backgroundlayer = map.createLayer('Background');
         backgroundlayer.resizeWorld();
@@ -53,7 +53,7 @@ Level3.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies();
+        initEnemies('voidSlime','voidTower', 10, 5);
         initPlayer();
 
         //border
@@ -96,6 +96,7 @@ Level3.prototype = {
 
     update: function() {
         handleUpdate();
+        endGame("level3");
     },
 
 };
