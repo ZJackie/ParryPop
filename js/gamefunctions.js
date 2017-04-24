@@ -118,7 +118,7 @@ function spawnPersephone() {
     persephone.phase3 = false;
 }
 
-function spawnHades(){
+function spawnHades() {
     enemies = game.add.group();
     enemies.physicsBodyType = Phaser.Physics.P2JS;
 
@@ -172,13 +172,13 @@ function spawnHades(){
     hades.bullets.setAll('anchor.x', 0.5);
     hades.bullets.setAll('anchor.y', 0.5);
 
-     //attacks
-     hades.ramAttack = false;
-     hades.invulnerability = false;
-     hades.phase1 = false;
-     hades.phase2 = false;
-     hades.phase3 = false;
- }
+    //attacks
+    hades.ramAttack = false;
+    hades.invulnerability = false;
+    hades.phase1 = false;
+    hades.phase2 = false;
+    hades.phase3 = false;
+}
 
 function spawnCerberus(){
         enemies = game.add.group();
@@ -229,7 +229,7 @@ function spawnCerberus(){
         cerberus.phase3 = false;
     }
 
- function killEnemies(body1, body2) {
+function killEnemies(body1, body2) {
     body2.sprite.kill();
     if (body1.isVulnerable == true) {
         if (player.ultimate < 10) {
@@ -275,15 +275,15 @@ function spawnCerberus(){
         if (body1.sprite.enemyType == "slime") {
             switch (currentGameState) {
                 case "Game":
-                slime_1.play();
-                break;
+                    slime_1.play();
+                    break;
                 case "Level2":
-                slime_2.play();
+                    slime_2.play();
 
-                break;
+                    break;
                 case "Level3":
-                slime_3.play();
-                break;
+                    slime_3.play();
+                    break;
                 default:
             }
         }
@@ -489,11 +489,11 @@ function spawnTowers(NumberOfTowers, towerName) {
         towers.bullets.physicsBodyType = Phaser.Physics.P2JS;
         switch (towerName) {
             case 'bubbleTower':
-            towers.bullets.createMultiple(5, 'bubblebullet');
-            break;
+                towers.bullets.createMultiple(5, 'bubblebullet');
+                break;
             case 'fireballTower':
-            towers.bullets.createMultiple(5, 'fireBullet');
-            break;
+                towers.bullets.createMultiple(5, 'fireBullet');
+                break;
             default:
         }
 
@@ -574,17 +574,17 @@ function fireEnemyBullet(enemy) {
         var random = Math.random();
         switch (currentGameState) {
             case "Game":
-            if (random > 0.5) {
-                fire_tower.play();
-            } else {
-                fire_tower_2.play();
-            }
-            break;
+                if (random > 0.5) {
+                    fire_tower.play();
+                } else {
+                    fire_tower_2.play();
+                }
+                break;
             case "Level2":
-            water_tower.play();
-            break;
+                water_tower.play();
+                break;
             case "Level3":
-            break;
+                break;
             default:
         }
         game.physics.p2.enable(enemyBullet, true);
@@ -648,73 +648,73 @@ function takeDamage(body1, body2) {
 function takeBulletDamage(body1, body2) {
     body1.sprite.kill()
         // decrement health, handle heart graphic in update
-        if (player.health > 0) {
-            if (invulnerability == false) {
-                hearts.children[player.health - 1].kill();
-                player.health--;
-                pandora_damaged.play();
-                invulnerability = true;
-                game.time.events.add(500, removeInvulnerability, this);
-            }
-        }
-
-        function removeInvulnerability() {
-            invulnerability = false;
-        }
-    }
-
-    function ultimateReady() {
-        var handle;
-        var handle2;
-        if (player.ultimate == 10) {
-            handle = setInterval(function() {
-                ultimateBarInvert.bringToTop();
-                if (player.ultimate != 10) {
-                    clearInterval(handle);
-                    handle = 0;
-                }
-            }, 20);
-            handle2 = setInterval(function() {
-                player.ultimateBar.bringToTop();
-                if (player.ultimate != 10) {
-                    clearInterval(handle2);
-                    handle2 = 0;
-                }
-            }, 50);
-        }
-    }
-
-    function useUltimate() {
-        if (player.ultimate == 10) {
+    if (player.health > 0) {
+        if (invulnerability == false) {
+            hearts.children[player.health - 1].kill();
+            player.health--;
+            pandora_damaged.play();
             invulnerability = true;
-            player.ultimate = 0;
-            player.ultimateBar.width = (player.ultimate / 10) * 100;
-            player.body.setCircle(200);
-            player.body.setCollisionGroup(playerCollisionGroup);
             game.time.events.add(500, removeInvulnerability, this);
-        } else {
-            console.log("Not enough energy");
-        }
-
-        function removeInvulnerability() {
-            player.body.setCircle(20);
-            player.body.setCollisionGroup(playerCollisionGroup);
-            invulnerability = false;
         }
     }
 
-    function resetHealth() {
-        player.health = 10;
-        hearts.removeAll();
-        for (var i = 0; i < player.health; i++) {
-            var heart = hearts.create(i * 30, 0, 'heart');
-            heart.fixedToCamera = true;
-        }
+    function removeInvulnerability() {
+        invulnerability = false;
+    }
+}
+
+function ultimateReady() {
+    var handle;
+    var handle2;
+    if (player.ultimate == 10) {
+        handle = setInterval(function() {
+            ultimateBarInvert.bringToTop();
+            if (player.ultimate != 10) {
+                clearInterval(handle);
+                handle = 0;
+            }
+        }, 20);
+        handle2 = setInterval(function() {
+            player.ultimateBar.bringToTop();
+            if (player.ultimate != 10) {
+                clearInterval(handle2);
+                handle2 = 0;
+            }
+        }, 50);
+    }
+}
+
+function useUltimate() {
+    if (player.ultimate == 10) {
+        invulnerability = true;
+        player.ultimate = 0;
+        player.ultimateBar.width = (player.ultimate / 10) * 100;
+        player.body.setCircle(200);
+        player.body.setCollisionGroup(playerCollisionGroup);
+        game.time.events.add(500, removeInvulnerability, this);
+    } else {
+        console.log("Not enough energy");
     }
 
-    function handleUpdate() {
-        ultimateReady();
-        if (player.dead == 0) {
+    function removeInvulnerability() {
+        player.body.setCircle(20);
+        player.body.setCollisionGroup(playerCollisionGroup);
+        invulnerability = false;
+    }
+}
+
+function resetHealth() {
+    player.health = 10;
+    hearts.removeAll();
+    for (var i = 0; i < player.health; i++) {
+        var heart = hearts.create(i * 30, 0, 'heart');
+        heart.fixedToCamera = true;
+    }
+}
+
+function handleUpdate() {
+    ultimateReady();
+    if (player.dead == 0) {
         //player movement
         pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
         player.body.rotation = pointerangle;
@@ -856,8 +856,7 @@ if(level == "Level1"){
                 game.state.start('MainMenu');
             }, 2000);
         }
-    }
-    else if(level == "Level3"){
+    } else if (level == "Level3") {
         if (enemies.length == 0) {
             console.log(enemies.length);
             spawnHades();
@@ -889,9 +888,9 @@ if(level == "Level1"){
 }
 
 function handlePersephone(enemy) {
-    if(enemy.enemyType == "persephone"){
+    if (enemy.enemyType == "persephone") {
         enemy.animations.play('persephoneidle');
-        var random = Math.random() * 5
+        var random = Math.random() * 5;
         if (random < 2) {
             whale_2.play();
         }
@@ -965,9 +964,8 @@ function handlePersephone(enemy) {
         }
         if (player.tentaclecount == 0) {
             enemy.shield = false;
-        } 
-    }
-    else if (enemy.enemyType == "tentacles") {
+        }
+    } else if (enemy.enemyType == "tentacles") {
         enemy.animations.play('tentacleidle');
         enemy.currentRadius = enemy.currentRadius - enemy.rate;
         enemy.body.setCircle(enemy.currentRadius);
@@ -986,4 +984,3 @@ function handlePersephone(enemy) {
         }
     }
 }
-
