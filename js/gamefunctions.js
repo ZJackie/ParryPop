@@ -327,11 +327,20 @@ function ultimateReady() {
 
 function useUltimate() {
     if(player.ultimate == 10){
+        invulnerability = true;
         player.ultimate = 0;
         player.ultimateBar.width = (player.ultimate / 10) * 100;
+        player.body.setCircle(200);
+        player.body.setCollisionGroup(playerCollisionGroup);
+        game.time.events.add(500, removeInvulnerability, this);
     }
     else {
         console.log("Not enough energy");
+    }
+    function removeInvulnerability() {
+        player.body.setCircle(20);
+        player.body.setCollisionGroup(playerCollisionGroup);
+        invulnerability = false;
     }
 }
 
