@@ -100,7 +100,7 @@ Level2.prototype = {
 
     update: function() {
       handleUpdate();
-      endGame("level2");
+      endGame("Level2");
   },
 
 };
