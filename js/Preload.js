@@ -15,6 +15,8 @@ Preload.prototype = {
         game.load.image('bullet', 'assets/other_sprites/bullet.png');
         game.load.image('heart', 'assets/other_sprites/heart.png');
         game.load.image('healthbar', 'assets/other_sprites/healthbar.png');
+        game.load.image('ultimatebar', 'assets/other_sprites/ultimatebar.png');
+        game.load.image('ultimatebarInvert', 'assets/other_sprites/ultimatebarinvert.png');
         game.load.physics('data', 'assets/data.json');
         //level 1
         game.load.tilemap('cerberusMap', 'assets/Levels/Lava.json', null, Phaser.Tilemap.TILED_JSON);

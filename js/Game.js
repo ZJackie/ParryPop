@@ -31,7 +31,7 @@ Game.prototype = {
             e.preventDefault();
         }
 
-       
+
         var map = game.add.tilemap('cerberusMap');
         //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
         map.addTilesetImage('Lava', 'cerberusGameTiles');
@@ -74,7 +74,8 @@ Game.prototype = {
             'W': Phaser.KeyCode.W,
             'A': Phaser.KeyCode.A,
             'S': Phaser.KeyCode.S,
-            'D': Phaser.KeyCode.D
+            'D': Phaser.KeyCode.D,
+            'R': Phaser.KeyCode.R
         });
         //bullets
         bullets = game.add.group();
