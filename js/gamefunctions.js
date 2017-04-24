@@ -1,17 +1,39 @@
-function initEnemies() {
+function initPlayer(){
+        //Add my Robot player
+        player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
+
+        player.animations.add('idle', [0, 1, 2, 3, 4], 10, true);
+        player.animations.add('walk', [5, 6, 7, 8, 9], 10, false);
+        player.animations.add('attack', [10, 11, 12, 13, 14], 10, false);
+        player.animations.add('attackwalk', [15, 16, 17, 18, 19], 10, false);
+        player.animations.add('shoot', [20, 21, 22, 23, 24], 10, false);
+        player.animations.add('shootwalk', [25, 26, 27, 28, 29], 10, false);
+        player.animations.add('death', [30, 31, 32, 33, 34], 10, false);
+
+        player.dead = 0;
+
+        game.physics.p2.enable(player, true);
+        player.body.setCircle(20);
+        player.health = 10;
+        player.body.setCollisionGroup(playerCollisionGroup);
+        //the camera will follow the player in the world
+        game.camera.follow(player);
+}
+
+function initEnemies(slimeName, towerName) {
     enemies = game.add.group();
     //enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.P2JS;
 
     for(var i = 0; i < 15; i++){
-        var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'blueSlime');
+        var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), slimeName);
         var arr = [];
         for (var j = 0; j < 22; j++) {
             arr.push(j);
         }
         slime.mass = 5;
         slime.health = 1;
-        slime.animations.add('blueSlimeIdle', arr, 12, true);
+        slime.animations.add('slimeIdle', arr, 12, true);
         slime.currentRadius = slime.width;
         game.physics.p2.enable(slime, true);
         slime.body.setCircle(30);
@@ -40,7 +62,7 @@ function initEnemies() {
     }
 
     for(var i = 0; i < 5; i++){
-        var towers = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), 'bubbleTower');
+        var towers = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), towerName);
         var arr = [];
         for (var j = 0; j < 17; j++) {
             arr.push(j);
@@ -51,7 +73,7 @@ function initEnemies() {
         healthbar.width = (towers.health / 3) * 50;
         towers.healthbar = healthbar;
         towers.enemyType = "tower";
-        towers.animations.add('bubbleToweridle', arr, 12, true);
+        towers.animations.add('toweridle', arr, 12, true);
         towers.currentRadius = towers.width;
         game.physics.p2.enable(towers, true);
         towers.body.static = true;
@@ -134,7 +156,7 @@ function handleEnemies(){
 function handleEnemyMovements() {
     enemies.forEach(function(enemy) {
         if(enemy.enemyType == "slime"){
-        enemy.animations.play('blueSlimeIdle');
+        enemy.animations.play('slimeIdle');
         enemy.currentRadius = enemy.currentRadius - enemy.rate;
         enemy.body.setCircle(enemy.currentRadius);
         enemy.body.setCollisionGroup(enemyCollisionGroup);
@@ -154,7 +176,7 @@ function handleEnemyMovements() {
             game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);}
         }
         else if(enemy.enemyType == "tower"){
-             enemy.animations.play('bubbleToweridle', 10);
+             enemy.animations.play('toweridle', 10);
              enemy.currentRadius = enemy.currentRadius - enemy.rate;
              enemy.body.setCircle(enemy.currentRadius);
              enemy.body.setCollisionGroup(enemyCollisionGroup);
@@ -247,5 +269,117 @@ function takeBulletDamage(body1,body2) {
 
     function removeInvulnerability() {
         invulnerability = false;
+    }
+}
+
+function handleUpdate(){
+    if(player.dead == 0)
+        {
+        //player movement
+        pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
+        player.body.rotation = pointerangle;
+        player.body.setZeroVelocity();
+        if (cursors.W.isDown) {
+            player.body.moveUp(300);
+            if (game.input.mousePointer.leftButton.isDown) {
+                player.animations.play('shootwalk', false);
+            } else if (game.input.mousePointer.rightButton.isDown) {
+                player.animations.play('attackwalk', false);
+            } else {
+                player.animations.play('walk', false);
+            }
+        } else if (cursors.S.isDown) {
+            player.body.moveDown(300);
+            if (game.input.mousePointer.leftButton.isDown) {
+                player.animations.play('shootwalk', false);
+            } else if (game.input.mousePointer.rightButton.isDown) {
+                player.animations.play('attackwalk', false);
+            } else {
+                player.animations.play('walk', false);
+            }
+        }
+        if (cursors.A.isDown) {
+            player.body.moveLeft(300);
+            if (game.input.mousePointer.leftButton.isDown) {
+                player.animations.play('shootwalk', false);
+            } else if (game.input.mousePointer.rightButton.isDown) {
+                player.animations.play('attackwalk', false);
+            } else {
+                player.animations.play('walk', false);
+            }
+        } else if (cursors.D.isDown) {
+            player.body.moveRight(300);
+            if (game.input.mousePointer.leftButton.isDown) {
+                player.animations.play('shootwalk', false);
+            } else if (game.input.mousePointer.rightButton.isDown) {
+                player.animations.play('attackwalk', false);
+            } else {
+                player.animations.play('walk', false);
+            }
+        }
+        if (game.input.mousePointer.leftButton.isDown) {
+            if (game.time.now > nextFire && bullets.countDead() > 0) {
+                nextFire = game.time.now + fireRate;
+                var point1 = new Phaser.Point(player.body.x, player.body.y);
+                var point2 = new Phaser.Point(player.body.x + 13, player.body.y - 40);
+                point2.rotate(point1.x, point1.y, pointerangle + game.math.degToRad(180), false);
+                var bullet = bullets.getFirstExists(false);
+                if (bullet) {
+                    game.physics.p2.enable(bullet, true);
+                    bullet.body.fixedRotation = true;
+                    bullet.lifespan = 2000;
+                    bullet.reset(point2.x, point2.y);
+                    bullet.rotation = pointerangle;
+                    bullet.body.velocity.x = bulletspeed * Math.cos(pointerangle + game.math.degToRad(-270));
+                    bullet.body.velocity.y = bulletspeed * Math.sin(pointerangle + game.math.degToRad(-270));
+                    bullet.body.mass = 0.1;
+                    bullet.body.setCircle(10)
+                    bullet.body.setCollisionGroup(bulletCollisionGroup);
+                    bullet.body.collides([enemyCollisionGroup, borderCollisionGroup, swordCollisionGroup,enemybulletCollisionGroup])
+                    player.animations.play('shoot', false);
+                    //bullet.body.collides(enemyCollisionGroup, killEnemies, this);
+                    //game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
+                }
+            }
+        }
+        if (game.input.mousePointer.rightButton.isDown) {
+            if (game.time.now > nextSwing) {
+                nextSwing = game.time.now + swingRate;
+                if (swung == false) {
+                    shield = 2;
+                    player.body.addShape(swordhitbox, 0, 20);
+                    player.body.setCollisionGroup(swordCollisionGroup, swordhitbox)
+                    swung = true;
+                    player.animations.play('attack', true)
+                }
+            }
+        } else {
+            player.animations.play('walk', true)
+            if (game.time.now > nextSwing - 500) {
+                if (swung == true) {
+                    shield = 0;
+                    player.body.removeShape(swordhitbox);
+                    swung = false;
+                }
+            }
+        }
+        //handle enemies
+        handleEnemies();
+      }
+        if(enemies.length == 0){
+            setTimeout(function() {
+            game.state.start('MainMenu');
+        }, 2000);
+        }
+
+
+        if (player.health <= 0 && player.dead == 0) {
+            player.animations.play('death');
+            player.body.clearShapes();
+            player.dead = 1;
+
+            setTimeout(function() {
+            game.state.start('MainMenu');
+        }, 2000);
     }
 }
