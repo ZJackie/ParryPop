@@ -3,7 +3,7 @@ Boot = function() {};
 
 Boot.prototype = {
     preload: function() {
-      this.load.image('splash', 'assets/splash.png');
+      this.load.image('splash', 'assets/UI/splash.png');
     },
     create: function() {
         this.game.stage.backgroundColor = '#fff';

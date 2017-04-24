@@ -33,7 +33,7 @@ Level2.prototype = {
 
         var map = game.add.tilemap('persephoneMap');
         //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
-        map.addTilesetImage('Lava', 'cerberusGameTiles');
+        map.addTilesetImage('Water', 'persephoneGameTiles');
         //Create Layers
         var backgroundlayer = map.createLayer('Background');
         backgroundlayer.resizeWorld();
