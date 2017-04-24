@@ -370,6 +370,9 @@ function handleEnemyMovements() {
             } else {
                 enemy.body.isVulnerable = false;
             }
+            if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 500) {
+                fireEnemyBullet(enemy);
+            }
         }
      else if (enemy.enemyType == "cerberus"){
             enemy.animations.play('cerberusidle');
@@ -444,9 +447,6 @@ function handleEnemyMovements() {
             } 
             else {
                 enemy.body.isVulnerable = false;
-            if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 500) {
-                fireEnemyBullet(enemy);
-            }
             }
         } 
         else if (enemy.enemyType == "persephone") {
