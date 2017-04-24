@@ -25,6 +25,7 @@ Level3 = function() {};
 Level3.prototype = {
 
     create: function() {
+        initAudio();
         invulnerability = false;
         //disable right click menu
         game.canvas.oncontextmenu = function(e) {
