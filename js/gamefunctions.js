@@ -59,7 +59,7 @@ function initEnemies(slimeName, towerName) {
     //enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.P2JS;
 
-    for(var i = 0; i < 10; i++){
+    for(var i = 0; i < 1; i++){
         var slime = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), slimeName);
         var arr = [];
         for (var j = 0; j < 22; j++) {
@@ -92,7 +92,7 @@ function initEnemies(slimeName, towerName) {
         //slime.body.static = true;
     }
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 1; i++) {
         var towers = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), towerName);
         var arr = [];
         for (var j = 0; j < 17; j++) {
@@ -190,6 +190,56 @@ function initEnemies(slimeName, towerName) {
         persephone.phase3 = false;
     }
 
+
+        function spawnCerberus(){
+        enemies = game.add.group();
+        enemies.physicsBodyType = Phaser.Physics.P2JS;
+
+        var cerberus = enemies.create(game.world.centerX, game.world.centerY, 'cerberus');
+        var arr = [];
+        for (var j = 0; j < 6; j++) {
+            arr.push(j);
+        }
+        cerberus.mass  = 20;
+        cerberus.maxhealth = 20;
+        cerberus.health = 20;
+
+        healthbar = game.add.sprite(300,30,'healthbar');
+        healthbar.height = 10;
+        healthbar.width = (cerberus.health / cerberus.maxhealth) * 500;
+        healthbar.fixedToCamera = true;
+
+        cerberus.healthbar = healthbar;
+        cerberus.animations.add('cerberusidle', arr, 12, true);
+        cerberus.currentRadius = cerberus.width;
+        game.physics.p2.enable(cerberus, true);
+        cerberus.body.setCircle(60);
+        cerberus.body.setCollisionGroup(enemyCollisionGroup);
+        cerberus.body.collides(swordCollisionGroup, smackEnemies, this);
+        cerberus.body.collides(playerCollisionGroup, takeDamage, this);
+        cerberus.body.collides(bulletCollisionGroup, killEnemies, this);
+        cerberus.body.collides(borderCollisionGroup);
+        cerberus.body.collides(playerCollisionGroup);
+        cerberus.enemyType = "cerberus";
+        cerberus.rate = 0.5;
+        cerberus.body.static = true;
+
+        //bullets
+        cerberus.bullets = game.add.group();
+        cerberus.bullets.enableBody = true;
+        cerberus.bullets.physicsBodyType = Phaser.Physics.P2JS;
+        cerberus.bullets.createMultiple(5, 'fireBullet');
+        cerberus.bullets.setAll('checkWorldBounds', true);
+        cerberus.bullets.setAll('outOfBoundsKill', true);
+        cerberus.bullets.setAll('anchor.x', 0.5);
+        cerberus.bullets.setAll('anchor.y', 0.5);
+
+        //attacks
+        cerberus.phase1 = false;
+        cerberus.phase2 = false;
+        cerberus.phase3 = false;
+    }
+
 function killEnemies(body1, body2) {
     body2.sprite.kill();
     if (body1.isVulnerable == true) {
@@ -213,6 +263,10 @@ function killEnemies(body1, body2) {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
             }
+            if(body1.sprite.enemyType == "cerberus"){
+                player.bossAlive = false;
+                body1.sprite.healthbar.kill();
+            }
             body1.sprite.destroy();
         }
         else {
@@ -222,6 +276,9 @@ function killEnemies(body1, body2) {
             tower_damaged.play();
         }
             else if(body1.sprite.enemyType == "persephone"){
+                body1.sprite.healthbar.width = (body1.sprite.health /  body1.sprite.maxhealth) * 500;
+            }
+            else if(body1.sprite.enemyType == "cerberus"){
                 body1.sprite.healthbar.width = (body1.sprite.health /  body1.sprite.maxhealth) * 500;
             }
         }
@@ -404,6 +461,62 @@ function handleEnemyMovements() {
             }
             if(player.tentaclecount == 0){
                enemy.shield = false;
+            }
+     }
+     else if (enemy.enemyType == "cerberus"){
+            enemy.animations.play('cerberusidle');
+            enemy.currentRadius = enemy.currentRadius - enemy.rate;
+            enemy.body.setCircle(enemy.currentRadius);
+            enemy.body.setCollisionGroup(enemyCollisionGroup);
+            var lowerBound = enemy.width / 2 - enemy.width * 0.1 + 5;
+            var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
+            if (enemy.currentRadius <= lowerBound) {
+                enemy.currentRadius = enemy.width;
+            }
+
+            if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
+                enemy.body.isVulnerable = true;
+            } else {
+                enemy.body.isVulnerable = false;
+            }
+                enemy.body.rotation = game.physics.arcade.angleBetween(enemy, player) + game.math.degToRad(-90);
+                var chance = Math.random();
+                if(chance > 0.5){
+                angle = game.physics.arcade.angleBetween(enemy,player) + Math.random();
+            }
+            else{
+                angle = game.physics.arcade.angleBetween(enemy,player) - Math.random();
+            }
+            //    enemy.body.velocity.x = 500 * Math.cos(angle);
+	       //     enemy.body.velocity.y = 500 * Math.sin(angle);
+                var bubblebullet = enemy.bullets.getFirstExists(false);
+                if(bubblebullet){
+                    game.physics.p2.enable(bubblebullet, true);
+                    bubblebullet.enemyType = "enemyBullet";
+                    bubblebullet.body.fixedRotation = true;
+                    bubblebullet.lifespan = 2000;
+                    bubblebullet.reset(enemy.x, enemy.y);
+                    bubblebullet.rotation = angle + game.math.degToRad(-90);;
+                    bubblebullet.body.velocity.x = 400 * Math.cos(angle);
+                    bubblebullet.body.velocity.y = 400 * Math.sin(angle);
+                    bubblebullet.isVulnerable = true;
+                    bubblebullet.body.setCircle(10)
+                    bubblebullet.body.setCollisionGroup(enemybulletCollisionGroup);
+                    bubblebullet.body.collides([borderCollisionGroup])
+                    bubblebullet.body.collides(swordCollisionGroup, parryBullets, this);
+                    bubblebullet.body.collides(playerCollisionGroup, takeBulletDamage, this);
+                    bubblebullet.body.collides(bulletCollisionGroup, destroyBullets, this);
+                     }
+            if(enemy.phase1 == false && enemy.health < 15){
+                spawnSlimes(5,'redSlime');
+                enemy.phase1 = true;
+            }
+            if(enemy.phase2 == false && enemy.health < 10){
+                 enemy.bullets.createMultiple(15, 'fireBullet');
+                 enemy.phase2 = true;
+            }
+            if(enemy.phase3 == false && enemy.health < 5){
+                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
             }
      }
             else if (enemy.enemyType == "tentacles"){
@@ -796,7 +909,21 @@ function handleUpdate(){
 
 }
 function endGame(level){
-    if(level == "level2"){
+
+if(level == "level1"){
+    if(enemies.length == 0 ) {
+        console.log(enemies.length);
+        spawnCerberus();
+        resetHealth();
+        player.bossAlive = true;
+    }
+    if(player.bossAlive == false){
+        setTimeout(function() {
+            game.state.start('MainMenu');
+        }, 2000);
+    }
+}
+   else if(level == "level2"){
     if(enemies.length == 0 ) {
         console.log(enemies.length);
         spawnPersephone();
