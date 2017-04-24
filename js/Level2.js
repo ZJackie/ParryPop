@@ -54,7 +54,7 @@ Level2.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('blueSlime','bubbleTower');
+        initEnemies('blueSlime','bubbleTower', 10, 5);
         //spawnPersephone();
         initPlayer();
 
@@ -78,6 +78,7 @@ Level2.prototype = {
             'D': Phaser.KeyCode.D,
             'R': Phaser.KeyCode.R,
             'I': Phaser.KeyCode.I,
+            'K': Phaser.KeyCode.K
         });
         //bullets
         bullets = game.add.group();

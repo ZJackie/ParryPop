@@ -54,7 +54,7 @@ Game.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('redSlime','fireballTower');
+        initEnemies('redSlime','fireballTower', 10, 5);
         initPlayer();
 
         //border
@@ -77,6 +77,7 @@ Game.prototype = {
             'D': Phaser.KeyCode.D,
             'R': Phaser.KeyCode.R,
             'I': Phaser.KeyCode.I,
+            'K': Phaser.KeyCode.K
         });
         //bullets
         bullets = game.add.group();
