@@ -20,9 +20,9 @@ var hearts;
 var invulnerability;
 var shield;
 
-Game = function() {};
+Level1 = function() {};
 
-Game.prototype = {
+Level1.prototype = {
 
     create: function() {
         initAudio();

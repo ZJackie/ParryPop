@@ -33,8 +33,8 @@ Preload.prototype = {
         game.load.spritesheet('blueSlime', 'assets/other_sprites/blue_slime.png', 32, 32);
         game.load.spritesheet('bubbleTower', 'assets/other_sprites/bubble_tower.png', 64, 64);
         game.load.image('bubblebullet', 'assets/other_sprites/bubbleBullet.png');
-        game.load.spritesheet('persephone', 'assets/other_sprites/whale.png', 128,128);
-        game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32,32);
+        game.load.spritesheet('persephone', 'assets/other_sprites/whale.png', 128, 128);
+        game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32, 32);
         //level 3
 
         //Sounds
@@ -51,8 +51,8 @@ Preload.prototype = {
         game.load.audio('slime_hurt', 'assets/sounds/slime_hurt.wav');
         game.load.audio('tower_block', 'assets/sounds/tower_block.wav');
         game.load.audio('whale_hurt', 'assets/sounds/whale_hurt.wav');
-        game.load.audio('whale_1','assets/sounds/whale_1.wav');
-        game.load.audio('whale_2','assets/sounds/whale_2.wav');
+        game.load.audio('whale_1', 'assets/sounds/whale_1.wav');
+        game.load.audio('whale_2', 'assets/sounds/whale_2.wav');
         game.load.audio('whale_shoot', 'assets/sounds/whale_shoot.wav');
         game.load.audio('tower_damaged', 'assets/sounds/tower_damaged.wav');
     },

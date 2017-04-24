@@ -66,57 +66,6 @@ function initEnemies(slimeName, towerName, numSlimes, numTowers) {
 
 }
 
-function spawnPersephone() {
-    enemies = game.add.group();
-    enemies.physicsBodyType = Phaser.Physics.P2JS;
-
-    var persephone = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), 'persephone');
-    var arr = [];
-    for (var j = 0; j < 4; j++) {
-        arr.push(j);
-    }
-    persephone.mass = 20;
-    persephone.maxhealth = 20;
-    persephone.health = 20;
-
-    healthbar = game.add.sprite(300, 30, 'healthbar');
-    healthbar.height = 10;
-    healthbar.width = (persephone.health / persephone.maxhealth) * 500;
-    healthbar.fixedToCamera = true;
-    persephone.shield = false;
-    persephone.healthbar = healthbar;
-    persephone.animations.add('persephoneidle', arr, 12, true);
-    persephone.currentRadius = persephone.width;
-    game.physics.p2.enable(persephone, true);
-    persephone.body.setCircle(60);
-    persephone.body.setCollisionGroup(enemyCollisionGroup);
-    persephone.body.collides(swordCollisionGroup, smackEnemies, this);
-    persephone.body.collides(playerCollisionGroup, takeDamage, this);
-    persephone.body.collides(bulletCollisionGroup, killEnemies, this);
-    persephone.body.collides(borderCollisionGroup);
-    persephone.body.collides(playerCollisionGroup);
-    persephone.enemyType = "persephone";
-    persephone.rate = 0.5;
-    persephone.body.static = true;
-
-    //bullets
-    persephone.bullets = game.add.group();
-    persephone.bullets.enableBody = true;
-    persephone.bullets.physicsBodyType = Phaser.Physics.P2JS;
-    persephone.bullets.createMultiple(5, 'bubblebullet');
-    persephone.bullets.setAll('checkWorldBounds', true);
-    persephone.bullets.setAll('outOfBoundsKill', true);
-    persephone.bullets.setAll('anchor.x', 0.5);
-    persephone.bullets.setAll('anchor.y', 0.5);
-
-    //attacks
-    persephone.ramAttack = false;
-    persephone.invulnerability = false;
-    persephone.phase1 = false;
-    persephone.phase2 = false;
-    persephone.phase3 = false;
-}
-
 function killEnemies(body1, body2) {
     body2.sprite.kill();
     if (body1.isVulnerable == true) {
@@ -156,15 +105,15 @@ function killEnemies(body1, body2) {
         if (body1.sprite.enemyType == "slime") {
             switch (currentGameState) {
                 case "Game":
-                slime_1.play();
-                break;
+                    slime_1.play();
+                    break;
                 case "Level2":
-                slime_2.play();
+                    slime_2.play();
 
-                break;
+                    break;
                 case "Level3":
-                slime_3.play();
-                break;
+                    slime_3.play();
+                    break;
                 default:
             }
         }
@@ -254,99 +203,7 @@ function handleEnemyMovements() {
                 fireEnemyBullet(enemy);
             }
         } else if (enemy.enemyType == "persephone") {
-            enemy.animations.play('persephoneidle');
-            var random = Math.random()*5
-            if(random<2){
-                whale_2.play();
-            }
-            if (enemy.shield == false) {
-                enemy.currentRadius = enemy.currentRadius - enemy.rate;
-                enemy.body.setCircle(enemy.currentRadius);
-                enemy.body.setCollisionGroup(enemyCollisionGroup);
-                var lowerBound = enemy.width / 2 - enemy.width * 0.1 + 5;
-                var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
-                if (enemy.currentRadius <= lowerBound) {
-                    enemy.currentRadius = enemy.width;
-                }
-
-                if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
-                    enemy.body.isVulnerable = true;
-                } else {
-                    enemy.body.isVulnerable = false;
-                }
-            } else {
-                enemy.currentRadius = enemy.width;
-                enemy.body.isVulnerable = false;
-            }
-
-            enemy.body.rotation = game.physics.arcade.angleBetween(enemy, player) + game.math.degToRad(-90);;
-            game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 50);
-            if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 200) {
-                if (enemy.ramAttack == false) {
-                    currentrotation = enemy.body.rotation;
-                    enemy.ramAttack = true;
-                } else {
-                    enemy.body.velocity.x = 500 * Math.cos(currentrotation);
-                    enemy.body.velocity.y = 500 * Math.sin(currentrotation);
-                    angle = game.physics.arcade.angleBetween(enemy, player);
-                    var bubblebullet = enemy.bullets.getFirstExists(false);
-                    if (bubblebullet) {
-                        whale_shoot.play();
-                        game.physics.p2.enable(bubblebullet, true);
-                        bubblebullet.enemyType = "enemyBullet";
-                        bubblebullet.body.fixedRotation = true;
-                        bubblebullet.lifespan = 2000;
-                        bubblebullet.reset(enemy.x, enemy.y);
-                        bubblebullet.rotation = angle + game.math.degToRad(-90);;
-                        bubblebullet.body.velocity.x = 400 * Math.cos(angle);
-                        bubblebullet.body.velocity.y = 400 * Math.sin(angle);
-                        bubblebullet.isVulnerable = true;
-                        bubblebullet.body.setCircle(10)
-                        bubblebullet.body.setCollisionGroup(enemybulletCollisionGroup);
-                        bubblebullet.body.collides([borderCollisionGroup])
-                        bubblebullet.body.collides(swordCollisionGroup, parryBullets, this);
-                        bubblebullet.body.collides(playerCollisionGroup, takeBulletDamage, this);
-                        bubblebullet.body.collides(bulletCollisionGroup, destroyBullets, this);
-                    }
-                }
-            } else {
-                game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 300);
-                enemy.ramAttack = false;
-            }
-            if (enemy.phase1 == false && enemy.health < 15) {
-                spawnTowers(8, 'bubbleTower');
-                enemy.phase1 = true;
-            }
-            if (enemy.phase2 == false && enemy.health < 10) {
-                spawnSlimes(8, 'blueSlime');
-                enemy.phase2 = true;
-            }
-            if (enemy.phase3 == false && enemy.health < 5) {
-                spawnTenctales(6);
-                player.tentaclecount = 6;
-                enemy.shield = true;
-                enemy.phase3 = true;
-            }
-            if (player.tentaclecount == 0) {
-                enemy.shield = false;
-            }
-        } else if (enemy.enemyType == "tentacles") {
-            enemy.animations.play('tentacleidle');
-            enemy.currentRadius = enemy.currentRadius - enemy.rate;
-            enemy.body.setCircle(enemy.currentRadius);
-            enemy.body.setCollisionGroup(enemyCollisionGroup);
-            enemy.body.collides([enemyCollisionGroup, swordCollisionGroup, borderCollisionGroup]);
-            var lowerBound = enemy.width / 2 - enemy.width * 0.1 + 5;
-            var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
-            if (enemy.currentRadius <= lowerBound) {
-                enemy.currentRadius = enemy.width;
-            }
-
-            if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
-                enemy.body.isVulnerable = true;
-            } else {
-                enemy.body.isVulnerable = false;
-            }
+            handlePersephone(enemy);
         }
     }, this);
 }
@@ -382,11 +239,11 @@ function spawnTowers(NumberOfTowers, towerName) {
         towers.bullets.physicsBodyType = Phaser.Physics.P2JS;
         switch (towerName) {
             case 'bubbleTower':
-            towers.bullets.createMultiple(5, 'bubblebullet');
-            break;
+                towers.bullets.createMultiple(5, 'bubblebullet');
+                break;
             case 'fireballTower':
-            towers.bullets.createMultiple(5, 'fireBullet');
-            break;
+                towers.bullets.createMultiple(5, 'fireBullet');
+                break;
             default:
         }
 
@@ -468,17 +325,17 @@ function fireEnemyBullet(enemy) {
         var random = Math.random();
         switch (currentGameState) {
             case "Game":
-            if (random > 0.5) {
-                fire_tower.play();
-            } else {
-                fire_tower_2.play();
-            }
-            break;
+                if (random > 0.5) {
+                    fire_tower.play();
+                } else {
+                    fire_tower_2.play();
+                }
+                break;
             case "Level2":
-            water_tower.play();
-            break;
+                water_tower.play();
+                break;
             case "Level3":
-            break;
+                break;
             default:
         }
         game.physics.p2.enable(enemyBullet, true);
@@ -541,7 +398,7 @@ function takeDamage(body1, body2) {
 
 function takeBulletDamage(body1, body2) {
     body1.sprite.kill()
-    // decrement health, handle heart graphic in update
+        // decrement health, handle heart graphic in update
     if (player.health > 0) {
         if (invulnerability == false) {
             hearts.children[player.health - 1].kill();
@@ -665,31 +522,31 @@ function handleUpdate() {
 
         }
         if (cursors.K.isDown) {
-         enemies.forEach(function(enemy) {
-           //enemy.destroy();
-       });
-     }
-     if (game.input.mousePointer.leftButton.isDown) {
-        if (game.time.now > nextFire && bullets.countDead() > 0) {
-            pandora_shoot.play();
-            nextFire = game.time.now + fireRate;
-            var point1 = new Phaser.Point(player.body.x, player.body.y);
-            var point2 = new Phaser.Point(player.body.x + 13, player.body.y - 40);
-            point2.rotate(point1.x, point1.y, pointerangle + game.math.degToRad(180), false);
-            var bullet = bullets.getFirstExists(false);
-            if (bullet) {
-                game.physics.p2.enable(bullet, true);
-                bullet.body.fixedRotation = true;
-                bullet.lifespan = 2000;
-                bullet.reset(point2.x, point2.y);
-                bullet.rotation = pointerangle;
-                bullet.body.velocity.x = bulletspeed * Math.cos(pointerangle + game.math.degToRad(-270));
-                bullet.body.velocity.y = bulletspeed * Math.sin(pointerangle + game.math.degToRad(-270));
-                bullet.body.mass = 0.1;
-                bullet.body.setCircle(10)
-                bullet.body.setCollisionGroup(bulletCollisionGroup);
-                bullet.body.collides([enemyCollisionGroup, borderCollisionGroup, swordCollisionGroup, enemybulletCollisionGroup])
-                player.animations.play('shoot', false);
+            enemies.forEach(function(enemy) {
+                //enemy.destroy();
+            });
+        }
+        if (game.input.mousePointer.leftButton.isDown) {
+            if (game.time.now > nextFire && bullets.countDead() > 0) {
+                pandora_shoot.play();
+                nextFire = game.time.now + fireRate;
+                var point1 = new Phaser.Point(player.body.x, player.body.y);
+                var point2 = new Phaser.Point(player.body.x + 13, player.body.y - 40);
+                point2.rotate(point1.x, point1.y, pointerangle + game.math.degToRad(180), false);
+                var bullet = bullets.getFirstExists(false);
+                if (bullet) {
+                    game.physics.p2.enable(bullet, true);
+                    bullet.body.fixedRotation = true;
+                    bullet.lifespan = 2000;
+                    bullet.reset(point2.x, point2.y);
+                    bullet.rotation = pointerangle;
+                    bullet.body.velocity.x = bulletspeed * Math.cos(pointerangle + game.math.degToRad(-270));
+                    bullet.body.velocity.y = bulletspeed * Math.sin(pointerangle + game.math.degToRad(-270));
+                    bullet.body.mass = 0.1;
+                    bullet.body.setCircle(10)
+                    bullet.body.setCollisionGroup(bulletCollisionGroup);
+                    bullet.body.collides([enemyCollisionGroup, borderCollisionGroup, swordCollisionGroup, enemybulletCollisionGroup])
+                    player.animations.play('shoot', false);
                     //bullet.body.collides(enemyCollisionGroup, killEnemies, this);
                     //game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
                 }
@@ -724,6 +581,17 @@ function handleUpdate() {
 }
 
 function endGame(level) {
+    if (level == "Level1") {
+        if (enemies.length == 0) {
+            player.bossAlive = true;
+            //spawnboss
+        }
+        if (player.bossAlive == false) {
+            setTimeout(function() {
+                game.state.start('MainMenu');
+            }, 2000);
+        }
+    }
     if (level == "Level2") {
         if (enemies.length == 0) {
             spawnPersephone();
