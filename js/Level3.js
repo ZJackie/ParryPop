@@ -53,7 +53,7 @@ Level3.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies();
+        initEnemies('voidSlime','voidTower', 10, 5);
         initPlayer();
 
         //border
@@ -96,6 +96,7 @@ Level3.prototype = {
 
     update: function() {
         handleUpdate();
+        endGame("level3");
     },
 
 };
