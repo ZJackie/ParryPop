@@ -25,12 +25,12 @@ Game = function() {};
 Game.prototype = {
 
     create: function() {
+        initAudio();
         invulnerability = false;
         //disable right click menu
         game.canvas.oncontextmenu = function(e) {
             e.preventDefault();
         }
-
 
         var map = game.add.tilemap('cerberusMap');
         //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
