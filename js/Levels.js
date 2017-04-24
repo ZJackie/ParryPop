@@ -10,7 +10,6 @@ Levels.prototype = {
             var tileworldY = pointer.worldY - (pointer.worldY);
             var tileX = Math.floor(pointer.worldX);
             var tileY = Math.floor(pointer.worldY);
-            console.log(tileX + " " + tileY);
             if (this.game.state.current == "Levels") {
                 //Play
                 if (tileX < 630 && tileX > 442 && tileY < 509 && tileY > 347) {

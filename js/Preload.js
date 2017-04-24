@@ -37,6 +37,22 @@ Preload.prototype = {
         game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32,32);
         //level 3
 
+        //Sounds
+        game.load.audio('pandora_damaged', 'assets/sounds/pandora_damaged.wav');
+        game.load.audio('pandora_sword', 'assets/sounds/pandora_sword_1.wav');
+        game.load.audio('pandora_shoot', 'assets/sounds/projectile_2.wav');
+        game.load.audio('fire_tower', 'assets/sounds/fire_tower.wav');
+        game.load.audio('fire_tower_2', 'assets/sounds/fire_tower_2.wav');
+        game.load.audio('water_tower', 'assets/sounds/water_tower.wav');
+        game.load.audio('slime_1', 'assets/sounds/slime_1.wav');
+        game.load.audio('slime_2', 'assets/sounds/slime_2.wav');
+        game.load.audio('slime_3', 'assets/sounds/slime_3.wav');
+        game.load.audio('slime_hurt', 'assets/sounds/slime_hurt.wav');
+        game.load.audio('tower_block', 'assets/sounds/tower_block.wav');
+
+        game.load.audio('tower_damaged', 'assets/sounds/tower_damaged.wav');
+
+        initAudio();
     },
     create: function() {
         setTimeout(function() {

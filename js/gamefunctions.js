@@ -31,7 +31,30 @@ function initPlayer(){
         game.camera.follow(player);
     }
 
-    function initEnemies(slimeName, towerName) {
+function initAudio() {
+    //Level 1
+    fire_tower = game.add.audio('fire_tower');
+    fire_tower_2 = game.add.audio('fire_tower_2');
+    //Level 2
+    water_tower = game.add.audio('water_tower');
+    //Level 3
+
+    //Pandora Sounds
+    pandora_damaged = game.add.audio('pandora_damaged');
+    pandora_sword = game.add.audio('pandora_sword');
+    pandora_shoot = game.add.audio('pandora_shoot');
+
+    //General Sounds
+    slime_hurt = game.add.audio('slime_hurt');
+    slime_1 = game.add.audio('slime_1');
+    slime_2 = game.add.audio('slime_2');
+    slime_3 = game.add.audio('slime_3');
+
+    tower_damaged = game.add.audio('tower_damaged');
+    tower_block = game.add.audio('tower_block');
+}
+
+function initEnemies(slimeName, towerName) {
     enemies = game.add.group();
     //enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.P2JS;
@@ -55,32 +78,29 @@ function initPlayer(){
         slime.body.collides(borderCollisionGroup, bounce, this);
         slime.body.collides([enemyCollisionGroup, playerCollisionGroup]);
         slime.enemyType = "slime";
-        slime.rate = Math.random()*0.4 + 0.1
+        slime.rate = Math.random() * 0.4 + 0.1
         var num = Math.random();
-        if(num < 0.25){
+        if (num < 0.25) {
             slime.body.moveUp(500);
-        }
-        else if(num >= 0.25 && num <= 0.50){
+        } else if (num >= 0.25 && num <= 0.50) {
             slime.body.moveDown(500);
-        }
-        else if(num >= 0.5 && num <= 0.75){
+        } else if (num >= 0.5 && num <= 0.75) {
             slime.body.moveLeft(500);
-        }
-        else{
+        } else {
             slime.body.moveRight(500);
         }
         //slime.body.static = true;
     }
 
-    for(var i = 0; i < 5; i++){
-        var towers = enemies.create(game.world.centerX + (-500 + Math.random()*1000), game.world.centerY+ (-500 + Math.random()*1000), towerName);
+    for (var i = 0; i < 5; i++) {
+        var towers = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), towerName);
         var arr = [];
         for (var j = 0; j < 17; j++) {
             arr.push(j);
         }
         towers.maxhealth = 3;
         towers.health = 3;
-        healthbar = game.add.sprite(towers.x - 25,towers.y - 50,'healthbar');
+        healthbar = game.add.sprite(towers.x - 25, towers.y - 50, 'healthbar');
         healthbar.height = 10;
         healthbar.width = (towers.health / towers.maxhealth) * 50;
         towers.healthbar = healthbar;
@@ -115,9 +135,8 @@ function initPlayer(){
         towers.bullets.setAll('anchor.y', 0.5);
 
         towers.enemyType = "tower";
-        towers.rate = Math.random()*0.4 + 0.1
+        towers.rate = Math.random() * 0.4 + 0.1
     }
-
 }
 
     function spawnPersephone(){
@@ -174,14 +193,18 @@ function initPlayer(){
 function killEnemies(body1, body2) {
     body2.sprite.kill();
     if (body1.isVulnerable == true) {
-        if(player.ultimate < 10){
+        if (player.ultimate < 10) {
             player.ultimate++;
             player.ultimateBar.width = (player.ultimate / 10) * 100;
         }
-        if(body1.sprite.health == 1){
+        if (body1.sprite.health == 1) {
             body1.clearShapes();
-            if(body1.sprite.enemyType == "tower"){
+            if (body1.sprite.enemyType == "tower") {
                 body1.sprite.healthbar.kill();
+                tower_damaged.play();
+            }
+            if (body1.sprite.enemyType == "slime") {
+                slime_hurt.play();
             }
             if(body1.sprite.enemyType == "tentacles"){
                 player.tentaclecount--;
@@ -196,28 +219,49 @@ function killEnemies(body1, body2) {
             body1.sprite.health --;
             if(body1.sprite.enemyType == "tower"){
             body1.sprite.healthbar.width = (body1.sprite.health /  body1.sprite.maxhealth) * 50;
+            tower_damaged.play();
         }
             else if(body1.sprite.enemyType == "persephone"){
                 body1.sprite.healthbar.width = (body1.sprite.health /  body1.sprite.maxhealth) * 500;
             }
         }
     }
-    else{
-}
+    else {
+        var currentGameState = this.game.state.current;
+        if (body1.sprite.enemyType == "slime") {
+            switch (currentGameState) {
+                case "Game":
+                slime_1.play();
+                break;
+                case "Level2":
+                slime_2.play();
+
+                break;
+                case "Level3":
+                slime_3.play();
+                break;
+                default:
+            }
+        }
+        if (body1.sprite.enemyType == "tower") {
+            tower_block.play();
+        }
+    }
 }
 
 function smackEnemies(body1, body2) {
     if (shield > 0) {
         if (body1.isVulnerable == true) {
-          if(player.ultimate < 10){
-            player.ultimate++;
-            player.ultimateBar.width = (player.ultimate / 10) * 100;
-        }
-        if(body1.sprite.health == 1){
-            body1.clearShapes();
-            body1.sprite.destroy();}
-            else{
-                body1.sprite.health --;
+            if (player.ultimate < 10) {
+                player.ultimate++;
+                player.ultimateBar.width = (player.ultimate / 10) * 100;
+            }
+            if (body1.sprite.health == 1) {
+                body1.clearShapes();
+                body1.sprite.destroy();
+                slime_hurt.play();
+            } else {
+                body1.sprite.health--;
             }
         }
         shield--;
@@ -227,29 +271,26 @@ function smackEnemies(body1, body2) {
     }
 }
 
-function bounce(body1, body2){
+function bounce(body1, body2) {
     var num = Math.random();
-    if(num < 0.25){
+    if (num < 0.25) {
         body1.moveUp(500);
-    }
-    else if(num >= 0.25 && num <= 0.50){
+    } else if (num >= 0.25 && num <= 0.50) {
         body1.moveDown(500);
-    }
-    else if(num >= 0.5 && num <= 0.75){
+    } else if (num >= 0.5 && num <= 0.75) {
         body1.moveLeft(500);
-    }
-    else{
+    } else {
         body1.moveRight(500);
     }
 }
 
-function handleEnemies(){
+function handleEnemies() {
     handleEnemyMovements();
 }
 
 function handleEnemyMovements() {
     enemies.forEach(function(enemy) {
-        if(enemy.enemyType == "slime"){
+        if (enemy.enemyType == "slime") {
             enemy.animations.play('slimeIdle');
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
             enemy.body.setCircle(enemy.currentRadius);
@@ -265,8 +306,8 @@ function handleEnemyMovements() {
             } else {
                 enemy.body.isVulnerable = false;
             }
-            if(game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 80){
-                game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);}
+            if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 80) {
+                game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
             }
             else if(enemy.enemyType == "tower"){
              enemy.animations.play('toweridle', 10);
@@ -381,9 +422,11 @@ function handleEnemyMovements() {
             } else {
                 enemy.body.isVulnerable = false;
             }
-            }
+        }
+        }
  }, this);
 }
+
 
 function spawnTowers(NumberOfTowers,towerName){
  for(var i = 0; i < NumberOfTowers; i++){
@@ -496,30 +539,48 @@ function spawnTenctales(NumberOfTentacles){
     }
 }
 
-function fireBubbleBullet(enemy){
-    angle = Math.random()*Math.PI*2;
-    var bubblebullet = enemy.bullets.getFirstExists(false);
-    if(bubblebullet){
-        game.physics.p2.enable(bubblebullet, true);
-        bubblebullet.enemyType = "enemyBullet";
-        bubblebullet.body.fixedRotation = true;
-        bubblebullet.lifespan = 2000;
-        bubblebullet.reset(enemy.x, enemy.y);
-        bubblebullet.rotation = angle;
-        bubblebullet.body.velocity.x = 250 * Math.cos(angle + game.math.degToRad(-270));
-        bubblebullet.body.velocity.y = 250 * Math.sin(angle + game.math.degToRad(-270));
-        bubblebullet.isVulnerable = true;
-        bubblebullet.body.setCircle(10)
-        bubblebullet.body.setCollisionGroup(enemybulletCollisionGroup);
-        bubblebullet.body.collides([borderCollisionGroup])
-        bubblebullet.body.collides(swordCollisionGroup, parryBullets, this);
-        bubblebullet.body.collides(playerCollisionGroup, takeBulletDamage, this);
-        bubblebullet.body.collides(bulletCollisionGroup, destroyBullets, this);
+function fireEnemyBullet(enemy) {
+    angle = Math.random() * Math.PI * 2;
+    var enemyBullet = enemy.bullets.getFirstExists(false);
+    var currentGameState = this.game.state.current;
+    if (enemyBullet) {
+        var random = Math.random();
+        switch (currentGameState) {
+            case "Game":
+            if (random > 0.5) {
+                fire_tower.play();
+            } else {
+                fire_tower_2.play();
+            }
+            break;
+            case "Level2":
+            water_tower.play();
+            break;
+            case "Level3":
+            break;
+            default:
+        }
+        game.physics.p2.enable(enemyBullet, true);
+        enemyBullet.enemyType = "enemyBullet";
+        enemyBullet.body.fixedRotation = true;
+        enemyBullet.lifespan = 2000;
+        enemyBullet.reset(enemy.x, enemy.y);
+        enemyBullet.rotation = angle;
+        enemyBullet.body.velocity.x = 250 * Math.cos(angle + game.math.degToRad(-270));
+        enemyBullet.body.velocity.y = 250 * Math.sin(angle + game.math.degToRad(-270));
+        enemyBullet.isVulnerable = true;
+        enemyBullet.body.setCircle(10);
+        enemyBullet.body.setCollisionGroup(enemybulletCollisionGroup);
+        enemyBullet.body.collides([borderCollisionGroup]);
+        enemyBullet.body.collides(swordCollisionGroup, parryBullets, this);
+        enemyBullet.body.collides(playerCollisionGroup, takeBulletDamage, this);
+        enemyBullet.body.collides(bulletCollisionGroup, destroyBullets, this);
     }
 
 }
-function destroyBullets(body1, body2){
-    if(player.ultimate < 10){
+
+function destroyBullets(body1, body2) {
+    if (player.ultimate < 10) {
         player.ultimate++;
         player.ultimateBar.width = (player.ultimate / 10) * 100;
     }
@@ -534,19 +595,19 @@ function parryBullets(body1, body2) {
         body1.clearShapes();
         body1.sprite.kill();
         shield--;
-    }
-    else {
+    } else {
         player.body.removeShape(swordhitbox);
         swung = false;
     }
 }
 
-function takeDamage(body1,body2) {
+function takeDamage(body1, body2) {
     // decrement health, handle heart graphic in update
-    if(player.health > 0){
-        if(invulnerability == false){
+    if (player.health > 0) {
+        if (invulnerability == false) {
             hearts.children[player.health - 1].kill();
             player.health--;
+            pandora_damaged.play();
             invulnerability = true;
             game.time.events.add(500, removeInvulnerability, this);
         }
@@ -557,13 +618,14 @@ function takeDamage(body1,body2) {
     }
 }
 
-function takeBulletDamage(body1,body2) {
+function takeBulletDamage(body1, body2) {
     body1.sprite.kill()
     // decrement health, handle heart graphic in update
-    if(player.health > 0){
-        if(invulnerability == false){
+    if (player.health > 0) {
+        if (invulnerability == false) {
             hearts.children[player.health - 1].kill();
             player.health--;
+            pandora_damaged.play();
             invulnerability = true;
             game.time.events.add(500, removeInvulnerability, this);
         }
@@ -577,17 +639,17 @@ function takeBulletDamage(body1,body2) {
 function ultimateReady() {
     var handle;
     var handle2;
-    if(player.ultimate == 10){
-        handle = setInterval(function(){ 
-            ultimateBarInvert.bringToTop(); 
-            if(player.ultimate != 10){
+    if (player.ultimate == 10) {
+        handle = setInterval(function() {
+            ultimateBarInvert.bringToTop();
+            if (player.ultimate != 10) {
                 clearInterval(handle);
                 handle = 0;
             }
         }, 20);
-        handle2 = setInterval(function(){ 
-            player.ultimateBar.bringToTop(); 
-            if(player.ultimate != 10){
+        handle2 = setInterval(function() {
+            player.ultimateBar.bringToTop();
+            if (player.ultimate != 10) {
                 clearInterval(handle2);
                 handle2 = 0;
             }
@@ -596,17 +658,17 @@ function ultimateReady() {
 }
 
 function useUltimate() {
-    if(player.ultimate == 10){
+    if (player.ultimate == 10) {
         invulnerability = true;
         player.ultimate = 0;
         player.ultimateBar.width = (player.ultimate / 10) * 100;
         player.body.setCircle(200);
         player.body.setCollisionGroup(playerCollisionGroup);
         game.time.events.add(500, removeInvulnerability, this);
-    }
-    else {
+    } else {
         console.log("Not enough energy");
     }
+
     function removeInvulnerability() {
         player.body.setCircle(20);
         player.body.setCollisionGroup(playerCollisionGroup);
@@ -625,8 +687,7 @@ function resetHealth(){
 
 function handleUpdate(){
     ultimateReady();
-    if(player.dead == 0)
-    {
+    if (player.dead == 0) {
         //player movement
         pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
         player.body.rotation = pointerangle;
@@ -669,11 +730,12 @@ function handleUpdate(){
                 player.animations.play('walk', false);
             }
         }
-        if (cursors.R.isDown){
+        if (cursors.R.isDown) {
             useUltimate();
         }
         if (game.input.mousePointer.leftButton.isDown) {
             if (game.time.now > nextFire && bullets.countDead() > 0) {
+                pandora_shoot.play();
                 nextFire = game.time.now + fireRate;
                 var point1 = new Phaser.Point(player.body.x, player.body.y);
                 var point2 = new Phaser.Point(player.body.x + 13, player.body.y - 40);
@@ -690,7 +752,7 @@ function handleUpdate(){
                     bullet.body.mass = 0.1;
                     bullet.body.setCircle(10)
                     bullet.body.setCollisionGroup(bulletCollisionGroup);
-                    bullet.body.collides([enemyCollisionGroup, borderCollisionGroup, swordCollisionGroup,enemybulletCollisionGroup])
+                    bullet.body.collides([enemyCollisionGroup, borderCollisionGroup, swordCollisionGroup, enemybulletCollisionGroup])
                     player.animations.play('shoot', false);
                     //bullet.body.collides(enemyCollisionGroup, killEnemies, this);
                     //game.physics.arcade.velocityFromRotation(game.physics.arcade.angleToPointer(player), bulletspeed, bullet.body.velocity);
@@ -706,6 +768,7 @@ function handleUpdate(){
                     player.body.setCollisionGroup(swordCollisionGroup, swordhitbox)
                     swung = true;
                     player.animations.play('attack', true)
+                    pandora_sword.play();
                 }
             }
         } else {
@@ -721,6 +784,7 @@ function handleUpdate(){
         //handle enemies
         handleEnemies();
     }
+
 }
 function endGame(level){
     if(level == "level2"){
