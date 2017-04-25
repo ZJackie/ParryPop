@@ -43,7 +43,9 @@ function initAudio() {
     whale_1 = game.add.audio('whale_1');
     whale_2 = game.add.audio('whale_2');
     whale_shoot = game.add.audio('whale_shoot');
+
     //Level 3
+    void_tower_attack = game.add.audio('void_tower_attack');
 
     //Pandora Sounds
     pandora_damaged = game.add.audio('pandora_damaged');
@@ -517,6 +519,9 @@ function fireEnemyBullet(enemy) {
                 water_tower.play();
                 break;
             case "Level3":
+                if (random > 0.5) {
+                    void_tower_attack.play();
+                } 
                 break;
             default:
         }
@@ -536,7 +541,6 @@ function fireEnemyBullet(enemy) {
         enemyBullet.body.collides(playerCollisionGroup, takeBulletDamage, this);
         enemyBullet.body.collides(bulletCollisionGroup, destroyBullets, this);
     }
-
 }
 
 function destroyBullets(body1, body2) {
