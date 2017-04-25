@@ -22,6 +22,7 @@ function initPlayer() {
     ultimateBarInvert.fixedToCamera = true;
     player.ultimateBar.bringToTop();
     player.tentaclecount = 0;
+    player.godmode = false;
 
     game.physics.p2.enable(player, true);
     player.body.setCircle(20);
@@ -577,7 +578,7 @@ function parryBullets(body1, body2) {
 function takeDamage(body1, body2) {
     // decrement health, handle heart graphic in update
     if (player.health > 0) {
-        if (invulnerability == false) {
+        if (invulnerability == false && player.godmode == false)  {
             hearts.children[player.health - 1].kill();
             player.health--;
             pandora_damaged.play();
@@ -595,7 +596,7 @@ function takeBulletDamage(body1, body2) {
     body1.sprite.kill()
         // decrement health, handle heart graphic in update
     if (player.health > 0) {
-        if (invulnerability == false) {
+        if (invulnerability == false && player.godmode == false) {
             hearts.children[player.health - 1].kill();
             player.health--;
             pandora_damaged.play();
@@ -707,14 +708,8 @@ function handleUpdate() {
             useUltimate();
         }
         //Cheats
-        if (cursors.I.isDown) {
-            invulnerability = true;
-            console.log("Invulnerability is on.")
-            game.time.events.add(6000, function() {
-                invulnerability = false;
-                console.log("Invulnerability is off.")
-            }, this);
-
+        if (cursors.I.onDown) {
+            player.godmode = true;
         }
         if (cursors.K.isDown) {
             enemies.forEach(function(enemy) {
@@ -729,6 +724,16 @@ function handleUpdate() {
                 }
             });
         }
+        if (cursors.ONE.isDown) {
+            this.game.state.start('Level1');
+        }
+        if (cursors.TWO.isDown) {
+            this.game.state.start('Level2');
+        }
+        if (cursors.THREE.isDown) {
+            this.game.state.start('Level3');
+        }
+
         if (game.input.mousePointer.leftButton.isDown) {
             if (game.time.now > nextFire && bullets.countDead() > 0) {
                 pandora_shoot.play();
