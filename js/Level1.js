@@ -102,5 +102,4 @@ Level1.prototype = {
         handleUpdate();
         endGame("Level1");
     },
-
 };

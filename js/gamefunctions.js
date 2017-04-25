@@ -82,7 +82,7 @@ function spawnCerberus() {
     }
     cerberus.mass = 20;
     cerberus.maxhealth = 20;
-    cerberus.health = 20;
+    cerberus.health = 1;
 
     healthbar = game.add.sprite(300, 30, 'healthbar');
     healthbar.height = 10;
@@ -521,7 +521,7 @@ function fireEnemyBullet(enemy) {
             case "Level3":
                 if (random > 0.5) {
                     void_tower_attack.play();
-                } 
+                }
                 break;
             default:
         }
@@ -776,8 +776,7 @@ function handleUpdate() {
 
 function endGame(level) {
     if (level == "Level1") {
-        if (enemies.length == 0) {
-            console.log(enemies.length);
+        if (enemies.length == 0 && player.bossAlive!=false) {
             spawnCerberus();
             resetHealth();
             player.bossAlive = true;
@@ -788,7 +787,7 @@ function endGame(level) {
             }, 2000);
         }
     } else if (level == "Level2") {
-        if (enemies.length == 0) {
+        if (enemies.length == 0 && player.bossAlive!=false) {
             spawnPersephone();
             whale_1.play();
             resetHealth();
@@ -800,19 +799,13 @@ function endGame(level) {
             }, 2000);
         }
     } else if (level == "Level3") {
-        if (enemies.length == 0) {
+        if (enemies.length == 0 && player.bossAlive!=false) {
             console.log(enemies.length);
             spawnHades();
             resetHealth();
             player.bossAlive = true;
         }
         if (player.bossAlive == false) {
-            setTimeout(function() {
-                game.state.start('MainMenu');
-            }, 2000);
-        }
-    } else {
-        if (enemies.length == 0) {
             setTimeout(function() {
                 game.state.start('MainMenu');
             }, 2000);
