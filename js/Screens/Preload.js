@@ -7,6 +7,8 @@ Preload.prototype = {
         this.splash.width = 1200;
         this.splash.height = 800;
 
+        game.load.audio('bg_music', 'assets/music/parry_pop_sonata.wav');
+
         this.load.image('about', 'assets/UI/about.png');
         this.load.image('levels', 'assets/UI/levels.png');
         this.load.image('controls', 'assets/UI/controls.png');
@@ -64,6 +66,11 @@ Preload.prototype = {
         game.load.audio('void_tower_attack', 'assets/sounds/void_tower_attack.wav');
     },
     create: function() {
+        music = game.add.audio('bg_music');
+        music.loop = true;
+        music.volume = 0.5;
+        music.play();
+        console.log(music.volume);
         setTimeout(function() {
             game.state.start('MainMenu');
         }, 2000);
