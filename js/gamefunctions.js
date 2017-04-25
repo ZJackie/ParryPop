@@ -1,3 +1,5 @@
+var toggle = false;
+
 function initPlayer() {
     //Add my Robot player
     player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
@@ -23,6 +25,7 @@ function initPlayer() {
     player.ultimateBar.bringToTop();
     player.tentaclecount = 0;
     player.godmode = false;
+
 
     game.physics.p2.enable(player, true);
     player.body.setCircle(20);
@@ -578,7 +581,7 @@ function parryBullets(body1, body2) {
 function takeDamage(body1, body2) {
     // decrement health, handle heart graphic in update
     if (player.health > 0) {
-        if (invulnerability == false && player.godmode == false)  {
+        if (invulnerability == false && player.godmode == false) {
             hearts.children[player.health - 1].kill();
             player.health--;
             pandora_damaged.play();
@@ -708,8 +711,15 @@ function handleUpdate() {
             useUltimate();
         }
         //Cheats
-        if (cursors.I.onDown) {
-            player.godmode = true;
+        if (!toggle) {
+
+            if (cursors.I.isDown) {
+                toggle = !toggle;
+                player.godmode = !player.godmode;
+                console.log(player.godmode);
+                game.time.events.add(1000, function() { toggle = !toggle; }, this);
+
+            }
         }
         if (cursors.K.isDown) {
             enemies.forEach(function(enemy) {
