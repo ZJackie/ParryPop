@@ -129,7 +129,7 @@ function spawnPersephone() {
     }
     persephone.mass = 20;
     persephone.maxhealth = 20;
-    persephone.health = 1;
+    persephone.health = 20;
 
     healthbar = game.add.sprite(300, 30, 'healthbar');
     healthbar.height = 10;
@@ -705,7 +705,15 @@ function handleUpdate() {
         }
         if (cursors.K.isDown) {
             enemies.forEach(function(enemy) {
-                //enemy.destroy();
+                if (enemy.enemyType == 'tower') {
+                    enemy.body.clearShapes();
+                    enemy.healthbar.width = 0;
+                    enemy.destroy;
+                }
+                if (enemy.enemyType != "persephone" && enemy.enemyType != "cerberus" && enemy.enemyType != "hades") {
+                    enemy.body.clearShapes();
+                    enemy.destroy();
+                }
             });
         }
         if (game.input.mousePointer.leftButton.isDown) {
