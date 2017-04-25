@@ -54,8 +54,8 @@ Level2.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('blueSlime', 'bubbleTower', 0, 0);
-        //initEnemies('blueSlime', 'bubbleTower', 10, 5);
+        //initEnemies('blueSlime', 'bubbleTower', 0, 0);
+        initEnemies('blueSlime', 'bubbleTower', 10, 5);
         //spawnPersephone();
         initPlayer();
 
