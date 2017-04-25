@@ -19,6 +19,7 @@ var enemybulletCollisionGroup
 var hearts;
 var invulnerability;
 var shield;
+var bossSpawned = false;
 
 Level2 = function() {};
 

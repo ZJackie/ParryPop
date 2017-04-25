@@ -82,7 +82,7 @@ function spawnCerberus() {
     }
     cerberus.mass = 20;
     cerberus.maxhealth = 20;
-    cerberus.health = 1;
+    cerberus.health = 20;
 
     healthbar = game.add.sprite(300, 30, 'healthbar');
     healthbar.height = 10;
@@ -255,14 +255,23 @@ function killEnemies(body1, body2) {
             if (body1.sprite.enemyType == "persephone") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
+                setTimeout(function() {
+                    game.state.start('MainMenu');
+                }, 2000);
             }
             if (body1.sprite.enemyType == "cerberus") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
+                setTimeout(function() {
+                    game.state.start('MainMenu');
+                }, 2000);
             }
             if (body1.sprite.enemy == "hades") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
+                setTimeout(function() {
+                    game.state.start('MainMenu');
+                }, 2000);
             }
             body1.sprite.destroy();
         } else {
@@ -776,39 +785,21 @@ function handleUpdate() {
 
 function endGame(level) {
     if (level == "Level1") {
-        if (enemies.length == 0 && player.bossAlive!=false) {
+        if (enemies.length == 0 && player.bossAlive != false) {
             spawnCerberus();
             resetHealth();
-            player.bossAlive = true;
-        }
-        if (player.bossAlive == false) {
-            setTimeout(function() {
-                game.state.start('MainMenu');
-            }, 2000);
         }
     } else if (level == "Level2") {
-        if (enemies.length == 0 && player.bossAlive!=false) {
+        if (enemies.length == 0 && player.bossAlive != false) {
             spawnPersephone();
             whale_1.play();
             resetHealth();
-            player.bossAlive = true;
-        }
-        if (player.bossAlive == false) {
-            setTimeout(function() {
-                game.state.start('MainMenu');
-            }, 2000);
         }
     } else if (level == "Level3") {
-        if (enemies.length == 0 && player.bossAlive!=false) {
+        if (enemies.length == 0 && player.bossAlive != false) {
             console.log(enemies.length);
             spawnHades();
             resetHealth();
-            player.bossAlive = true;
-        }
-        if (player.bossAlive == false) {
-            setTimeout(function() {
-                game.state.start('MainMenu');
-            }, 2000);
         }
     }
 
