@@ -15,7 +15,7 @@ var enemyCollisionGroup;
 var borderCollisionGroup;
 var swordCollisionGroup;
 var bulletCollisionGroup;
-var enemybulletCollisionGroup
+var enemybulletCollisionGroup;
 var hearts;
 var invulnerability;
 var shield;
