@@ -32,10 +32,10 @@ Level3.prototype = {
         game.canvas.oncontextmenu = function(e) {
             e.preventDefault();
         }
-
-        var map = game.add.tilemap('persephoneMap');
+        
+        var map = game.add.tilemap('hadesMap');
         //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
-        map.addTilesetImage('Water', 'persephoneGameTiles');
+        map.addTilesetImage('Darkness', 'hadesGameTiles');
         //Create Layers
         var backgroundlayer = map.createLayer('Background');
         backgroundlayer.resizeWorld();

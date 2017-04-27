@@ -3,19 +3,23 @@ Preload = function() {};
 
 Preload.prototype = {
     preload: function() {
-        this.splash = this.add.sprite(0, 0, 'splash');
-        this.splash.width = 1200;
-        this.splash.height = 800;
+        game.splash = game.add.sprite(0, 0, 'splash');
+        game.splash.width = 1200;
+        game.splash.height = 800;
 
         game.load.audio('bg_music', 'assets/music/parry_pop_sonata.wav');
 
-        this.load.image('about', 'assets/UI/about.png');
-        this.load.image('levels', 'assets/UI/levels.png');
-        this.load.image('controls', 'assets/UI/controls.png');
-        this.load.image('menu', 'assets/UI/menu.png');
+        //Menus
+        game.load.image('about', 'assets/UI/about.png');
+        game.load.image('levels', 'assets/UI/levels.png');
+        game.load.image('controls', 'assets/UI/controls.png');
+        game.load.image('menu', 'assets/UI/menu.png');
         game.load.image('pauseMenu', 'assets/UI/pausemenu.png');
         game.load.image('controlsMenu', 'assets/UI/controlsmenu.png');
+        game.load.image('levelCompleteMenu', 'assets/UI/levelcomplete.png');
+        game.load.image('gameCompleteMenu', 'assets/UI/gamecomplete.png');
 
+        //Player
         game.load.spritesheet('player', 'assets/player.png', 64, 64);
         game.load.image('bullet', 'assets/other_sprites/bullet.png');
         game.load.image('heart', 'assets/other_sprites/heart.png');
@@ -23,6 +27,7 @@ Preload.prototype = {
         game.load.image('ultimatebar', 'assets/other_sprites/ultimatebar.png');
         game.load.image('ultimatebarInvert', 'assets/other_sprites/ultimatebarinvert.png');
         game.load.physics('data', 'assets/data.json');
+        
         //level 1
         game.load.tilemap('cerberusMap', 'assets/Levels/Lava.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('cerberusGameTiles', 'assets/Levels/Fire.png');
@@ -42,6 +47,8 @@ Preload.prototype = {
         game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32, 32);
 
         //level 3
+        game.load.tilemap('hadesMap', 'assets/Levels/Darkness.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('hadesGameTiles', 'assets/Levels/Darkness.png');
         game.load.spritesheet('hades', 'assets/other_sprites/hades.png', 64, 64);
         game.load.spritesheet('voidTower', 'assets/other_sprites/void_tower.png', 64, 64);
         game.load.spritesheet('glitchSlime', 'assets/other_sprites/glitch_slime.png', 32, 32);
@@ -73,7 +80,6 @@ Preload.prototype = {
         music.loop = true;
         music.volume = 0.5;
         music.play();
-        console.log(music.volume);
         setTimeout(function() {
             game.state.start('MainMenu');
         }, 2000);

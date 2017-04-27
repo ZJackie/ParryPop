@@ -12,6 +12,7 @@ function initPlayer() {
     player.animations.add('shootwalk', [25, 26, 27, 28, 29], 10, false);
     player.animations.add('death', [30, 31, 32, 33, 34], 10, false);
 
+    player.bossAlive = true;
     player.dead = 0;
     player.ultimate = 0;
     player.ultimateBar = game.add.sprite(3, 30, 'ultimatebar');
@@ -259,23 +260,17 @@ function killEnemies(body1, body2) {
             if (body1.sprite.enemyType == "persephone") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
-                setTimeout(function() {
-                    game.state.start('MainMenu');
-                }, 2000);
+                initLevelCompleteMenu();
             }
             if (body1.sprite.enemyType == "cerberus") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
-                setTimeout(function() {
-                    game.state.start('MainMenu');
-                }, 2000);
+                initLevelCompleteMenu();
             }
             if (body1.sprite.enemy == "hades") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
-                setTimeout(function() {
-                    game.state.start('MainMenu');
-                }, 2000);
+                initGameCompleteMenu();
             }
             body1.sprite.destroy();
         } else {
@@ -987,24 +982,26 @@ function handleHades(enemy) {
 
 function initPauseMenu() {
     window.onkeydown = function(event) {
-        if (this.game.state.current == "Level1" || this.game.state.current == "Level2" || this.game.state.current == "Level3") {
-            if (event.keyCode == 27) {
-                if (!game.paused) {
-                    game.time.events.add(100, function() {
+        if (player.bossAlive) {
+            if (this.game.state.current == "Level1" || this.game.state.current == "Level2" || this.game.state.current == "Level3") {
+                if (event.keyCode == 27) {
+                    if (!game.paused) {
+                        game.time.events.add(100, function() {
+                            game.paused = !game.paused;
+                        }, this);
+                        pauseMenu = game.add.sprite(game.world.centerX, game.world.centerY, 'pauseMenu');
+                        game.camera.follow(pauseMenu);
+                        pauseMenu.anchor.setTo(.5, .5);
+                        pauseMenu.inputEnabled = true;
+                        game.input.onDown.add(pauseMenuHandler, this);
+                    } else {
                         game.paused = !game.paused;
-                    }, this);
-                    pauseMenu = game.add.sprite(game.world.centerX, game.world.centerY, 'pauseMenu');
-                    game.camera.follow(pauseMenu);
-                    pauseMenu.anchor.setTo(.5, .5);
-                    pauseMenu.inputEnabled = true;
-                    game.input.onDown.add(pauseMenuHandler, this);
-                } else {
-                    game.paused = !game.paused;
-                    game.camera.follow(player);
-                    pauseMenu.destroy();
-                    controlsMenu.destroy();
-                    game.input.onDown.remove(pauseMenuHandler, this);
-                    game.input.onDown.remove(controlsMenuHandler, this);
+                        game.camera.follow(player);
+                        pauseMenu.destroy();
+                        controlsMenu.destroy();
+                        game.input.onDown.remove(pauseMenuHandler, this);
+                        game.input.onDown.remove(controlsMenuHandler, this);
+                    }
                 }
             }
         }
@@ -1017,7 +1014,7 @@ function pauseMenuHandler(pointer, event) {
     var tileX = Math.floor(pointer.worldX);
     var tileY = Math.floor(pointer.worldY);
     //Resume
-    if (tileX < 866 && tileX > 730 && tileY < 750 && tileY > 700) {
+    if (tileX < 870 && tileX > 720 && tileY < 755 && tileY > 700) {
         game.paused = !game.paused;
         button.play();
         game.camera.follow(player);
@@ -1025,14 +1022,14 @@ function pauseMenuHandler(pointer, event) {
         game.input.onDown.remove(pauseMenuHandler, this);
     }
     //Help
-    if (tileX < 866 && tileX > 730 && tileY < 850 && tileY > 800) {
+    if (tileX < 870 && tileX > 720 && tileY < 850 && tileY > 805) {
         button.play();
         pauseMenu.destroy();
         game.input.onDown.remove(pauseMenuHandler, this);
         initControlsMenu();
     }
     //Menu
-    if (tileX < 866 && tileX > 730 && tileY < 955 && tileY > 905) {
+    if (tileX < 870 && tileX > 720 && tileY < 960 && tileY > 905) {
         game.paused = !game.paused;
         button.play();
         this.game.state.start('MainMenu');
@@ -1052,7 +1049,7 @@ function controlsMenuHandler(pointer, event) {
     var tileX = Math.floor(pointer.worldX);
     var tileY = Math.floor(pointer.worldY);
     //Back
-    if (tileX < 645 && tileX > 555 && tileY < 684 && tileY > 650) {
+    if (tileX < 600 && tileX > 490 && tileY < 660 && tileY > 606) {
         button.play();
         controlsMenu.destroy();
         game.input.onDown.remove(levelCompleteMenuHandler, this);
@@ -1064,10 +1061,15 @@ function controlsMenuHandler(pointer, event) {
 }
 
 function initLevelCompleteMenu() {
+    game.time.events.add(100, function() {
+        game.paused = !game.paused;
+    }, this);
     levelCompleteMenu = game.add.sprite(game.world.centerX, game.world.centerY, 'levelCompleteMenu');
+    game.camera.follow(levelCompleteMenu);
     levelCompleteMenu.anchor.setTo(.5, .5);
     levelCompleteMenu.inputEnabled = true;
     game.input.onDown.add(levelCompleteMenuHandler, this);
+
 }
 
 function levelCompleteMenuHandler(pointer, event) {
@@ -1075,5 +1077,53 @@ function levelCompleteMenuHandler(pointer, event) {
     var tileworldY = pointer.worldY - (pointer.worldY);
     var tileX = Math.floor(pointer.worldX);
     var tileY = Math.floor(pointer.worldY);
+    //Next Level
+    if (tileX < 875 && tileX > 726 && tileY < 850 && tileY > 800) {
+        game.paused = !game.paused;
+        button.play();
+        game.input.onDown.remove(levelCompleteMenuHandler, this);
+        switch (this.game.state.current) {
+            case "Level1":
+                button.play();
+                this.game.state.start('Level2');
+                break;
+            case "Level2":
+                button.play();
+                this.game.state.start('Level3');
+                break;
+            default:
+        }
+    }
+    //Menu
+    if (tileX < 875 && tileX > 726 && tileY < 940 && tileY > 880) {
+        game.paused = !game.paused;
+        button.play();
+        game.input.onDown.remove(levelCompleteMenuHandler, this);
+        this.game.state.start('MainMenu');
+    }
+}
+
+function initGameCompleteMenu() {
+    game.time.events.add(100, function() {
+        game.paused = !game.paused;
+    }, this);
+    gameCompleteMenu = game.add.sprite(game.world.centerX, game.world.centerY, 'gameCompleteMenu');
+    game.camera.follow(gameCompleteMenu);
+    gameCompleteMenu.anchor.setTo(.5, .5);
+    gameCompleteMenu.inputEnabled = true;
+    game.input.onDown.add(gameCompleteMenuHandler, this);
+}
+
+function gameCompleteMenuHandler() {
+    var tileworldX = pointer.worldX - (pointer.worldX);
+    var tileworldY = pointer.worldY - (pointer.worldY);
+    var tileX = Math.floor(pointer.worldX);
+    var tileY = Math.floor(pointer.worldY);
     console.log(tileX + "," + tileY);
+    if (tileX < 870 && tileX > 725 && tileY < 890 && tileY > 840) {
+        game.paused = !game.paused;
+        button.play();
+        this.game.state.start('MainMenu');
+        game.input.onDown.remove(gameCompleteMenuHandler, this);
+    }
 }
