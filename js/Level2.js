@@ -101,6 +101,12 @@ Level2.prototype = {
             var heart = hearts.create(i * 30, 0, 'heart');
             heart.fixedToCamera = true;
         }
+
+        window.onkeydown = function(event) {
+            if (event.keyCode == 27) {
+                game.paused = !game.paused;
+            }
+        }
     },
 
     update: function() {

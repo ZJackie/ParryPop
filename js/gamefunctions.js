@@ -712,13 +712,11 @@ function handleUpdate() {
         }
         //Cheats
         if (!toggle) {
-
             if (cursors.I.isDown) {
                 toggle = !toggle;
                 player.godmode = !player.godmode;
                 console.log(player.godmode);
                 game.time.events.add(1000, function() { toggle = !toggle; }, this);
-
             }
         }
         if (cursors.K.isDown) {
@@ -743,7 +741,6 @@ function handleUpdate() {
         if (cursors.THREE.isDown) {
             this.game.state.start('Level3');
         }
-
         if (game.input.mousePointer.leftButton.isDown) {
             if (game.time.now > nextFire && bullets.countDead() > 0) {
                 pandora_shoot.play();
