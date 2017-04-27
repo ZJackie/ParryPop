@@ -1119,11 +1119,15 @@ function gameCompleteMenuHandler() {
     var tileworldY = pointer.worldY - (pointer.worldY);
     var tileX = Math.floor(pointer.worldX);
     var tileY = Math.floor(pointer.worldY);
-    console.log(tileX + "," + tileY);
     if (tileX < 870 && tileX > 725 && tileY < 890 && tileY > 840) {
         game.paused = !game.paused;
         button.play();
         this.game.state.start('MainMenu');
         game.input.onDown.remove(gameCompleteMenuHandler, this);
     }
+}
+
+//writes text for boss phases
+function writeText(text) {
+    
 }

@@ -20,12 +20,12 @@ MainMenu.prototype = {
                 //About
                 if (tileX < 1060 && tileX > 880 && tileY < 420 && tileY > 240) {
                     button.play();
-                    this.game.state.start('About');
+                    this.game.state.start('Help');
                 }
                 //Help
                 if (tileX < 931 && tileX > 785 && tileY < 585 && tileY > 395) {
                     button.play();
-                    this.game.state.start('Help');
+                    this.game.state.start('About');
                 }
             }
         });
