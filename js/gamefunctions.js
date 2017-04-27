@@ -260,17 +260,23 @@ function killEnemies(body1, body2) {
             if (body1.sprite.enemyType == "persephone") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
-                initLevelCompleteMenu();
+                game.time.events.add(1500, function() {
+                    initLevelCompleteMenu();
+                }, this);
             }
             if (body1.sprite.enemyType == "cerberus") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
-                initLevelCompleteMenu();
+                game.time.events.add(1500, function() {
+                    initLevelCompleteMenu();
+                }, this);
             }
             if (body1.sprite.enemy == "hades") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
-                initGameCompleteMenu();
+                game.time.events.add(1500, function() {
+                    initGameCompleteMenu();
+                }, this);
             }
             body1.sprite.destroy();
         } else {
@@ -866,15 +872,18 @@ function handleCerberus(enemy) {
         bubblebullet.body.collides(bulletCollisionGroup, destroyBullets, this);
     }
     if (enemy.phase1 == false && enemy.health < 15) {
+        //writeText("Cerberus has spawned 5 Red Slimes!");
         spawnSlimes(5, 'redSlime');
         enemy.phase1 = true;
     }
     if (enemy.phase2 == false && enemy.health < 10) {
+        //writeText("Cerberus unleashes his flames!");
         cerberus_fire_storm.play();
         enemy.bullets.createMultiple(15, 'fireBullet');
         enemy.phase2 = true;
     }
     if (enemy.phase3 == false && enemy.health < 5) {
+        //writeText("Cerberus is enraged!");
         game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
     }
 }
@@ -941,14 +950,17 @@ function handlePersephone(enemy) {
             enemy.ramAttack = false;
         }
         if (enemy.phase1 == false && enemy.health < 15) {
+            //writeText("Persephone has spawned 8 Bubble Towers!");
             spawnTowers(8, 'bubbleTower');
             enemy.phase1 = true;
         }
         if (enemy.phase2 == false && enemy.health < 10) {
+            //writeText("Persephone has spawned 8 Blue Slimes!");
             spawnSlimes(8, 'blueSlime');
             enemy.phase2 = true;
         }
         if (enemy.phase3 == false && enemy.health < 5) {
+            //writeText("Kill all 6 Tentacles to bring down Persephone's Shield!");
             spawnTenctales(6);
             player.tentaclecount = 6;
             enemy.shield = true;
@@ -1129,5 +1141,5 @@ function gameCompleteMenuHandler() {
 
 //writes text for boss phases
 function writeText(text) {
-    
+
 }
