@@ -13,6 +13,9 @@ Preload.prototype = {
         this.load.image('levels', 'assets/UI/levels.png');
         this.load.image('controls', 'assets/UI/controls.png');
         this.load.image('menu', 'assets/UI/menu.png');
+        game.load.image('pauseMenu', 'assets/UI/pausemenu.png');
+        game.load.image('controlsMenu', 'assets/UI/controlsmenu.png');
+
         game.load.spritesheet('player', 'assets/player.png', 64, 64);
         game.load.image('bullet', 'assets/other_sprites/bullet.png');
         game.load.image('heart', 'assets/other_sprites/heart.png');
@@ -39,7 +42,7 @@ Preload.prototype = {
         game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32, 32);
 
         //level 3
-        game.load.spritesheet('hades', 'assets/other_sprites/hades.png', 64,64);
+        game.load.spritesheet('hades', 'assets/other_sprites/hades.png', 64, 64);
         game.load.spritesheet('voidTower', 'assets/other_sprites/void_tower.png', 64, 64);
         game.load.spritesheet('glitchSlime', 'assets/other_sprites/glitch_slime.png', 32, 32);
         game.load.image('voidBullet', 'assets/other_sprites/voidBullet.png');
