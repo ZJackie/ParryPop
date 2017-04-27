@@ -27,6 +27,7 @@ Level2.prototype = {
 
     create: function() {
         initAudio();
+        initPauseMenu();
         invulnerability = false;
         //disable right click menu
         game.canvas.oncontextmenu = function(e) {
@@ -100,12 +101,6 @@ Level2.prototype = {
         for (var i = 0; i < player.health; i++) {
             var heart = hearts.create(i * 30, 0, 'heart');
             heart.fixedToCamera = true;
-        }
-
-        window.onkeydown = function(event) {
-            if (event.keyCode == 27) {
-                game.paused = !game.paused;
-            }
         }
     },
 

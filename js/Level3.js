@@ -15,7 +15,7 @@ var enemyCollisionGroup;
 var borderCollisionGroup;
 var swordCollisionGroup;
 var bulletCollisionGroup;
-var enemybulletCollisionGroup 
+var enemybulletCollisionGroup
 var hearts;
 var invulnerability;
 var shield;
@@ -26,6 +26,7 @@ Level3.prototype = {
 
     create: function() {
         initAudio();
+        initPauseMenu();
         invulnerability = false;
         //disable right click menu
         game.canvas.oncontextmenu = function(e) {
@@ -54,7 +55,7 @@ Level3.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('glitchSlime','voidTower', 10, 5);
+        initEnemies('glitchSlime', 'voidTower', 10, 5);
         initPlayer();
 
         //border
@@ -65,7 +66,7 @@ Level3.prototype = {
         border.body.setCollisionGroup(borderCollisionGroup);
         border.body.collides([enemyCollisionGroup, playerCollisionGroup, bulletCollisionGroup, enemybulletCollisionGroup]);
 
-        player.body.collides([borderCollisionGroup,enemybulletCollisionGroup]);
+        player.body.collides([borderCollisionGroup, enemybulletCollisionGroup]);
         player.body.collides(enemyCollisionGroup);
         player.body.collides(bulletCollisionGroup);
 
@@ -75,7 +76,7 @@ Level3.prototype = {
             'A': Phaser.KeyCode.A,
             'S': Phaser.KeyCode.S,
             'D': Phaser.KeyCode.D,
-            'R': Phaser.KeyCode.R, 
+            'R': Phaser.KeyCode.R,
             'I': Phaser.KeyCode.I,
             'K': Phaser.KeyCode.K,
             'ONE': Phaser.KeyCode.ONE,
@@ -98,11 +99,6 @@ Level3.prototype = {
             var heart = hearts.create(i * 30, 0, 'heart');
             heart.fixedToCamera = true;
         }
-        window.onkeydown = function(event) {
-            if (event.keyCode == 27) {
-                game.paused = !game.paused;
-            }
-        }
     },
 
     update: function() {
@@ -111,4 +107,3 @@ Level3.prototype = {
     },
 
 };
-

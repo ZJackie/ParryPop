@@ -3,14 +3,15 @@ Preload = function() {};
 
 Preload.prototype = {
     preload: function() {
-        this.splash = this.add.sprite(0, 0, 'splash');
-        this.splash.width = 1200;
-        this.splash.height = 800;
+        game.splash = game.add.sprite(0, 0, 'splash');
+        game.splash.width = 1200;
+        game.splash.height = 800;
 
-        this.load.image('about', 'assets/UI/about.png');
-        this.load.image('levels', 'assets/UI/levels.png');
-        this.load.image('controls', 'assets/UI/controls.png');
-        this.load.image('menu', 'assets/UI/menu.png');
+        game.load.image('about', 'assets/UI/about.png');
+        game.load.image('levels', 'assets/UI/levels.png');
+        game.load.image('controls', 'assets/UI/controls.png');
+        game.load.image('menu', 'assets/UI/menu.png');
+        game.load.image('controlsMenu', 'assets/UI/controlsmenu.png');
         game.load.spritesheet('player', 'assets/player.png', 64, 64);
         game.load.image('bullet', 'assets/other_sprites/bullet.png');
         game.load.image('heart', 'assets/other_sprites/heart.png');
@@ -24,7 +25,7 @@ Preload.prototype = {
         game.load.spritesheet('redSlime', 'assets/other_sprites/red_slime.png', 32, 32);
         game.load.spritesheet('fireballTower', 'assets/other_sprites/fireball_tower.png', 64, 64);
         game.load.image('fireBullet', 'assets/other_sprites/fireBullet.png');
-        game.load.spritesheet('cerberus', 'assets/other_sprites/cerberus.png', 128,128);
+        game.load.spritesheet('cerberus', 'assets/other_sprites/cerberus.png', 128, 128);
 
         //level 2 
         game.load.tilemap('persephoneMap', 'assets/Levels/water.json', null, Phaser.Tilemap.TILED_JSON);

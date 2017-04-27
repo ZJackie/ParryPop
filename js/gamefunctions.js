@@ -758,7 +758,7 @@ function handleUpdate() {
                     bullet.body.velocity.x = bulletspeed * Math.cos(pointerangle + game.math.degToRad(-270));
                     bullet.body.velocity.y = bulletspeed * Math.sin(pointerangle + game.math.degToRad(-270));
                     bullet.body.mass = 0.1;
-                    bullet.body.setCircle(10)
+                    bullet.body.setCircle(10);
                     bullet.body.setCollisionGroup(bulletCollisionGroup);
                     bullet.body.collides([enemyCollisionGroup, borderCollisionGroup, swordCollisionGroup, enemybulletCollisionGroup])
                     player.animations.play('shoot', false);
@@ -983,4 +983,97 @@ function handlePersephone(enemy) {
 
 function handleHades(enemy) {
 
+}
+
+function initPauseMenu() {
+    window.onkeydown = function(event) {
+        if (this.game.state.current == "Level1" || this.game.state.current == "Level2" || this.game.state.current == "Level3") {
+            if (event.keyCode == 27) {
+                if (!game.paused) {
+                    game.time.events.add(100, function() {
+                        game.paused = !game.paused;
+                    }, this);
+                    pauseMenu = game.add.sprite(game.world.centerX, game.world.centerY, 'pauseMenu');
+                    game.camera.follow(pauseMenu);
+                    pauseMenu.anchor.setTo(.5, .5);
+                    pauseMenu.inputEnabled = true;
+                    game.input.onDown.add(pauseMenuHandler, this);
+                } else {
+                    game.paused = !game.paused;
+                    game.camera.follow(player);
+                    pauseMenu.destroy();
+                    controlsMenu.destroy();
+                    game.input.onDown.remove(pauseMenuHandler, this);
+                    game.input.onDown.remove(controlsMenuHandler, this);
+                }
+            }
+        }
+    }
+}
+
+function pauseMenuHandler(pointer, event) {
+    var tileworldX = pointer.worldX - (pointer.worldX);
+    var tileworldY = pointer.worldY - (pointer.worldY);
+    var tileX = Math.floor(pointer.worldX);
+    var tileY = Math.floor(pointer.worldY);
+    //Resume
+    if (tileX < 866 && tileX > 730 && tileY < 750 && tileY > 700) {
+        game.paused = !game.paused;
+        button.play();
+        game.camera.follow(player);
+        pauseMenu.destroy();
+        game.input.onDown.remove(pauseMenuHandler, this);
+    }
+    //Help
+    if (tileX < 866 && tileX > 730 && tileY < 850 && tileY > 800) {
+        button.play();
+        pauseMenu.destroy();
+        game.input.onDown.remove(pauseMenuHandler, this);
+        initControlsMenu();
+    }
+    //Menu
+    if (tileX < 866 && tileX > 730 && tileY < 955 && tileY > 905) {
+        game.paused = !game.paused;
+        button.play();
+        this.game.state.start('MainMenu');
+    }
+}
+
+function initControlsMenu() {
+    controlsMenu = game.add.sprite(game.world.centerX, game.world.centerY, 'controlsMenu');
+    controlsMenu.anchor.setTo(.5, .5);
+    controlsMenu.inputEnabled = true;
+    game.input.onDown.add(controlsMenuHandler, this);
+}
+
+function controlsMenuHandler(pointer, event) {
+    var tileworldX = pointer.worldX - (pointer.worldX);
+    var tileworldY = pointer.worldY - (pointer.worldY);
+    var tileX = Math.floor(pointer.worldX);
+    var tileY = Math.floor(pointer.worldY);
+    //Back
+    if (tileX < 645 && tileX > 555 && tileY < 684 && tileY > 650) {
+        button.play();
+        controlsMenu.destroy();
+        game.input.onDown.remove(levelCompleteMenuHandler, this);
+        pauseMenu = game.add.sprite(game.world.centerX, game.world.centerY, 'pauseMenu');
+        pauseMenu.anchor.setTo(.5, .5);
+        pauseMenu.inputEnabled = true;
+        game.input.onDown.add(pauseMenuHandler, this);
+    }
+}
+
+function initLevelCompleteMenu() {
+    levelCompleteMenu = game.add.sprite(game.world.centerX, game.world.centerY, 'levelCompleteMenu');
+    levelCompleteMenu.anchor.setTo(.5, .5);
+    levelCompleteMenu.inputEnabled = true;
+    game.input.onDown.add(levelCompleteMenuHandler, this);
+}
+
+function levelCompleteMenuHandler(pointer, event) {
+    var tileworldX = pointer.worldX - (pointer.worldX);
+    var tileworldY = pointer.worldY - (pointer.worldY);
+    var tileX = Math.floor(pointer.worldX);
+    var tileY = Math.floor(pointer.worldY);
+    console.log(tileX + "," + tileY);
 }
