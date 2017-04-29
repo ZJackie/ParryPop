@@ -716,6 +716,7 @@ function handleUpdate() {
             if (cursors.I.isDown) {
                 toggle = !toggle;
                 player.godmode = !player.godmode;
+                writeText("Godmode: " + player.godmode, 1000);
                 console.log(player.godmode);
                 game.time.events.add(1000, function() { toggle = !toggle; }, this);
             }
@@ -727,7 +728,7 @@ function handleUpdate() {
                     enemy.healthbar.width = 0;
                     enemy.destroy;
                 }
-                if (enemy.enemyType != "persephone" && enemy.enemyType != "cerberus" && enemy.enemyType != "hades") {
+                if (enemy.enemyType != "tentacles" && enemy.enemyType != "persephone" && enemy.enemyType != "cerberus" && enemy.enemyType != "hades") {
                     enemy.body.clearShapes();
                     enemy.destroy();
                 }
@@ -799,17 +800,20 @@ function handleUpdate() {
 function endGame(level) {
     if (level == "Level1") {
         if (enemies.length == 0 && player.bossAlive != false) {
+            writeText("Cerberus has spawned!", 3000);
             spawnCerberus();
             resetHealth();
         }
     } else if (level == "Level2") {
         if (enemies.length == 0 && player.bossAlive != false) {
+            writeText("Persephone has spawned!", 3000);
             spawnPersephone();
             whale_1.play();
             resetHealth();
         }
     } else if (level == "Level3") {
         if (enemies.length == 0 && player.bossAlive != false) {
+            writeText("Hades has spawned!", 3000);
             console.log(enemies.length);
             spawnHades();
             resetHealth();
@@ -872,18 +876,18 @@ function handleCerberus(enemy) {
         bubblebullet.body.collides(bulletCollisionGroup, destroyBullets, this);
     }
     if (enemy.phase1 == false && enemy.health < 15) {
-        //writeText("Cerberus has spawned 5 Red Slimes!");
+        writeText("Cerberus has spawned 5 Red Slimes!", 3000);
         spawnSlimes(5, 'redSlime');
         enemy.phase1 = true;
     }
     if (enemy.phase2 == false && enemy.health < 10) {
-        //writeText("Cerberus unleashes his flames!");
+        writeText("Cerberus unleashes his flames!", 3000);
         cerberus_fire_storm.play();
         enemy.bullets.createMultiple(15, 'fireBullet');
         enemy.phase2 = true;
     }
     if (enemy.phase3 == false && enemy.health < 5) {
-        //writeText("Cerberus is enraged!");
+        writeText("Cerberus is enraged!", 3000);
         game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
     }
 }
@@ -950,17 +954,17 @@ function handlePersephone(enemy) {
             enemy.ramAttack = false;
         }
         if (enemy.phase1 == false && enemy.health < 15) {
-            //writeText("Persephone has spawned 8 Bubble Towers!");
+            writeText("Persephone has spawned 8 Bubble Towers!", 3000);
             spawnTowers(8, 'bubbleTower');
             enemy.phase1 = true;
         }
         if (enemy.phase2 == false && enemy.health < 10) {
-            //writeText("Persephone has spawned 8 Blue Slimes!");
+            writeText("Persephone has spawned 8 Blue Slimes!", 3000);
             spawnSlimes(8, 'blueSlime');
             enemy.phase2 = true;
         }
         if (enemy.phase3 == false && enemy.health < 5) {
-            //writeText("Kill all 6 Tentacles to bring down Persephone's Shield!");
+            writeText("Kill all 6 Tentacles to bring down Persephone's Shield!", 4500);
             spawnTenctales(6);
             player.tentaclecount = 6;
             enemy.shield = true;
@@ -1140,6 +1144,18 @@ function gameCompleteMenuHandler() {
 }
 
 //writes text for boss phases
-function writeText(text) {
-
+function writeText(text, time) {
+    var style = { font: "32px Arial", fill: "#FFF", align: "center" };
+    text = game.add.text(player.x, player.y - 100, text, style);
+    console.log(player.x + "" + player.y);
+    console.log(text.x + "" + text.y);
+    var interval = setInterval(function() {
+        text.x = player.x;
+        text.y = player.y - 100;
+    }, 15);
+    text.anchor.set(0.5);
+    game.time.events.add(time, function() {
+        clearInterval(interval);
+        text.destroy();
+    }, this);
 }
