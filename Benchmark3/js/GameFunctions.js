@@ -1,5 +1,4 @@
 var toggle = false;
-var pauseToggle = false;
 
 function initPlayer() {
     //Add my Robot player

@@ -24,7 +24,7 @@ body {
     display: block;
     width: 130px;
     height: 115px;
-    border: 3px solid grey;
+    border: 5px solid grey;
     border-radius: 50%;
     font-size: 18px;
     color: white;
@@ -48,6 +48,6 @@ a {
 @media only screen and (min-width:765px) {
     .circle {
         display: inline-block;
-        margin: 0 10px;
+        margin: 5px 10px;
     }
 }
