@@ -1147,8 +1147,6 @@ function gameCompleteMenuHandler() {
 function writeText(text, time) {
     var style = { font: "32px Arial", fill: "#FFF", align: "center" };
     text = game.add.text(player.x, player.y - 100, text, style);
-    console.log(player.x + "" + player.y);
-    console.log(text.x + "" + text.y);
     var interval = setInterval(function() {
         text.x = player.x;
         text.y = player.y - 100;
