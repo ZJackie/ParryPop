@@ -1,4 +1,4 @@
-var toggle = false;
+var toggle = false; //used to handle godmode toggle
 
 function initPlayer() {
     //Add my Robot player
@@ -26,7 +26,6 @@ function initPlayer() {
     player.ultimateBar.bringToTop();
     player.tentaclecount = 0;
     player.godmode = false;
-
 
     game.physics.p2.enable(player, true);
     player.body.setCircle(20);
@@ -67,6 +66,7 @@ function initAudio() {
     tower_block = game.add.audio('tower_block');
 }
 
+//spawns all slimes and towers for the current level
 function initEnemies(slimeName, towerName, numSlimes, numTowers) {
     enemies = game.add.group();
     //enemies.enableBody = true;
@@ -188,7 +188,7 @@ function spawnHades() {
 
     hades.mass = 20;
     hades.maxhealth = 20;
-    hades.health = 20;
+    hades.health = 5;
 
     healthbar = game.add.sprite(300, 30, 'healthbar');
     healthbar.height = 10;
@@ -224,22 +224,28 @@ function spawnHades() {
     hades.bullets = game.add.group();
     hades.bullets.enableBody = true;
     hades.bullets.physicsBodyType = Phaser.Physics.P2JS;
-    hades.bullets.createMultiple(5, 'voidbullet');
+    hades.bullets.createMultiple(25, 'voidBullet');
     hades.bullets.setAll('checkWorldBounds', true);
     hades.bullets.setAll('outOfBoundsKill', true);
     hades.bullets.setAll('anchor.x', 0.5);
     hades.bullets.setAll('anchor.y', 0.5);
 
     //attacks
-    hades.ramAttack = false;
+    hades.nextTp = 0;
+    hades.tpRate = 4500;
     hades.invulnerability = false;
     hades.phase1 = false;
     hades.phase2 = false;
     hades.phase3 = false;
 }
 
+//Damages enemies, kills them if they have been damaged to 0 health
+//body1 is the body being damaged
+//body2 is the body used to do damage
 function killEnemies(body1, body2) {
+    //destroys bullet
     body2.sprite.kill();
+    //damages enemies if they are vulnerable and destroys them
     if (body1.isVulnerable == true) {
         if (player.ultimate < 10) {
             player.ultimate++;
@@ -257,6 +263,7 @@ function killEnemies(body1, body2) {
             if (body1.sprite.enemyType == "tentacles") {
                 player.tentaclecount--;
             }
+            //once bosses are deadm init level complete screen
             if (body1.sprite.enemyType == "persephone") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
@@ -279,6 +286,7 @@ function killEnemies(body1, body2) {
                 }, this);
             }
             body1.sprite.destroy();
+            //else just damage them if they have >1 health left and play damage sound
         } else {
             body1.sprite.health--;
             if (body1.sprite.enemyType == "tower") {
@@ -296,6 +304,7 @@ function killEnemies(body1, body2) {
             }
         }
     } else {
+        //different sounds for when slimes are damaged
         var currentGameState = this.game.state.current;
         if (body1.sprite.enemyType == "slime") {
             switch (currentGameState) {
@@ -317,6 +326,7 @@ function killEnemies(body1, body2) {
     }
 }
 
+//damage enemies with player sword (body2)
 function smackEnemies(body1, body2) {
     if (shield > 0) {
         if (body1.isVulnerable == true) {
@@ -339,6 +349,7 @@ function smackEnemies(body1, body2) {
     }
 }
 
+//handler for slime movement
 function bounce(body1, body2) {
     var num = Math.random();
     if (num < 0.25) {
@@ -352,12 +363,10 @@ function bounce(body1, body2) {
     }
 }
 
+//handles all enemy movements and actions
 function handleEnemies() {
-    handleEnemyMovements();
-}
-
-function handleEnemyMovements() {
     enemies.forEach(function(enemy) {
+        //handle slime movements and actions
         if (enemy.enemyType == "slime") {
             enemy.animations.play('slimeIdle');
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
@@ -377,6 +386,7 @@ function handleEnemyMovements() {
             if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 80) {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
             }
+            //handle tower actions
         } else if (enemy.enemyType == "tower") {
             enemy.animations.play('toweridle', 10);
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
@@ -395,6 +405,7 @@ function handleEnemyMovements() {
                     fireEnemyBullet(enemy);
                 }
             }
+            //handle all boss fights
         } else if (enemy.enemyType == "cerberus") {
             handleCerberus(enemy);
         } else if (enemy.enemyType == "persephone" || enemy.enemyType == "tentacles") {
@@ -405,7 +416,9 @@ function handleEnemyMovements() {
     }, this);
 }
 
+//spawns towers
 function spawnTowers(NumberOfTowers, towerName) {
+    //creates towers that spawn at random locations
     for (var i = 0; i < NumberOfTowers; i++) {
         var towers = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), towerName);
         var arr = [];
@@ -429,10 +442,11 @@ function spawnTowers(NumberOfTowers, towerName) {
         towers.body.collides(playerCollisionGroup, takeDamage, this);
         towers.body.collides(bulletCollisionGroup, killEnemies, this);
         towers.body.collides([enemyCollisionGroup, borderCollisionGroup, playerCollisionGroup]);
-
+        //handle tower bullets
         towers.bullets = game.add.group();
         towers.bullets.enableBody = true;
         towers.bullets.physicsBodyType = Phaser.Physics.P2JS;
+        //Different levels will have different towers, and bullets
         switch (towerName) {
             case 'bubbleTower':
                 towers.bullets.createMultiple(5, 'bubblebullet');
@@ -456,6 +470,7 @@ function spawnTowers(NumberOfTowers, towerName) {
     }
 }
 
+//spawns slimes at random locations
 function spawnSlimes(NumberOfSlimes, slimeName) {
     for (var i = 0; i < NumberOfSlimes; i++) {
         var slime = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), slimeName);
@@ -491,6 +506,7 @@ function spawnSlimes(NumberOfSlimes, slimeName) {
     }
 }
 
+//spawns tentacles for 3rd persephone boss phase
 function spawnTenctales(NumberOfTentacles) {
     for (var i = 0; i < NumberOfTentacles; i++) {
         var tentacles = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), 'tentacles');
@@ -515,6 +531,7 @@ function spawnTenctales(NumberOfTentacles) {
     }
 }
 
+//Handles projectiles that are fired by enemy towers
 function fireEnemyBullet(enemy) {
     angle = Math.random() * Math.PI * 2;
     var enemyBullet = enemy.bullets.getFirstExists(false);
@@ -557,6 +574,7 @@ function fireEnemyBullet(enemy) {
     }
 }
 
+//destroys bullets that the player fires at
 function destroyBullets(body1, body2) {
     if (player.ultimate < 10) {
         player.ultimate++;
@@ -568,6 +586,7 @@ function destroyBullets(body1, body2) {
     body2.sprite.kill();
 }
 
+//called when the user parries bullets
 function parryBullets(body1, body2) {
     if (shield > 0) {
         body1.clearShapes();
@@ -579,6 +598,7 @@ function parryBullets(body1, body2) {
     }
 }
 
+//called when the player takes damage from colliding with enemies
 function takeDamage(body1, body2) {
     // decrement health, handle heart graphic in update
     if (player.health > 0) {
@@ -596,6 +616,7 @@ function takeDamage(body1, body2) {
     }
 }
 
+//called when the player takes damage from other bullets
 function takeBulletDamage(body1, body2) {
     body1.sprite.kill()
         // decrement health, handle heart graphic in update
@@ -614,6 +635,7 @@ function takeBulletDamage(body1, body2) {
     }
 }
 
+//makes the ultimate bar flash, to signal that its ready
 function ultimateReady() {
     var handle;
     var handle2;
@@ -635,6 +657,7 @@ function ultimateReady() {
     }
 }
 
+//allows the player to generate a brief shield that repels enemies
 function useUltimate() {
     if (player.ultimate == 10) {
         invulnerability = true;
@@ -654,6 +677,7 @@ function useUltimate() {
     }
 }
 
+//resets player health, used when the boss spawns
 function resetHealth() {
     player.health = 10;
     hearts.removeAll();
@@ -708,10 +732,12 @@ function handleUpdate() {
                 player.animations.play('walk', false);
             }
         }
+        //allows player to use ultimate
         if (cursors.R.isDown) {
             useUltimate();
         }
         //Cheats
+        //Godmode
         if (!toggle) {
             if (cursors.I.isDown) {
                 toggle = !toggle;
@@ -721,6 +747,7 @@ function handleUpdate() {
                 game.time.events.add(1000, function() { toggle = !toggle; }, this);
             }
         }
+        //kill-all command
         if (cursors.K.isDown) {
             enemies.forEach(function(enemy) {
                 if (enemy.enemyType == 'tower') {
@@ -734,6 +761,7 @@ function handleUpdate() {
                 }
             });
         }
+        //Level switching
         if (cursors.ONE.isDown) {
             this.game.state.start('Level1');
         }
@@ -743,6 +771,7 @@ function handleUpdate() {
         if (cursors.THREE.isDown) {
             this.game.state.start('Level3');
         }
+        //player shoots bullet
         if (game.input.mousePointer.leftButton.isDown) {
             if (game.time.now > nextFire && bullets.countDead() > 0) {
                 pandora_shoot.play();
@@ -769,6 +798,7 @@ function handleUpdate() {
                 }
             }
         }
+        //sword
         if (game.input.mousePointer.rightButton.isDown) {
             if (game.time.now > nextSwing) {
                 nextSwing = game.time.now + swingRate;
@@ -797,6 +827,7 @@ function handleUpdate() {
 
 }
 
+//Handles boss spawning for the end of the level (if all enemies are slain)
 function endGame(level) {
     if (level == "Level1") {
         if (enemies.length == 0 && player.bossAlive != false) {
@@ -831,17 +862,20 @@ function endGame(level) {
     }
 }
 
+//Cerberus boss fight handler
 function handleCerberus(enemy) {
     enemy.animations.play('cerberusidle');
+    //decreases circle
     enemy.currentRadius = enemy.currentRadius - enemy.rate;
     enemy.body.setCircle(enemy.currentRadius);
     enemy.body.setCollisionGroup(enemyCollisionGroup);
+    //handle circle
     var lowerBound = enemy.width / 2 - enemy.width * 0.1 + 5;
     var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
+    //sets circle back to width if <= lower bound
     if (enemy.currentRadius <= lowerBound) {
         enemy.currentRadius = enemy.width;
     }
-
     if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
         enemy.body.isVulnerable = true;
     } else {
@@ -854,27 +888,28 @@ function handleCerberus(enemy) {
     } else {
         angle = game.physics.arcade.angleBetween(enemy, player) - Math.random();
     }
-    //    enemy.body.velocity.x = 500 * Math.cos(angle);
-    //     enemy.body.velocity.y = 500 * Math.sin(angle);
-    var bubblebullet = enemy.bullets.getFirstExists(false);
-    if (bubblebullet) {
+    //Handle cerberus fire projectiles
+    var fireBullet = enemy.bullets.getFirstExists(false);
+    if (fireBullet) {
         fire_tower_2.play();
-        game.physics.p2.enable(bubblebullet, true);
-        bubblebullet.enemyType = "enemyBullet";
-        bubblebullet.body.fixedRotation = true;
-        bubblebullet.lifespan = 2000;
-        bubblebullet.reset(enemy.x, enemy.y);
-        bubblebullet.rotation = angle + game.math.degToRad(-90);;
-        bubblebullet.body.velocity.x = 400 * Math.cos(angle);
-        bubblebullet.body.velocity.y = 400 * Math.sin(angle);
-        bubblebullet.isVulnerable = true;
-        bubblebullet.body.setCircle(10)
-        bubblebullet.body.setCollisionGroup(enemybulletCollisionGroup);
-        bubblebullet.body.collides([borderCollisionGroup])
-        bubblebullet.body.collides(swordCollisionGroup, parryBullets, this);
-        bubblebullet.body.collides(playerCollisionGroup, takeBulletDamage, this);
-        bubblebullet.body.collides(bulletCollisionGroup, destroyBullets, this);
+        game.physics.p2.enable(fireBullet, true);
+        fireBullet.enemyType = "enemyBullet";
+        fireBullet.body.fixedRotation = true;
+        fireBullet.lifespan = 2000;
+        fireBullet.reset(enemy.x, enemy.y);
+        fireBullet.rotation = angle + game.math.degToRad(-90);;
+        fireBullet.body.velocity.x = 400 * Math.cos(angle);
+        fireBullet.body.velocity.y = 400 * Math.sin(angle);
+        fireBullet.isVulnerable = true;
+        fireBullet.body.setCircle(10)
+        fireBullet.body.setCollisionGroup(enemybulletCollisionGroup);
+        fireBullet.body.collides([borderCollisionGroup])
+        fireBullet.body.collides(swordCollisionGroup, parryBullets, this);
+        fireBullet.body.collides(playerCollisionGroup, takeBulletDamage, this);
+        fireBullet.body.collides(bulletCollisionGroup, destroyBullets, this);
     }
+
+    //different cerberus boss phases
     if (enemy.phase1 == false && enemy.health < 15) {
         writeText("Cerberus has spawned 5 Red Slimes!", 3000);
         spawnSlimes(5, 'redSlime');
@@ -892,6 +927,7 @@ function handleCerberus(enemy) {
     }
 }
 
+//Persephone boss fight handler
 function handlePersephone(enemy) {
     if (enemy.enemyType == "persephone") {
         enemy.animations.play('persephoneidle');
@@ -899,6 +935,7 @@ function handlePersephone(enemy) {
         if (random < 2) {
             whale_2.play();
         }
+        //if no shield, handle circle
         if (enemy.shield == false) {
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
             enemy.body.setCircle(enemy.currentRadius);
@@ -929,6 +966,7 @@ function handlePersephone(enemy) {
                 enemy.body.velocity.x = 500 * Math.cos(currentrotation);
                 enemy.body.velocity.y = 500 * Math.sin(currentrotation);
                 angle = game.physics.arcade.angleBetween(enemy, player);
+                //handle persephone's bubble bullets
                 var bubblebullet = enemy.bullets.getFirstExists(false);
                 if (bubblebullet) {
                     whale_shoot.play();
@@ -953,6 +991,8 @@ function handlePersephone(enemy) {
             game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 300);
             enemy.ramAttack = false;
         }
+
+        //different persephone boss phases
         if (enemy.phase1 == false && enemy.health < 15) {
             writeText("Persephone has spawned 8 Bubble Towers!", 3000);
             spawnTowers(8, 'bubbleTower');
@@ -992,15 +1032,92 @@ function handlePersephone(enemy) {
     }
 }
 
+//hades boss fight handler
 function handleHades(enemy) {
+    if (!enemy.phase2 && !enemy.phase3) {
+        enemy.animations.play('hadesidle');
+    }
+    //handle circle
+    enemy.currentRadius = enemy.currentRadius - enemy.rate;
+    enemy.body.setCircle(enemy.currentRadius);
+    enemy.body.setCollisionGroup(enemyCollisionGroup);
+    var lowerBound = enemy.width / 2 - enemy.width * 0.1 + 5;
+    var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
+    //sets circle back to width if <= lower bound
+    if (enemy.currentRadius <= lowerBound) {
+        enemy.currentRadius = enemy.width;
+    }
+    if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
+        enemy.body.isVulnerable = true;
+    } else {
+        enemy.body.isVulnerable = false;
+    }
+    enemy.body.rotation = game.physics.arcade.angleBetween(enemy, player) + game.math.degToRad(-90);
 
+    //handle hades' void bulllets
+    var voidBullet = enemy.bullets.getFirstExists(false);
+    //fires projectiles in random directions
+    if (voidBullet) {
+        //sound.play();
+        angle = Math.random() * 10;
+        game.physics.p2.enable(voidBullet, true);
+        voidBullet.enemyType = "enemyBullet";
+        voidBullet.lifespan = 2000;
+        if (enemy.phase3 == true) {
+            voidBullet.lifespan = 1000;
+        } else {
+            voidBullet.lifespan = 2000;
+        }
+        voidBullet.reset(enemy.x, enemy.y);
+        voidBullet.body.velocity.x = 400 * Math.cos(angle);
+        voidBullet.body.velocity.y = 400 * Math.sin(angle);
+        voidBullet.isVulnerable = true;
+        voidBullet.body.setCircle(10)
+        voidBullet.body.setCollisionGroup(enemybulletCollisionGroup);
+        voidBullet.body.collides([borderCollisionGroup])
+        voidBullet.body.collides(swordCollisionGroup, parryBullets, this);
+        voidBullet.body.collides(playerCollisionGroup, takeBulletDamage, this);
+        voidBullet.body.collides(bulletCollisionGroup, destroyBullets, this);
+    }
+    if (enemy.phase1 == false && enemy.health < 15) {
+        writeText("Hades begins to teleport around the map!", 3000);
+        spawnSlimes(5, 'glitchSlime');
+        enemy.phase1 = true;
+    }
+    if (enemy.phase2 == false && enemy.health < 10) {
+        writeText("Hades begins to teleport faster!", 3000);
+        spawnSlimes(5, 'glitchSlime');
+        spawnTowers(2, 'voidTower');
+        enemy.tpRate = 2500;
+        enemy.phase2 = true;
+    }
+    if (enemy.phase3 == false && enemy.health < 5) {
+        writeText("Hades unleashes the void!!", 3000);
+        enemy.tpRate = 1000;
+        enemy.phase3 = true;
+    }
+    //Hades randomly teleports around the map, faster with each phase
+    if (enemy.phase1 == true || enemy.phase2 == true || enemy.phase3 == true) {
+        if (game.time.now > enemy.nextTp) {
+            enemy.nextTp = game.time.now + enemy.tpRate;
+            enemy.animations.play('hades_tp');
+            enemy.body.x = (game.world.centerX + (-500 + Math.random() * 1000));
+            enemy.body.y = (game.world.centerY + (-500 + Math.random() * 1000));
+        }
+        if (enemy.phase3 == true) {
+            enemy.bullets.createMultiple(1, 'voidBullet');
+        }
+    }
 }
 
+//Pause menu once user presses 'ESC'
 function initPauseMenu() {
     window.onkeydown = function(event) {
+        //No point of having a pause menu if boss is dead
         if (player.bossAlive) {
             if (this.game.state.current == "Level1" || this.game.state.current == "Level2" || this.game.state.current == "Level3") {
                 if (event.keyCode == 27) {
+                    //switches focus to pause menu
                     if (!game.paused) {
                         game.time.events.add(100, function() {
                             game.paused = !game.paused;
@@ -1010,6 +1127,7 @@ function initPauseMenu() {
                         pauseMenu.anchor.setTo(.5, .5);
                         pauseMenu.inputEnabled = true;
                         game.input.onDown.add(pauseMenuHandler, this);
+                        //unpauses the game and destroys all menus along with their handlers
                     } else {
                         game.paused = !game.paused;
                         game.camera.follow(player);
@@ -1024,6 +1142,8 @@ function initPauseMenu() {
     }
 }
 
+//handles pause menu input allowing a user to 
+//resume, go to the help screen, or return to menu
 function pauseMenuHandler(pointer, event) {
     var tileworldX = pointer.worldX - (pointer.worldX);
     var tileworldY = pointer.worldY - (pointer.worldY);
@@ -1052,6 +1172,7 @@ function pauseMenuHandler(pointer, event) {
     }
 }
 
+//controls menu
 function initControlsMenu() {
     controlsMenu = game.add.sprite(game.world.centerX, game.world.centerY, 'controlsMenu');
     controlsMenu.anchor.setTo(.5, .5);
@@ -1059,6 +1180,7 @@ function initControlsMenu() {
     game.input.onDown.add(controlsMenuHandler, this);
 }
 
+//handles the controls menu input
 function controlsMenuHandler(pointer, event) {
     var tileworldX = pointer.worldX - (pointer.worldX);
     var tileworldY = pointer.worldY - (pointer.worldY);
@@ -1076,6 +1198,7 @@ function controlsMenuHandler(pointer, event) {
     }
 }
 
+//menu shown once the level is complete
 function initLevelCompleteMenu() {
     game.time.events.add(100, function() {
         game.paused = !game.paused;
@@ -1088,6 +1211,7 @@ function initLevelCompleteMenu() {
 
 }
 
+//handles input for level complete menu allowing advancement to the next level
 function levelCompleteMenuHandler(pointer, event) {
     var tileworldX = pointer.worldX - (pointer.worldX);
     var tileworldY = pointer.worldY - (pointer.worldY);
@@ -1098,6 +1222,7 @@ function levelCompleteMenuHandler(pointer, event) {
         game.paused = !game.paused;
         button.play();
         game.input.onDown.remove(levelCompleteMenuHandler, this);
+        //Advance to next level
         switch (this.game.state.current) {
             case "Level1":
                 button.play();
@@ -1119,6 +1244,7 @@ function levelCompleteMenuHandler(pointer, event) {
     }
 }
 
+//Menu for completion of level 3 
 function initGameCompleteMenu() {
     game.time.events.add(100, function() {
         game.paused = !game.paused;
@@ -1130,6 +1256,7 @@ function initGameCompleteMenu() {
     game.input.onDown.add(gameCompleteMenuHandler, this);
 }
 
+//handles game completion menu, allowing user to return to main menu
 function gameCompleteMenuHandler() {
     var tileworldX = pointer.worldX - (pointer.worldX);
     var tileworldY = pointer.worldY - (pointer.worldY);
@@ -1143,7 +1270,7 @@ function gameCompleteMenuHandler() {
     }
 }
 
-//writes text for boss phases
+//writes text for boss phases, displayed for a certain time
 function writeText(text, time) {
     var style = { font: "32px Arial", fill: "#FFF", align: "center" };
     text = game.add.text(player.x, player.y - 100, text, style);
