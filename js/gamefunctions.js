@@ -1,4 +1,5 @@
 var toggle = false; //used to handle godmode toggle
+var hadesFire = 0; //hades phase 3 fire rate
 
 function initPlayer() {
     //Add my Robot player
@@ -79,12 +80,8 @@ function initEnemies(slimeName, towerName, numSlimes, numTowers) {
 function spawnCerberus() {
     enemies = game.add.group();
     enemies.physicsBodyType = Phaser.Physics.P2JS;
-
     var cerberus = enemies.create(game.world.centerX, game.world.centerY, 'cerberus');
-    var arr = [];
-    for (var j = 0; j < 6; j++) {
-        arr.push(j);
-    }
+
     cerberus.mass = 20;
     cerberus.maxhealth = 20;
     cerberus.health = 20;
@@ -93,8 +90,11 @@ function spawnCerberus() {
     healthbar.height = 10;
     healthbar.width = (cerberus.health / cerberus.maxhealth) * 500;
     healthbar.fixedToCamera = true;
-
     cerberus.healthbar = healthbar;
+    var arr = [];
+    for (var j = 0; j < 6; j++) {
+        arr.push(j);
+    }
     cerberus.animations.add('cerberusidle', arr, 12, true);
     cerberus.currentRadius = cerberus.width;
     game.physics.p2.enable(cerberus, true);
@@ -128,12 +128,9 @@ function spawnCerberus() {
 function spawnPersephone() {
     enemies = game.add.group();
     enemies.physicsBodyType = Phaser.Physics.P2JS;
+    var persephone = enemies.create(game.world.centerX + (-500 + Math.random() * 1000),
+        game.world.centerY + (-500 + Math.random() * 1000), 'persephone');
 
-    var persephone = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), 'persephone');
-    var arr = [];
-    for (var j = 0; j < 4; j++) {
-        arr.push(j);
-    }
     persephone.mass = 20;
     persephone.maxhealth = 20;
     persephone.health = 20;
@@ -144,6 +141,11 @@ function spawnPersephone() {
     healthbar.fixedToCamera = true;
     persephone.shield = false;
     persephone.healthbar = healthbar;
+
+    var arr = [];
+    for (var j = 0; j < 4; j++) {
+        arr.push(j);
+    }
     persephone.animations.add('persephoneidle', arr, 12, true);
     persephone.currentRadius = persephone.width;
     game.physics.p2.enable(persephone, true);
@@ -179,16 +181,10 @@ function spawnPersephone() {
 function spawnHades() {
     enemies = game.add.group();
     enemies.physicsBodyType = Phaser.Physics.P2JS;
-
     var hades = enemies.create(game.world.centerX, game.world.centerY, 'hades');
-    var arr = [];
-    for (var j = 0; j < 3; j++) {
-        arr.push(j);
-    }
-
     hades.mass = 20;
     hades.maxhealth = 20;
-    hades.health = 5;
+    hades.health = 20;
 
     healthbar = game.add.sprite(300, 30, 'healthbar');
     healthbar.height = 10;
@@ -196,14 +192,13 @@ function spawnHades() {
     healthbar.fixedToCamera = true;
     hades.shield = false;
     hades.healthbar = healthbar;
-    hades.animations.add('hadesidle', arr, 12, true);
-    arr = [];
-    for (var j = 3; j < 6; j++) {
+    var arr = [];
+    for (var j = 0; j < 3; j++) {
         arr.push(j);
     }
-    hades.animations.add('hades_open', arr, 12, true);
+    hades.animations.add('hadesidle', arr, 12, true);
     arr = [];
-    for (var j = 7; j < 20; j++) {
+    for (var j = 0; j < 12; j++) {
         arr.push(j);
     }
     hades.animations.add('hades_tp', arr, 12, true);
@@ -217,7 +212,7 @@ function spawnHades() {
     hades.body.collides(borderCollisionGroup);
     hades.body.collides(playerCollisionGroup);
     hades.enemyType = "hades";
-    hades.rate = 0.5;
+    hades.rate = 0.4;
     hades.body.static = true;
 
     //bullets
@@ -278,7 +273,7 @@ function killEnemies(body1, body2) {
                     initLevelCompleteMenu();
                 }, this);
             }
-            if (body1.sprite.enemy == "hades") {
+            if (body1.sprite.enemyType == "hades") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
                 game.time.events.add(1500, function() {
@@ -416,8 +411,8 @@ function handleEnemies() {
     }, this);
 }
 
-//spawns towers
-function spawnTowers(NumberOfTowers, towerName) {
+//spawns towers with default health of 3
+function spawnTowers(NumberOfTowers, towerName, health = 3) {
     //creates towers that spawn at random locations
     for (var i = 0; i < NumberOfTowers; i++) {
         var towers = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), towerName);
@@ -426,7 +421,7 @@ function spawnTowers(NumberOfTowers, towerName) {
             arr.push(j);
         }
         towers.maxhealth = 3;
-        towers.health = 3;
+        towers.health = health;
         healthbar = game.add.sprite(towers.x - 25, towers.y - 50, 'healthbar');
         healthbar.height = 10;
         healthbar.width = (towers.health / towers.maxhealth) * 50;
@@ -466,7 +461,7 @@ function spawnTowers(NumberOfTowers, towerName) {
         towers.bullets.setAll('anchor.y', 0.5);
 
         towers.enemyType = "tower";
-        towers.rate = Math.random() * 0.4 + 0.1
+        towers.rate = Math.random() * 0.4 + 0.15;
     }
 }
 
@@ -527,7 +522,7 @@ function spawnTenctales(NumberOfTentacles) {
         tentacles.body.collides(playerCollisionGroup, takeDamage, this);
         tentacles.body.collides(bulletCollisionGroup, killEnemies, this);
         tentacles.body.collides([enemyCollisionGroup, borderCollisionGroup, playerCollisionGroup]);
-        tentacles.rate = Math.random() * 0.4 + 0.1;
+        tentacles.rate = Math.random() * 0.4 + 0.2;
     }
 }
 
@@ -743,7 +738,6 @@ function handleUpdate() {
                 toggle = !toggle;
                 player.godmode = !player.godmode;
                 writeText("Godmode: " + player.godmode, 1000);
-                console.log(player.godmode);
                 game.time.events.add(1000, function() { toggle = !toggle; }, this);
             }
         }
@@ -845,7 +839,6 @@ function endGame(level) {
     } else if (level == "Level3") {
         if (enemies.length == 0 && player.bossAlive != false) {
             writeText("Hades has spawned!", 3000);
-            console.log(enemies.length);
             spawnHades();
             resetHealth();
         }
@@ -924,6 +917,7 @@ function handleCerberus(enemy) {
     if (enemy.phase3 == false && enemy.health < 5) {
         writeText("Cerberus is enraged!", 3000);
         game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
+        enemy.phase3 = true;
     }
 }
 
@@ -994,8 +988,8 @@ function handlePersephone(enemy) {
 
         //different persephone boss phases
         if (enemy.phase1 == false && enemy.health < 15) {
-            writeText("Persephone has spawned 8 Bubble Towers!", 3000);
-            spawnTowers(8, 'bubbleTower');
+            writeText("Persephone has spawned 6 Bubble Towers!", 3000);
+            spawnTowers(6, 'bubbleTower');
             enemy.phase1 = true;
         }
         if (enemy.phase2 == false && enemy.health < 10) {
@@ -1010,8 +1004,10 @@ function handlePersephone(enemy) {
             enemy.shield = true;
             enemy.phase3 = true;
         }
-        if (player.tentaclecount == 0) {
+        if (player.tentaclecount == 0 && enemy.phase3 == true) {
+            writeText("Persephone's shield is down!", 3000);
             enemy.shield = false;
+            player.tentaclecount--; // stops write text from looping
         }
     } else if (enemy.enemyType == "tentacles") {
         enemy.animations.play('tentacleidle');
@@ -1034,7 +1030,7 @@ function handlePersephone(enemy) {
 
 //hades boss fight handler
 function handleHades(enemy) {
-    if (!enemy.phase2 && !enemy.phase3) {
+    if (!enemy.phase1 && !enemy.phase2 && !enemy.phase3) {
         enemy.animations.play('hadesidle');
     }
     //handle circle
@@ -1059,7 +1055,7 @@ function handleHades(enemy) {
     //fires projectiles in random directions
     if (voidBullet) {
         //sound.play();
-        angle = Math.random() * 10;
+        angle = Math.random() * Math.PI * 2
         game.physics.p2.enable(voidBullet, true);
         voidBullet.enemyType = "enemyBullet";
         voidBullet.lifespan = 2000;
@@ -1087,25 +1083,39 @@ function handleHades(enemy) {
     if (enemy.phase2 == false && enemy.health < 10) {
         writeText("Hades begins to teleport faster!", 3000);
         spawnSlimes(5, 'glitchSlime');
-        spawnTowers(2, 'voidTower');
+        spawnTowers(1, 'voidTower');
         enemy.tpRate = 2500;
         enemy.phase2 = true;
     }
     if (enemy.phase3 == false && enemy.health < 5) {
-        writeText("Hades unleashes the void!!", 3000);
-        enemy.tpRate = 1000;
+        writeText("Hades unleashes the void!! Towers and slimes will keep spawning!", 3000);
+        spawnSlimes(2, 'glitchSlime');
+        spawnTowers(3, 'voidTower', 1);
+        enemy.tpRate = 1500;
         enemy.phase3 = true;
     }
     //Hades randomly teleports around the map, faster with each phase
     if (enemy.phase1 == true || enemy.phase2 == true || enemy.phase3 == true) {
         if (game.time.now > enemy.nextTp) {
             enemy.nextTp = game.time.now + enemy.tpRate;
-            enemy.animations.play('hades_tp');
+            //control hades tp animation depending on how fast he teleports
+            if (enemy.phase1 == true && enemy.phase2 == false && enemy.phase3 == false) {
+                enemy.animations.play('hades_tp', 2.44); // 11/4.5
+            }
+            if (enemy.phase1 == true && enemy.phase2 == true && enemy.phase3 == false) {
+                enemy.animations.play('hades_tp', 4.33); // 11/2.5
+            }
+            if (enemy.phase1 == true && enemy.phase2 == true && enemy.phase3 == true) {
+                enemy.animations.play('hades_tp', 7.33); // 11/1.5
+            }
             enemy.body.x = (game.world.centerX + (-500 + Math.random() * 1000));
             enemy.body.y = (game.world.centerY + (-500 + Math.random() * 1000));
         }
-        if (enemy.phase3 == true) {
-            enemy.bullets.createMultiple(1, 'voidBullet');
+        if (enemy.phase3 == true && game.time.now > hadesFire) {
+            //spawns tower and slime every 8 seconds
+            hadesFire = game.time.now + 8000;
+            spawnSlimes(2, 'glitchSlime');
+            spawnTowers(2, 'voidTower', 1);
         }
     }
 }
@@ -1257,7 +1267,7 @@ function initGameCompleteMenu() {
 }
 
 //handles game completion menu, allowing user to return to main menu
-function gameCompleteMenuHandler() {
+function gameCompleteMenuHandler(pointer, event) {
     var tileworldX = pointer.worldX - (pointer.worldX);
     var tileworldY = pointer.worldY - (pointer.worldY);
     var tileX = Math.floor(pointer.worldX);
