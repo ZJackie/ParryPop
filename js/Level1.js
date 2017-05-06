@@ -58,7 +58,7 @@ Level1.prototype = {
 
         //enemies
         //initEnemies('redSlime', 'fireballTower', 0, 0);
-        initEnemies('redSlime', 'fireballTower', 8, 3);
+        initEnemies('redSlime', 'fireballTower', 8, 4);
         initPlayer();
 
         //border
