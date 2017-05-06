@@ -458,7 +458,7 @@ function spawnTowers(NumberOfTowers, towerName, health = 3) {
                 towers.bullets.createMultiple(5, 'fireBullet');
                 break;
             case 'voidTower':
-                towers.bullets.createMultiple(5, 'voidBullet');
+                towers.bullets.createMultiple(8, 'voidBullet');
                 break;
             default:
         }
