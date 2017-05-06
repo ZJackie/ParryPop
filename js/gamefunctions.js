@@ -53,6 +53,7 @@ function initAudio() {
     void_tower_attack = game.add.audio('void_tower_attack');
     hades_attack = game.add.audio('hades_attack');
     hades_tp = game.add.audio('hades_tp');
+    hades_damaged = game.add.audio('hades_damaged');
 
     //Pandora Sounds
     pandora_damaged = game.add.audio('pandora_damaged');
@@ -184,6 +185,7 @@ function spawnPersephone() {
 }
 
 function spawnHades() {
+    hades_damaged.play();
     enemies = game.add.group();
     enemies.physicsBodyType = Phaser.Physics.P2JS;
     var hades = enemies.create(game.world.centerX, game.world.centerY, 'hades');
@@ -302,7 +304,7 @@ function killEnemies(body1, body2) {
                 //cerberus hurt sound
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 500;
             } else if (body1.sprite.enemyType == "hades") {
-                //hades hurt sound
+                hades_damaged.play();
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 500;
             }
         }
@@ -1044,6 +1046,7 @@ function handleHades(enemy) {
     if (!enemy.phase1 && !enemy.phase2 && !enemy.phase3) {
         enemy.animations.play('hadesidle');
     }
+    var randomSound = Math.random() * 20;
     //handle circle
     enemy.currentRadius = enemy.currentRadius - enemy.rate;
     enemy.body.setCircle(enemy.currentRadius);

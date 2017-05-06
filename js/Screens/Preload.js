@@ -56,26 +56,37 @@ Preload.prototype = {
 
         //Sounds
         game.load.audio('button', 'assets/sounds/button.wav');
+
+        //Pandora
         game.load.audio('pandora_damaged', 'assets/sounds/pandora_damaged.wav');
         game.load.audio('pandora_sword', 'assets/sounds/pandora_sword_1.wav');
         game.load.audio('pandora_shoot', 'assets/sounds/projectile_2.wav');
+
+        //towers
         game.load.audio('fire_tower', 'assets/sounds/fire_tower.wav');
         game.load.audio('fire_tower_2', 'assets/sounds/fire_tower_2.wav');
         game.load.audio('water_tower', 'assets/sounds/water_tower.wav');
+        game.load.audio('tower_block', 'assets/sounds/tower_block.wav');
+        game.load.audio('tower_damaged', 'assets/sounds/tower_damaged.wav');
+        game.load.audio('void_tower_attack', 'assets/sounds/void_tower_attack.wav');
+
+
+        //slimes
         game.load.audio('slime_1', 'assets/sounds/slime_1.wav');
         game.load.audio('slime_2', 'assets/sounds/slime_2.wav');
         game.load.audio('slime_3', 'assets/sounds/slime_3.wav');
         game.load.audio('slime_hurt', 'assets/sounds/slime_hurt.wav');
-        game.load.audio('tower_block', 'assets/sounds/tower_block.wav');
+
+        //bosses
+        game.load.audio('cerberus_fire_storm', 'assets/sounds/cerberus_fire_storm.wav');
         game.load.audio('whale_hurt', 'assets/sounds/whale_hurt.wav');
         game.load.audio('whale_1', 'assets/sounds/whale_1.wav');
         game.load.audio('whale_2', 'assets/sounds/whale_2.wav');
         game.load.audio('whale_shoot', 'assets/sounds/whale_shoot.wav');
-        game.load.audio('tower_damaged', 'assets/sounds/tower_damaged.wav');
-        game.load.audio('cerberus_fire_storm', 'assets/sounds/cerberus_fire_storm.wav');
-        game.load.audio('void_tower_attack', 'assets/sounds/void_tower_attack.wav');
         game.load.audio('hades_attack', 'assets/sounds/hades_attack.wav');
         game.load.audio('hades_tp', 'assets/sounds/hades_tp.wav');
+        game.load.audio('hades_damaged', 'assets/sounds/hades_damaged.wav');
+
 
     },
     create: function() {
