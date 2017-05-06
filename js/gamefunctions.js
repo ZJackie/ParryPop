@@ -51,6 +51,8 @@ function initAudio() {
 
     //Level 3
     void_tower_attack = game.add.audio('void_tower_attack');
+    hades_attack = game.add.audio('hades_attack');
+    hades_tp = game.add.audio('hades_tp');
 
     //Pandora Sounds
     pandora_damaged = game.add.audio('pandora_damaged');
@@ -421,7 +423,7 @@ function handleEnemies() {
 function spawnTowers(NumberOfTowers, towerName, health = 3) {
     //creates towers that spawn at random locations
     for (var i = 0; i < NumberOfTowers; i++) {
-        var towers = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), 
+        var towers = enemies.create(game.world.centerX + (-500 + Math.random() * 1000),
             game.world.centerY + (-500 + Math.random() * 1000), towerName);
 
         var arr = [];
@@ -1063,7 +1065,9 @@ function handleHades(enemy) {
     var voidBullet = enemy.bullets.getFirstExists(false);
     //fires projectiles in random directions
     if (voidBullet) {
-        //sound.play();
+        if (!hades_attack.isPlaying) {
+            hades_attack.play();
+        }
         angle = Math.random() * Math.PI * 2
         game.physics.p2.enable(voidBullet, true);
         voidBullet.enemyType = "enemyBullet";
@@ -1101,6 +1105,7 @@ function handleHades(enemy) {
     if (enemy.phase1 == true || enemy.phase2 == true || enemy.phase3 == true) {
         if (game.time.now > enemy.nextTp) {
             enemy.nextTp = game.time.now + enemy.tpRate;
+            hades_tp.play();
             //control hades tp animation depending on how fast he teleports
             if (enemy.phase1 == true && enemy.phase2 == false && enemy.phase3 == false) {
                 enemy.animations.play('hades_tp', 2.44); // 11/4.5

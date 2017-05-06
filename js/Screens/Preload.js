@@ -27,7 +27,7 @@ Preload.prototype = {
         game.load.image('ultimatebar', 'assets/other_sprites/ultimatebar.png');
         game.load.image('ultimatebarInvert', 'assets/other_sprites/ultimatebarinvert.png');
         game.load.physics('data', 'assets/data.json');
-        
+
         //level 1
         game.load.tilemap('cerberusMap', 'assets/Levels/Lava.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('cerberusGameTiles', 'assets/Levels/Fire.png');
@@ -74,6 +74,9 @@ Preload.prototype = {
         game.load.audio('tower_damaged', 'assets/sounds/tower_damaged.wav');
         game.load.audio('cerberus_fire_storm', 'assets/sounds/cerberus_fire_storm.wav');
         game.load.audio('void_tower_attack', 'assets/sounds/void_tower_attack.wav');
+        game.load.audio('hades_attack', 'assets/sounds/hades_attack.wav');
+        game.load.audio('hades_tp', 'assets/sounds/hades_tp.wav');
+
     },
     create: function() {
         music = game.add.audio('bg_music');
