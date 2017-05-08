@@ -41,6 +41,7 @@ function initAudio() {
     fire_tower = game.add.audio('fire_tower');
     fire_tower_2 = game.add.audio('fire_tower_2');
     cerberus_fire_storm = game.add.audio('cerberus_fire_storm');
+    cerberus_damaged = game.add.audio('cerberus_damaged');
 
     //Level 2
     water_tower = game.add.audio('water_tower');
@@ -54,6 +55,7 @@ function initAudio() {
     hades_attack = game.add.audio('hades_attack');
     hades_tp = game.add.audio('hades_tp');
     hades_damaged = game.add.audio('hades_damaged');
+    void_spawn = game.add.audio('void_spawn');
 
     //Pandora Sounds
     pandora_damaged = game.add.audio('pandora_damaged');
@@ -62,12 +64,14 @@ function initAudio() {
 
     //General Sounds
     slime_hurt = game.add.audio('slime_hurt');
+    slime_hurt_2 = game.add.audio('slime_hurt_2');
     slime_1 = game.add.audio('slime_1');
     slime_2 = game.add.audio('slime_2');
     slime_3 = game.add.audio('slime_3');
 
     tower_damaged = game.add.audio('tower_damaged');
     tower_block = game.add.audio('tower_block');
+    boss_block = game.add.audio('boss_block');
 }
 
 //spawns all slimes and towers for the current level
@@ -263,7 +267,18 @@ function killEnemies(body1, body2) {
                 tower_damaged.play();
             }
             if (body1.sprite.enemyType == "slime") {
-                slime_hurt.play();
+                switch (this.game.state.current) {
+                    case "Level1":
+                        slime_hurt.play();
+                        break;
+                    case "Level2":
+                        slime_hurt.play();
+                        break;
+                    case "Level3":
+                        slime_hurt_2.play();
+                        break;
+                    default:
+                }
             }
             if (body1.sprite.enemyType == "tentacles") {
                 player.tentaclecount--;
@@ -301,7 +316,7 @@ function killEnemies(body1, body2) {
                 whale_hurt.play();
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 500;
             } else if (body1.sprite.enemyType == "cerberus") {
-                //cerberus hurt sound
+                cerberus_damaged.play();
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 500;
             } else if (body1.sprite.enemyType == "hades") {
                 hades_damaged.play();
@@ -309,11 +324,11 @@ function killEnemies(body1, body2) {
             }
         }
     } else {
-        //different sounds for when slimes are damaged
+        //sounds for when enemies block
         var currentGameState = this.game.state.current;
         if (body1.sprite.enemyType == "slime") {
             switch (currentGameState) {
-                case "Game":
+                case "Level1":
                     slime_1.play();
                     break;
                 case "Level2":
@@ -327,6 +342,9 @@ function killEnemies(body1, body2) {
         }
         if (body1.sprite.enemyType == "tower") {
             tower_block.play();
+        }
+        if (body1.sprite.enemyType == "cerberus" || body1.sprite.enemyType == "persephone" || body1.sprite.enemyType == "hades") {
+            boss_block.play();
         }
     }
 }
@@ -1125,6 +1143,7 @@ function handleHades(enemy) {
         if (enemy.phase3 == true && game.time.now > hadesFire) {
             //spawns tower and slime every 10 seconds
             writeText("Enemies Spawned!", 1000);
+            void_spawn.play();
             hadesFire = game.time.now + 10000;
             spawnSlimes(2, 'glitchSlime');
             spawnTowers(2, 'voidTower', 1);

@@ -76,9 +76,11 @@ Preload.prototype = {
         game.load.audio('slime_2', 'assets/sounds/slime_2.wav');
         game.load.audio('slime_3', 'assets/sounds/slime_3.wav');
         game.load.audio('slime_hurt', 'assets/sounds/slime_hurt.wav');
+        game.load.audio('slime_hurt_2', 'assets/sounds/slime_hurt_2.wav');
 
         //bosses
         game.load.audio('cerberus_fire_storm', 'assets/sounds/cerberus_fire_storm.wav');
+        game.load.audio('cerberus_damaged', 'assets/sounds/cerberus_damaged.wav');
         game.load.audio('whale_hurt', 'assets/sounds/whale_hurt.wav');
         game.load.audio('whale_1', 'assets/sounds/whale_1.wav');
         game.load.audio('whale_2', 'assets/sounds/whale_2.wav');
@@ -86,6 +88,9 @@ Preload.prototype = {
         game.load.audio('hades_attack', 'assets/sounds/hades_attack.wav');
         game.load.audio('hades_tp', 'assets/sounds/hades_tp.wav');
         game.load.audio('hades_damaged', 'assets/sounds/hades_damaged.wav');
+        game.load.audio('void_spawn', 'assets/sounds/void_spawn.wav');
+        game.load.audio('boss_block', 'assets/sounds/boss_block.wav');
+
 
 
     },
