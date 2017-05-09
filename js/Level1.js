@@ -60,7 +60,6 @@ Level1.prototype = {
         //initEnemies('redSlime', 'fireballTower', 0, 0);
         initEnemies('redSlime', 'fireballTower', 8, 4);
         initPlayer();
-        spawnJellyfish(6, 'jelly');
 
         //border
         border = game.add.sprite(0, 0, null);

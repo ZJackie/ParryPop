@@ -347,6 +347,9 @@ function killEnemies(body1, body2) {
         if (body1.sprite.enemyType == "cerberus" || body1.sprite.enemyType == "persephone" || body1.sprite.enemyType == "hades") {
             boss_block.play();
         }
+        if (body1.sprite.enemyType == "bomb") {
+            body1.sprite.detonate = true;
+        }
     }
 }
 
@@ -449,6 +452,30 @@ function handleEnemies() {
             }
             if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 200) {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 250);
+            }
+        } else if (enemy.enemyType == "bomb") {
+            enemy.animations.play('bombIdle');
+            enemy.currentRadius = enemy.currentRadius - enemy.rate;
+            enemy.body.setCircle(enemy.currentRadius);
+            enemy.body.setCollisionGroup(enemyCollisionGroup);
+            var lowerBound = enemy.width / 2 - enemy.width * 0.1 + 3;
+            var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
+            if (enemy.currentRadius <= lowerBound) {
+                enemy.currentRadius = enemy.width;
+            }
+
+            if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
+                enemy.body.isVulnerable = true;
+            } else {
+                enemy.body.isVulnerable = false;
+            }
+            if (enemy.detonate == true) {
+                game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 500);
+            } else if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 200) {
+                game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 500);
+            }
+            if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 50) {
+                explode(enemy);
             }
         } else if (enemy.enemyType == "cerberus") {
             handleCerberus(enemy);
@@ -597,6 +624,40 @@ function spawnJellyfish(NumberOfJellyfish, Jellyfish) {
     }
 }
 
+//spawns bombs
+function spawnbomb(NumberOfbomb, bomb) {
+    for (var i = 0; i < NumberOfbomb; i++) {
+        location1 = Math.random() * 1000
+        location2 = Math.random() * 1000
+        while (location1 > 300 && location1 < 700) {
+            location1 = Math.random() * 1000
+        }
+        while (location2 > 300 && location1 < 700) {
+            location1 = Math.random() * 1000
+        }
+        var bomb = enemies.create(game.world.centerX + (-500 + location1), game.world.centerY + (-500 + location2), bomb);
+        var arr = [];
+        for (var j = 0; j < 3; j++) {
+            arr.push(j);
+        }
+        bomb.mass = 5;
+        bomb.health = 1;
+        bomb.detonate = false;
+        bomb.animations.add('bombIdle', arr, 12, true);
+        bomb.currentRadius = bomb.width;
+        game.physics.p2.enable(bomb, true);
+        bomb.body.setCircle(30);
+        bomb.body.setCollisionGroup(enemyCollisionGroup);
+        bomb.body.collides(swordCollisionGroup, smackEnemies, this);
+        bomb.body.collides(playerCollisionGroup, takeDamage, this);
+        bomb.body.collides(bulletCollisionGroup, killEnemies, this);
+        bomb.body.collides(borderCollisionGroup);
+        bomb.body.collides([enemyCollisionGroup, playerCollisionGroup]);
+        bomb.body.static = true;
+        bomb.enemyType = "bomb";
+        bomb.rate = Math.random() * 0.4 + 0.05
+    }
+}
 
 //spawns tentacles for 3rd persephone boss phase
 function spawnTenctales(NumberOfTentacles) {
@@ -720,6 +781,20 @@ function takeDamage(body1, body2) {
 
     function removeInvulnerability() {
         invulnerability = false;
+    }
+
+    function explode(enemy) {
+        enemy.body.clearShapes();
+        enemy.destroy();
+        if (invulnerability == false && player.godmode == false) {
+            hearts.children[player.health - 1].kill();
+            player.health--;
+            pandora_damaged.play();
+            invulnerability = true;
+            game.time.events.add(500, removeInvulnerability, this);
+            player.stun = true
+            game.time.events.add(1000, removestun, this);
+        }
     }
 }
 
@@ -1435,6 +1510,6 @@ function stunTimer(time) {
     }, 15);
     //decrements bar
     var stun = setInterval(function() {
-        player.stunbar.width--;
+        player.stunbar.width--; //100 iterations
     }, timeDecrement);
 }
