@@ -777,7 +777,7 @@ function takeDamage(body1, body2) {
             invulnerability = true;
             game.time.events.add(500, removeInvulnerability, this);
         }
-        if (body1.sprite.enemyType == "jellyfish") {
+        if (body1.sprite.enemyType == "jellyfish" && invulnerability == false) {
             jelly_zap.play();
             body1.clearShapes();
             body1.sprite.destroy();
