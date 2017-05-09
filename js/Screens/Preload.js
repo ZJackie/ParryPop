@@ -26,6 +26,7 @@ Preload.prototype = {
         game.load.image('healthbar', 'assets/other_sprites/healthbar.png');
         game.load.image('ultimatebar', 'assets/other_sprites/ultimatebar.png');
         game.load.image('ultimatebarInvert', 'assets/other_sprites/ultimatebarinvert.png');
+        game.load.image('stunbar', 'assets/other_sprites/stunbar.png');
         game.load.physics('data', 'assets/data.json');
 
         //level 1

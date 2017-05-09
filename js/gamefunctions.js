@@ -15,7 +15,7 @@ function initPlayer() {
 
     player.bossAlive = true;
     player.dead = 0;
-    player.stun  = false;
+    player.stun = false;
     player.ultimate = 0;
     player.ultimateBar = game.add.sprite(3, 30, 'ultimatebar');
     player.ultimateBar.height = 20;
@@ -429,10 +429,9 @@ function handleEnemies() {
                     fireEnemyBullet(enemy);
                 }
             }
-            
+
             //handle all boss fights
-        }
-        else if (enemy.enemyType == "jellyfish") {
+        } else if (enemy.enemyType == "jellyfish") {
             enemy.animations.play('jellyfishIdle');
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
             enemy.body.setCircle(enemy.currentRadius);
@@ -451,9 +450,7 @@ function handleEnemies() {
             if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 200) {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 250);
             }
-        }
-        
-         else if (enemy.enemyType == "cerberus") {
+        } else if (enemy.enemyType == "cerberus") {
             handleCerberus(enemy);
         } else if (enemy.enemyType == "persephone" || enemy.enemyType == "tentacles") {
             handlePersephone(enemy);
@@ -537,10 +534,10 @@ function spawnSlimes(NumberOfSlimes, slimeName) {
         slime.body.collides(swordCollisionGroup, smackEnemies, this);
         slime.body.collides(playerCollisionGroup, takeDamage, this);
         slime.body.collides(bulletCollisionGroup, killEnemies, this);
-        slime.body.collides(borderCollisionGroup,bounce,this);
+        slime.body.collides(borderCollisionGroup, bounce, this);
         slime.body.collides([enemyCollisionGroup, playerCollisionGroup]);
         slime.enemyType = "slime";
-        slime.rate = Math.random() * 0.4 + 0.1
+        slime.rate = Math.random() * 0.4 + 0.1;
         var num = Math.random();
         if (num < 0.25) {
             slime.body.moveUp(500);
@@ -558,13 +555,13 @@ function spawnSlimes(NumberOfSlimes, slimeName) {
 //spawns bombs at random locations
 function spawnJellyfish(NumberOfJellyfish, Jellyfish) {
     for (var i = 0; i < NumberOfJellyfish; i++) {
-        location1 = Math.random() * 1000
-        location2 = Math.random() * 1000
-        while(location1 > 400 && location1 < 600){
-        location1 = Math.random() * 1000
-    }
-        while(location2 > 400 && location1 < 600){
-        location1 = Math.random() * 1000
+        location1 = Math.random() * 1000;
+        location2 = Math.random() * 1000;
+        while (location1 > 400 && location1 < 600) {
+            location1 = Math.random() * 1000;
+        }
+        while (location2 > 400 && location1 < 600) {
+            location1 = Math.random() * 1000;
         }
         var jellyfish = enemies.create(game.world.centerX + (-500 + location1), game.world.centerY + (-500 + location2), Jellyfish);
         var arr = [];
@@ -585,7 +582,7 @@ function spawnJellyfish(NumberOfJellyfish, Jellyfish) {
         jellyfish.body.collides(borderCollisionGroup);
         jellyfish.body.collides([enemyCollisionGroup, playerCollisionGroup]);
         jellyfish.enemyType = "jellyfish";
-        jellyfish.rate = Math.random() * 0.4 + 0.1
+        jellyfish.rate = Math.random() * 0.4 + 0.1;
         var num = Math.random();
         if (num < 0.25) {
             jellyfish.body.moveUp(200);
@@ -704,15 +701,21 @@ function takeDamage(body1, body2) {
             invulnerability = true;
             game.time.events.add(500, removeInvulnerability, this);
         }
-        if(body1.sprite.enemyType == "jellyfish"){
+        if (body1.sprite.enemyType == "jellyfish") {
             body1.clearShapes();
             body1.sprite.destroy();
-            player.stun = true
-            game.time.events.add(4000, removestun, this);
+            //only stun if not stunned 
+            if (player.stun == false) {
+                writeText("Stunned!", 3000);
+                stunTimer(3000);
+                player.stun = true;
+                game.time.events.add(3000, removestun, this);
+            }
         }
     }
-function removestun() {
-        player.stun = false
+
+    function removestun() {
+        player.stun = false;
     }
 
     function removeInvulnerability() {
@@ -799,45 +802,45 @@ function handleUpdate() {
         pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
         player.body.rotation = pointerangle;
         player.body.setZeroVelocity();
-        if(player.stun == false){
-        if (cursors.W.isDown) {
-            player.body.moveUp(300);
-            if (game.input.mousePointer.leftButton.isDown) {
-                player.animations.play('shootwalk', false);
-            } else if (game.input.mousePointer.rightButton.isDown) {
-                player.animations.play('attackwalk', false);
-            } else {
-                player.animations.play('walk', false);
+        if (player.stun == false) {
+            if (cursors.W.isDown) {
+                player.body.moveUp(300);
+                if (game.input.mousePointer.leftButton.isDown) {
+                    player.animations.play('shootwalk', false);
+                } else if (game.input.mousePointer.rightButton.isDown) {
+                    player.animations.play('attackwalk', false);
+                } else {
+                    player.animations.play('walk', false);
+                }
+            } else if (cursors.S.isDown) {
+                player.body.moveDown(300);
+                if (game.input.mousePointer.leftButton.isDown) {
+                    player.animations.play('shootwalk', false);
+                } else if (game.input.mousePointer.rightButton.isDown) {
+                    player.animations.play('attackwalk', false);
+                } else {
+                    player.animations.play('walk', false);
+                }
             }
-        } else if (cursors.S.isDown) {
-            player.body.moveDown(300);
-            if (game.input.mousePointer.leftButton.isDown) {
-                player.animations.play('shootwalk', false);
-            } else if (game.input.mousePointer.rightButton.isDown) {
-                player.animations.play('attackwalk', false);
-            } else {
-                player.animations.play('walk', false);
+            if (cursors.A.isDown) {
+                player.body.moveLeft(300);
+                if (game.input.mousePointer.leftButton.isDown) {
+                    player.animations.play('shootwalk', false);
+                } else if (game.input.mousePointer.rightButton.isDown) {
+                    player.animations.play('attackwalk', false);
+                } else {
+                    player.animations.play('walk', false);
+                }
+            } else if (cursors.D.isDown) {
+                player.body.moveRight(300);
+                if (game.input.mousePointer.leftButton.isDown) {
+                    player.animations.play('shootwalk', false);
+                } else if (game.input.mousePointer.rightButton.isDown) {
+                    player.animations.play('attackwalk', false);
+                } else {
+                    player.animations.play('walk', false);
+                }
             }
-        }
-        if (cursors.A.isDown) {
-            player.body.moveLeft(300);
-            if (game.input.mousePointer.leftButton.isDown) {
-                player.animations.play('shootwalk', false);
-            } else if (game.input.mousePointer.rightButton.isDown) {
-                player.animations.play('attackwalk', false);
-            } else {
-                player.animations.play('walk', false);
-            }
-        } else if (cursors.D.isDown) {
-            player.body.moveRight(300);
-            if (game.input.mousePointer.leftButton.isDown) {
-                player.animations.play('shootwalk', false);
-            } else if (game.input.mousePointer.rightButton.isDown) {
-                player.animations.play('attackwalk', false);
-            } else {
-                player.animations.play('walk', false);
-            }
-        }
         }
         //allows player to use ultimate
         if (cursors.R.isDown) {
@@ -1410,4 +1413,28 @@ function writeText(text, time) {
         clearInterval(interval);
         text.destroy();
     }, this);
+}
+
+//displays how long the user is stunned for (time in ms)
+function stunTimer(time) {
+    //in $time, will clear both intervals and destroys bar
+    game.time.events.add(time, function() {
+        clearInterval(stun);
+        clearInterval(stuninterval);
+        player.stunbar.destroy();
+    }, this);
+    var timeDecrement = time / 100; //time in s
+    player.stunbar = game.add.sprite(player.x, player.y - 20, 'stunbar');
+    player.stunbar.height = 20;
+    player.stunbar.width = 100;
+    player.stunbar.anchor.set(0.5);
+    //keeps focus on bar
+    var stuninterval = setInterval(function() {
+        player.stunbar.x = player.x;
+        player.stunbar.y = player.y - 20;
+    }, 15);
+    //decrements bar
+    var stun = setInterval(function() {
+        player.stunbar.width--;
+    }, timeDecrement);
 }
