@@ -47,6 +47,7 @@ Preload.prototype = {
         game.load.spritesheet('persephone', 'assets/other_sprites/whale.png', 128, 128);
         game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32, 32);
         game.load.spritesheet('jelly', 'assets/other_sprites/jellyfish.png', 32, 32);
+
         //level 3
         game.load.tilemap('hadesMap', 'assets/Levels/Darkness.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('hadesGameTiles', 'assets/Levels/Darkness.png');
@@ -55,8 +56,10 @@ Preload.prototype = {
         game.load.spritesheet('glitchSlime', 'assets/other_sprites/glitch_slime.png', 32, 32);
         game.load.image('voidBullet', 'assets/other_sprites/voidBullet.png');
         game.load.spritesheet('bomb', 'assets/other_sprites/bomb.png', 32, 32);
+
         //Sounds
         game.load.audio('button', 'assets/sounds/button.wav');
+        game.load.audio('bomb_explosion', 'assets/sounds/bomb_explosion.wav');
 
         //Level audio
         game.load.audio('Level1_music', 'assets/music/Level_1_theme.wav');

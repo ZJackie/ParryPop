@@ -57,6 +57,7 @@ function initAudio() {
     hades_tp = game.add.audio('hades_tp');
     hades_damaged = game.add.audio('hades_damaged');
     void_spawn = game.add.audio('void_spawn');
+    bomb_explosion = game.add.audio('bomb_explosion');
 
     //Pandora Sounds
     pandora_damaged = game.add.audio('pandora_damaged');
