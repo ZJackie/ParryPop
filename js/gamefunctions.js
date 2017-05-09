@@ -100,7 +100,7 @@ function spawnCerberus() {
     enemies.physicsBodyType = Phaser.Physics.P2JS;
     var cerberus = enemies.create(game.world.centerX, game.world.centerY, 'cerberus');
 
-    cerberus.mass = 200;
+    cerberus.mass = 20;
     cerberus.maxhealth = 20;
     cerberus.health = 20;
 
@@ -1140,9 +1140,8 @@ function handleCerberus(enemy) {
         writeText("Cerberus is enraged!", 3000);
         enemy.phase3 = true;
     }
-    if(enemy.phase3 == true && enemy.health < 5) {
+    if(enemy.phase3 == true) {
         game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
-        enemy.body.static = false;
     }
 }
 
