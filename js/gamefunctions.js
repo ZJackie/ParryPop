@@ -456,7 +456,7 @@ function handleEnemies() {
             }
         }
         else if (enemy.enemyType == "bomb") {
-            enemy.animations.play('bombIdle');
+            enemy.animations.play('bombExplode');
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
             enemy.body.setCircle(enemy.currentRadius);
             enemy.body.setCollisionGroup(enemyCollisionGroup);
@@ -477,6 +477,7 @@ function handleEnemies() {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 500);
             }
             if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 50) {
+               // enemy.animations.play('bombExplode');
                 explode(enemy);
             }
         }
@@ -628,7 +629,7 @@ function spawnJellyfish(NumberOfJellyfish, Jellyfish) {
     }
 }
 
-function spawnbomb(NumberOfbomb, bomb) {
+function spawnbomb(NumberOfbomb, bombName) {
     for (var i = 0; i < NumberOfbomb; i++) {
         location1 = Math.random() * 1000
         location2 = Math.random() * 1000
@@ -638,15 +639,15 @@ function spawnbomb(NumberOfbomb, bomb) {
         while(location2 > 300 && location1 < 700){
         location1 = Math.random() * 1000
         }
-        var bomb = enemies.create(game.world.centerX + (-500 + location1), game.world.centerY + (-500 + location2), bomb);
+        var bomb = enemies.create(game.world.centerX + (-500 + location1), game.world.centerY + (-500 + location2), bombName);
         var arr = [];
-        for (var j = 0; j < 3; j++) {
+        for (var j = 0; j < 15; j++) {
             arr.push(j);
         }
         bomb.mass = 5;
         bomb.health = 1;
-        bomb.detonate =false;
-        bomb.animations.add('bombIdle', arr, 12, true);
+        bomb.detonate = false;
+        bomb.animations.add('bombExplode', arr, 12, true);
         bomb.currentRadius = bomb.width;
         game.physics.p2.enable(bomb, true);
         bomb.body.setCircle(30);

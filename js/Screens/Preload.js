@@ -53,7 +53,7 @@ Preload.prototype = {
         game.load.spritesheet('voidTower', 'assets/other_sprites/void_tower.png', 64, 64);
         game.load.spritesheet('glitchSlime', 'assets/other_sprites/glitch_slime.png', 32, 32);
         game.load.image('voidBullet', 'assets/other_sprites/voidBullet.png');
-
+        game.load.spritesheet('bomb', 'assets/other_sprites/bomb.png', 32, 32);
         //Sounds
         game.load.audio('button', 'assets/sounds/button.wav');
 
