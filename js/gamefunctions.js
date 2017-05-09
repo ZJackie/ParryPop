@@ -455,6 +455,8 @@ function handleEnemies() {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 250);
             }
         } else if (enemy.enemyType == "bomb") {
+
+        } else if (enemy.enemyType == "bomb") {
             enemy.animations.play('bombIdle');
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
             enemy.body.setCircle(enemy.currentRadius);
