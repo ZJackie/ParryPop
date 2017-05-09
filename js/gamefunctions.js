@@ -802,10 +802,12 @@ function explode() {
         player.health--;
         pandora_damaged.play();
         invulnerability = true;
-        game.time.events.add(500, function() {
-            player.stun = false;
-        }, this);
-        player.stun = true
+        if (!player.stun) {
+            player.stun = true;
+            game.time.events.add(500, function() {
+                player.stun = false;
+            }, this);
+        }
         game.time.events.add(1000, function() {
             invulnerability = false;
         }, this);
