@@ -55,7 +55,9 @@ Level3.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //enemies
-        initEnemies('glitchSlime', 'voidTower', 10, 7);
+        initEnemies('glitchSlime', 'voidTower', 8, 4);
+        spawnJellyfish(6, "jelly");
+        spawnbomb(5,"bomb");
         initPlayer();
 
         //border
