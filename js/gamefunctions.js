@@ -453,8 +453,14 @@ function handleEnemies() {
             if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 200) {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 250);
             }
+<<<<<<< HEAD
+        }
+        else if (enemy.enemyType == "bomb") {
+            enemy.animations.play('bombExplode');
+=======
         } else if (enemy.enemyType == "bomb") {
             enemy.animations.play('bombIdle');
+>>>>>>> 2143a3e162d604125502e0fcbcb42490ac1eac71
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
             enemy.body.setCircle(enemy.currentRadius);
             enemy.body.setCollisionGroup(enemyCollisionGroup);
@@ -475,6 +481,7 @@ function handleEnemies() {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 500);
             }
             if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 50) {
+               // enemy.animations.play('bombExplode');
                 explode(enemy);
             }
         } else if (enemy.enemyType == "cerberus") {
@@ -624,8 +631,12 @@ function spawnJellyfish(NumberOfJellyfish, Jellyfish) {
     }
 }
 
+<<<<<<< HEAD
+function spawnbomb(NumberOfbomb, bombName) {
+=======
 //spawns bombs
 function spawnbomb(NumberOfbomb, bomb) {
+>>>>>>> 2143a3e162d604125502e0fcbcb42490ac1eac71
     for (var i = 0; i < NumberOfbomb; i++) {
         location1 = Math.random() * 1000
         location2 = Math.random() * 1000
@@ -635,15 +646,19 @@ function spawnbomb(NumberOfbomb, bomb) {
         while (location2 > 300 && location1 < 700) {
             location1 = Math.random() * 1000
         }
-        var bomb = enemies.create(game.world.centerX + (-500 + location1), game.world.centerY + (-500 + location2), bomb);
+        var bomb = enemies.create(game.world.centerX + (-500 + location1), game.world.centerY + (-500 + location2), bombName);
         var arr = [];
-        for (var j = 0; j < 3; j++) {
+        for (var j = 0; j < 15; j++) {
             arr.push(j);
         }
         bomb.mass = 5;
         bomb.health = 1;
         bomb.detonate = false;
+<<<<<<< HEAD
+        bomb.animations.add('bombExplode', arr, 12, true);
+=======
         bomb.animations.add('bombIdle', arr, 12, true);
+>>>>>>> 2143a3e162d604125502e0fcbcb42490ac1eac71
         bomb.currentRadius = bomb.width;
         game.physics.p2.enable(bomb, true);
         bomb.body.setCircle(30);
