@@ -32,7 +32,7 @@ Level3.prototype = {
         game.canvas.oncontextmenu = function(e) {
             e.preventDefault();
         }
-        
+
         var map = game.add.tilemap('hadesMap');
         //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
         map.addTilesetImage('Darkness', 'hadesGameTiles');
@@ -57,7 +57,7 @@ Level3.prototype = {
         //enemies
         initEnemies('glitchSlime', 'voidTower', 8, 4);
         spawnJellyfish(6, "jelly");
-        spawnbomb(5,"bomb");
+        spawnbomb(5, "bomb");
         initPlayer();
 
         //border

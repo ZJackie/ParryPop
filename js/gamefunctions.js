@@ -1113,6 +1113,7 @@ function handleCerberus(enemy) {
         writeText("Cerberus is enraged!", 3000);
         game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
         enemy.phase3 = true;
+        enemy.body.static = false;
     }
 }
 
@@ -1497,24 +1498,28 @@ function writeText(text, time) {
 
 //displays how long the user is stunned for (time in ms)
 function stunTimer(time) {
-    //in $time, will clear both intervals and destroys bar
-    game.time.events.add(time, function() {
-        clearInterval(stun);
-        clearInterval(stuninterval);
-        player.stunbar.destroy();
-    }, this);
-    var timeDecrement = time / 100; //time in s
+    var timeDecrement = time / 100; //time in s^-2
     player.stunbar = game.add.sprite(player.x, player.y - 20, 'stunbar');
     player.stunbar.height = 20;
     player.stunbar.width = 100;
     player.stunbar.anchor.set(0.5);
     //keeps focus on bar
     var stuninterval = setInterval(function() {
-        player.stunbar.x = player.x;
-        player.stunbar.y = player.y - 20;
+        if (player.stunbar != null) {
+            player.stunbar.x = player.x;
+            player.stunbar.y = player.y - 20;
+        }
     }, 15);
     //decrements bar
     var stun = setInterval(function() {
-        player.stunbar.width--; //100 iterations
+        if (player.stunbar != null) {
+            player.stunbar.width--; //100 iterations
+        }
     }, timeDecrement);
+    //in $time, will clear both intervals and destroys bar
+    game.time.events.add(time, function() {
+        clearInterval(stun);
+        clearInterval(stuninterval);
+        player.stunbar.destroy();
+    }, this);
 }

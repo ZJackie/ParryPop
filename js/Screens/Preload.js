@@ -58,6 +58,11 @@ Preload.prototype = {
         //Sounds
         game.load.audio('button', 'assets/sounds/button.wav');
 
+        //Level audio
+        game.load.audio('Level1_theme', 'assets/sounds/Level_1_theme.wav');
+        game.load.audio('Level2_theme', 'assets/sounds/Level_2_theme.wav');
+        game.load.audio('Level3_theme', 'assets/sounds/Level_3_theme.wav');
+
         //Pandora
         game.load.audio('pandora_damaged', 'assets/sounds/pandora_damaged.wav');
         game.load.audio('pandora_sword', 'assets/sounds/pandora_sword_1.wav');
