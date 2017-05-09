@@ -50,6 +50,7 @@ function initAudio() {
     whale_1 = game.add.audio('whale_1');
     whale_2 = game.add.audio('whale_2');
     whale_shoot = game.add.audio('whale_shoot');
+    jelly_zap = game.add.audio('jelly_zap');
 
     //Level 3
     void_tower_attack = game.add.audio('void_tower_attack');
@@ -455,8 +456,6 @@ function handleEnemies() {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 250);
             }
         } else if (enemy.enemyType == "bomb") {
-
-        } else if (enemy.enemyType == "bomb") {
             enemy.animations.play('bombIdle');
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
             enemy.body.setCircle(enemy.currentRadius);
@@ -478,8 +477,12 @@ function handleEnemies() {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 500);
             }
             if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 50) {
-                // enemy.animations.play('bombExplode');
-                explode(enemy);
+                game.time.events.add(300, function() {
+                    enemy.destroy();
+                    explode();
+                }, this);
+                enemy.animations.play('bombExplode');
+                bomb_explosion.play();
             }
         } else if (enemy.enemyType == "cerberus") {
             handleCerberus(enemy);
@@ -640,14 +643,17 @@ function spawnbomb(NumberOfbomb, bombName) {
             location1 = Math.random() * 1000
         }
         var bomb = enemies.create(game.world.centerX + (-500 + location1), game.world.centerY + (-500 + location2), bombName);
-        var arr = [];
-        for (var j = 0; j < 15; j++) {
-            arr.push(j);
-        }
-        bomb.mass = 5;
         bomb.health = 1;
         bomb.detonate = false;
+        var arr = [];
+        for (var j = 9; j < 17; j++) {
+            arr.push(j);
+        }
         bomb.animations.add('bombExplode', arr, 12, true);
+        arr = [];
+        for (var j = 0; j < 8; j++) {
+            arr.push(j);
+        }
         bomb.animations.add('bombIdle', arr, 12, true);
         bomb.currentRadius = bomb.width;
         game.physics.p2.enable(bomb, true);
@@ -790,9 +796,7 @@ function takeDamage(body1, body2) {
 }
 
 //bombs explode 
-function explode(enemy) {
-    enemy.body.clearShapes();
-    enemy.destroy();
+function explode() {
     if (invulnerability == false && player.godmode == false) {
         hearts.children[player.health - 1].kill();
         player.health--;
@@ -1517,7 +1521,7 @@ function stunTimer(time) {
     }, 15);
     //decrements bar
     var stun = setInterval(function() {
-        if (player.stunbar != null) {
+        if (player.stunbar != null && !game.paused) {
             player.stunbar.width--; //100 iterations
         }
     }, timeDecrement);
