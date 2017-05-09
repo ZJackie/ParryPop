@@ -61,6 +61,7 @@ Preload.prototype = {
         game.load.audio('button', 'assets/sounds/button.wav');
         game.load.audio('bomb_explosion', 'assets/sounds/bomb_explosion.wav');
         game.load.audio('jelly_zap', 'assets/sounds/jelly_zap.wav');
+        game.load.audio('jelly_death', 'assets/sounds/jelly_death.wav');
 
         //Level audio
         game.load.audio('Level1_music', 'assets/music/Level_1_theme.wav');

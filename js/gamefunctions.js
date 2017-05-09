@@ -51,6 +51,7 @@ function initAudio() {
     whale_2 = game.add.audio('whale_2');
     whale_shoot = game.add.audio('whale_shoot');
     jelly_zap = game.add.audio('jelly_zap');
+    jelly_death = game.add.audio('jelly_death');
 
     //Level 3
     void_tower_attack = game.add.audio('void_tower_attack');
@@ -283,6 +284,12 @@ function killEnemies(body1, body2) {
                     default:
                 }
             }
+            if (body1.sprite.enemyType == "jellyfish") {
+                jelly_death.play();
+            }
+            if (body1.sprite.enemyType == "bomb") {
+                bomb_explosion.play();
+            }
             if (body1.sprite.enemyType == "tentacles") {
                 player.tentaclecount--;
             }
@@ -348,9 +355,6 @@ function killEnemies(body1, body2) {
         }
         if (body1.sprite.enemyType == "cerberus" || body1.sprite.enemyType == "persephone" || body1.sprite.enemyType == "hades") {
             boss_block.play();
-        }
-        if (body1.sprite.enemyType == "bomb") {
-            body1.sprite.detonate = true;
         }
     }
 }
@@ -774,6 +778,7 @@ function takeDamage(body1, body2) {
             game.time.events.add(500, removeInvulnerability, this);
         }
         if (body1.sprite.enemyType == "jellyfish") {
+            jelly_zap.play();
             body1.clearShapes();
             body1.sprite.destroy();
             //only stun if not stunned 
