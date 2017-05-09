@@ -1,5 +1,6 @@
 var toggle = false; //used to handle godmode toggle
 var hadesFire = 0; //hades phase 3 fire rate
+var shotsFiredText;
 
 function initPlayer() {
     //Add my Robot player
@@ -30,6 +31,10 @@ function initPlayer() {
     player.ultimateBar.bringToTop();
     player.tentaclecount = 0;
     player.godmode = false;
+    player.shotsFired = 0;
+    var style = { font: "32px Arial", fill: "#FFF", align: "center" };
+    shotsFiredText = game.add.text(game.width - 250, 0, "Shots Fired: " + player.shotsFired, style);
+    shotsFiredText.fixedToCamera = true;
 
     game.physics.p2.enable(player, true);
     player.body.setCircle(20);
@@ -95,7 +100,7 @@ function spawnCerberus() {
     enemies.physicsBodyType = Phaser.Physics.P2JS;
     var cerberus = enemies.create(game.world.centerX, game.world.centerY, 'cerberus');
 
-    cerberus.mass = 20;
+    cerberus.mass = 200;
     cerberus.maxhealth = 20;
     cerberus.health = 20;
 
@@ -982,6 +987,8 @@ function handleUpdate() {
         //player shoots bullet
         if (game.input.mousePointer.leftButton.isDown) {
             if (game.time.now > nextFire && bullets.countDead() > 0) {
+                player.shotsFired++;
+                shotsFiredText.setText("Shots Fired: " + player.shotsFired);
                 pandora_shoot.play();
                 nextFire = game.time.now + fireRate;
                 var point1 = new Phaser.Point(player.body.x, player.body.y);
@@ -1131,8 +1138,10 @@ function handleCerberus(enemy) {
     }
     if (enemy.phase3 == false && enemy.health < 5) {
         writeText("Cerberus is enraged!", 3000);
-        game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
         enemy.phase3 = true;
+    }
+    if(enemy.phase3 == true && enemy.health < 5) {
+        game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
         enemy.body.static = false;
     }
 }
