@@ -1579,8 +1579,6 @@ function stunTimer(time) {
     var stun = setInterval(function() {
         if (player.stunbar != null && !game.paused && player.stunbar.width > 1.45) {
             player.stunbar.width -= 1.45; //100 iterations
-            console.log(player.stunbar.width);
-
         }
     }, timeDecrement);
     //in $time, will clear both intervals and destroys bar
