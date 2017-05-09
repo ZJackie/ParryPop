@@ -15,6 +15,7 @@ function initPlayer() {
 
     player.bossAlive = true;
     player.dead = 0;
+    player.stun  = false;
     player.ultimate = 0;
     player.ultimateBar = game.add.sprite(3, 30, 'ultimatebar');
     player.ultimateBar.height = 20;
@@ -428,8 +429,31 @@ function handleEnemies() {
                     fireEnemyBullet(enemy);
                 }
             }
+            
             //handle all boss fights
-        } else if (enemy.enemyType == "cerberus") {
+        }
+        else if (enemy.enemyType == "jellyfish") {
+            enemy.animations.play('jellyfishIdle');
+            enemy.currentRadius = enemy.currentRadius - enemy.rate;
+            enemy.body.setCircle(enemy.currentRadius);
+            enemy.body.setCollisionGroup(enemyCollisionGroup);
+            var lowerBound = enemy.width / 2 - enemy.width * 0.1 + 5;
+            var upperBound = enemy.width / 2 + enemy.width * 0.1 + 5;
+            if (enemy.currentRadius <= lowerBound) {
+                enemy.currentRadius = enemy.width;
+            }
+
+            if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
+                enemy.body.isVulnerable = true;
+            } else {
+                enemy.body.isVulnerable = false;
+            }
+            if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 200) {
+                game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 250);
+            }
+        }
+        
+         else if (enemy.enemyType == "cerberus") {
             handleCerberus(enemy);
         } else if (enemy.enemyType == "persephone" || enemy.enemyType == "tentacles") {
             handlePersephone(enemy);
@@ -513,7 +537,7 @@ function spawnSlimes(NumberOfSlimes, slimeName) {
         slime.body.collides(swordCollisionGroup, smackEnemies, this);
         slime.body.collides(playerCollisionGroup, takeDamage, this);
         slime.body.collides(bulletCollisionGroup, killEnemies, this);
-        slime.body.collides(borderCollisionGroup, bounce, this);
+        slime.body.collides(borderCollisionGroup,bounce,this);
         slime.body.collides([enemyCollisionGroup, playerCollisionGroup]);
         slime.enemyType = "slime";
         slime.rate = Math.random() * 0.4 + 0.1
@@ -530,6 +554,52 @@ function spawnSlimes(NumberOfSlimes, slimeName) {
         //slime.body.static = true;
     }
 }
+
+//spawns bombs at random locations
+function spawnJellyfish(NumberOfJellyfish, Jellyfish) {
+    for (var i = 0; i < NumberOfJellyfish; i++) {
+        location1 = Math.random() * 1000
+        location2 = Math.random() * 1000
+        while(location1 > 400 && location1 < 600){
+        location1 = Math.random() * 1000
+    }
+        while(location2 > 400 && location1 < 600){
+        location1 = Math.random() * 1000
+        }
+        var jellyfish = enemies.create(game.world.centerX + (-500 + location1), game.world.centerY + (-500 + location2), Jellyfish);
+        var arr = [];
+        for (var j = 0; j < 3; j++) {
+            arr.push(j);
+        }
+        jellyfish.mass = 5;
+        jellyfish.health = 1;
+        jellyfish.animations.add('jellyfishIdle', arr, 12, true);
+        jellyfish.currentRadius = jellyfish.width;
+        game.physics.p2.enable(jellyfish, true);
+        //jellyfish.body.static = true;
+        jellyfish.body.setCircle(30);
+        jellyfish.body.setCollisionGroup(enemyCollisionGroup);
+        jellyfish.body.collides(swordCollisionGroup, smackEnemies, this);
+        jellyfish.body.collides(playerCollisionGroup, takeDamage, this);
+        jellyfish.body.collides(bulletCollisionGroup, killEnemies, this);
+        jellyfish.body.collides(borderCollisionGroup);
+        jellyfish.body.collides([enemyCollisionGroup, playerCollisionGroup]);
+        jellyfish.enemyType = "jellyfish";
+        jellyfish.rate = Math.random() * 0.4 + 0.1
+        var num = Math.random();
+        if (num < 0.25) {
+            jellyfish.body.moveUp(200);
+        } else if (num >= 0.25 && num <= 0.50) {
+            jellyfish.body.moveDown(200);
+        } else if (num >= 0.5 && num <= 0.75) {
+            jellyfish.body.moveLeft(200);
+        } else {
+            jellyfish.body.moveRight(200);
+        }
+        //slime.body.static = true;
+    }
+}
+
 
 //spawns tentacles for 3rd persephone boss phase
 function spawnTenctales(NumberOfTentacles) {
@@ -634,6 +704,15 @@ function takeDamage(body1, body2) {
             invulnerability = true;
             game.time.events.add(500, removeInvulnerability, this);
         }
+        if(body1.sprite.enemyType == "jellyfish"){
+            body1.clearShapes();
+            body1.sprite.destroy();
+            player.stun = true
+            game.time.events.add(4000, removestun, this);
+        }
+    }
+function removestun() {
+        player.stun = false
     }
 
     function removeInvulnerability() {
@@ -720,6 +799,7 @@ function handleUpdate() {
         pointerangle = game.physics.arcade.angleToPointer(player) + game.math.degToRad(-90);
         player.body.rotation = pointerangle;
         player.body.setZeroVelocity();
+        if(player.stun == false){
         if (cursors.W.isDown) {
             player.body.moveUp(300);
             if (game.input.mousePointer.leftButton.isDown) {
@@ -757,6 +837,7 @@ function handleUpdate() {
             } else {
                 player.animations.play('walk', false);
             }
+        }
         }
         //allows player to use ultimate
         if (cursors.R.isDown) {
@@ -1019,13 +1100,14 @@ function handlePersephone(enemy) {
 
         //different persephone boss phases
         if (enemy.phase1 == false && enemy.health < 15) {
-            writeText("Persephone has spawned 6 Bubble Towers!", 3000);
-            spawnTowers(6, 'bubbleTower');
+            writeText("Persephone has spawned 4 Bubble Towers and 6 Slimes!", 3000);
+            spawnTowers(4, 'bubbleTower');
+            spawnSlimes(6, 'blueSlime');
             enemy.phase1 = true;
         }
         if (enemy.phase2 == false && enemy.health < 10) {
-            writeText("Persephone has spawned 8 Blue Slimes!", 3000);
-            spawnSlimes(8, 'blueSlime');
+            writeText("Persephone has spawned 6 Jellyfish", 3000);
+            spawnJellyfish(6, 'jelly');
             enemy.phase2 = true;
         }
         if (enemy.phase3 == false && enemy.health < 5) {

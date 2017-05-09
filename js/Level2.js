@@ -57,7 +57,8 @@ Level2.prototype = {
 
         //enemies
         //initEnemies('blueSlime', 'bubbleTower', 0, 0);
-        initEnemies('blueSlime', 'bubbleTower', 10, 5);
+        initEnemies('blueSlime', 'bubbleTower', 8, 4);
+        spawnJellyfish(6, "jelly");
         //spawnPersephone();
         initPlayer();
 

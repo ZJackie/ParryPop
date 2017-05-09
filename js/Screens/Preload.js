@@ -45,7 +45,7 @@ Preload.prototype = {
         game.load.image('bubblebullet', 'assets/other_sprites/bubbleBullet.png');
         game.load.spritesheet('persephone', 'assets/other_sprites/whale.png', 128, 128);
         game.load.spritesheet('tentacles', 'assets/other_sprites/tentacle.png', 32, 32);
-
+        game.load.spritesheet('jelly', 'assets/other_sprites/jellyfish.png', 32, 32);
         //level 3
         game.load.tilemap('hadesMap', 'assets/Levels/Darkness.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('hadesGameTiles', 'assets/Levels/Darkness.png');
