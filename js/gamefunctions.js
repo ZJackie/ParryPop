@@ -782,19 +782,24 @@ function takeDamage(body1, body2) {
     function removeInvulnerability() {
         invulnerability = false;
     }
+}
 
-    function explode(enemy) {
-        enemy.body.clearShapes();
-        enemy.destroy();
-        if (invulnerability == false && player.godmode == false) {
-            hearts.children[player.health - 1].kill();
-            player.health--;
-            pandora_damaged.play();
-            invulnerability = true;
-            game.time.events.add(500, removeInvulnerability, this);
-            player.stun = true
-            game.time.events.add(1000, removestun, this);
-        }
+//bombs explode 
+function explode(enemy) {
+    enemy.body.clearShapes();
+    enemy.destroy();
+    if (invulnerability == false && player.godmode == false) {
+        hearts.children[player.health - 1].kill();
+        player.health--;
+        pandora_damaged.play();
+        invulnerability = true;
+        game.time.events.add(500, function() {
+            player.stun = false;
+        }, this);
+        player.stun = true
+        game.time.events.add(1000, function() {
+            invulnerability = false;
+        }, this);
     }
 }
 
