@@ -18,6 +18,7 @@ Preload.prototype = {
         game.load.image('controlsMenu', 'assets/UI/controlsmenu.png');
         game.load.image('levelCompleteMenu', 'assets/UI/levelcomplete.png');
         game.load.image('gameCompleteMenu', 'assets/UI/gamecomplete.png');
+        game.load.image('death_screen', 'assets/UI/death_screen.png');
 
         //Player
         game.load.spritesheet('player', 'assets/player.png', 64, 64);

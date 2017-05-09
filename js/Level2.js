@@ -107,6 +107,8 @@ Level2.prototype = {
             var heart = hearts.create(i * 30, 0, 'heart');
             heart.fixedToCamera = true;
         }
+
+        writeText("Don't let the jellyfish touch you!", 3000);
     },
 
     update: function() {

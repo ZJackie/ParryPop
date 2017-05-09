@@ -15,8 +15,10 @@ function initPlayer() {
 
     player.bossAlive = true;
     player.dead = 0;
+    player.isDead = false;
     player.stun = false;
     player.ultimate = 0;
+    player.isUlted = false;
     player.ultimateBar = game.add.sprite(3, 30, 'ultimatebar');
     player.ultimateBar.height = 20;
     player.ultimateBar.width = (player.ultimate / 10) * 100;
@@ -670,7 +672,7 @@ function spawnbomb(NumberOfbomb, bombName) {
         bomb.body.collides([enemyCollisionGroup, playerCollisionGroup]);
         bomb.body.static = true;
         bomb.enemyType = "bomb";
-        bomb.rate = Math.random() * 0.4 + 0.05
+        bomb.rate = Math.random() * 0.2 + 0.05
     }
 }
 
@@ -777,9 +779,8 @@ function takeDamage(body1, body2) {
             invulnerability = true;
             game.time.events.add(500, removeInvulnerability, this);
         }
-        if (body1.sprite.enemyType == "jellyfish" && invulnerability == false) {
+        if (body1.sprite.enemyType == "jellyfish" && !player.isUlted) {
             jelly_zap.play();
-            body1.clearShapes();
             body1.sprite.destroy();
             //only stun if not stunned 
             if (player.stun == false) {
@@ -865,6 +866,7 @@ function useUltimate() {
     if (player.ultimate == 10) {
         invulnerability = true;
         player.ultimate = 0;
+        player.isUlted = true;
         player.ultimateBar.width = (player.ultimate / 10) * 100;
         player.body.setCircle(200);
         player.body.setCollisionGroup(playerCollisionGroup);
@@ -877,6 +879,7 @@ function useUltimate() {
         player.body.setCircle(20);
         player.body.setCollisionGroup(playerCollisionGroup);
         invulnerability = false;
+        player.isUlted = false;
     }
 }
 
@@ -1036,20 +1039,20 @@ function handleUpdate() {
 function endGame(level) {
     if (level == "Level1") {
         if (enemies.length == 0 && player.bossAlive != false) {
-            writeText("Cerberus has spawned!", 3000);
+            writeText("Cerberus has awoken!", 3000);
             spawnCerberus();
             resetHealth();
         }
     } else if (level == "Level2") {
         if (enemies.length == 0 && player.bossAlive != false) {
-            writeText("Persephone has spawned!", 3000);
+            writeText("Persephone emerges from the deep!", 3000);
             spawnPersephone();
             whale_1.play();
             resetHealth();
         }
     } else if (level == "Level3") {
         if (enemies.length == 0 && player.bossAlive != false) {
-            writeText("Hades has spawned!", 3000);
+            writeText("Hades shall grant you death!", 3000);
             spawnHades();
             resetHealth();
         }
@@ -1059,9 +1062,10 @@ function endGame(level) {
         player.animations.play('death');
         player.body.clearShapes();
         player.dead = 1;
+        player.isDead = true;
 
         setTimeout(function() {
-            game.state.start('MainMenu');
+            initDeathScreen();
         }, 2000);
     }
 }
@@ -1206,7 +1210,7 @@ function handlePersephone(enemy) {
             enemy.phase1 = true;
         }
         if (enemy.phase2 == false && enemy.health < 10) {
-            writeText("Persephone has spawned 6 Jellyfish", 3000);
+            writeText("Persephone has spawned 6 Jellyfish!", 3000);
             spawnJellyfish(6, 'jelly');
             enemy.phase2 = true;
         }
@@ -1300,7 +1304,7 @@ function handleHades(enemy) {
         enemy.phase2 = true;
     }
     if (enemy.phase3 == false && enemy.health < 5) {
-        writeText("Hades unleashes the void!! Jellyfish and slimes will keep spawning!", 4500);
+        writeText("Hades unleashes the void!! Enemies will keep spawning!", 4500);
         spawnSlimes(2, 'glitchSlime');
         spawnJellyfish(2, "jelly");
         spawnTowers(3, 'voidTower', 1);
@@ -1326,12 +1330,11 @@ function handleHades(enemy) {
             enemy.body.y = (game.world.centerY + (-500 + Math.random() * 1000));
         }
         if (enemy.phase3 == true && game.time.now > hadesFire) {
-            //spawns tower and slime every 10 seconds
+            //spawns jelly and slime every 10 seconds
             writeText("Enemies Spawned!", 1000);
             void_spawn.play();
             hadesFire = game.time.now + 10000;
             spawnSlimes(1, 'glitchSlime');
-            //spawnTowers(1, 'voidTower', 1);
             spawnJellyfish(1, "jelly");
         }
     }
@@ -1340,8 +1343,8 @@ function handleHades(enemy) {
 //Pause menu once user presses 'ESC'
 function initPauseMenu() {
     window.onkeydown = function(event) {
-        //No point of having a pause menu if boss is dead
-        if (player.bossAlive) {
+        //No point of having a pause menu if boss is dead or player is dead
+        if (player.bossAlive && !player.isDead) {
             if (this.game.state.current == "Level1" || this.game.state.current == "Level2" || this.game.state.current == "Level3") {
                 if (event.keyCode == 27) {
                     //switches focus to pause menu
@@ -1497,6 +1500,52 @@ function gameCompleteMenuHandler(pointer, event) {
     }
 }
 
+function initDeathScreen() {
+    game.time.events.add(100, function() {
+        game.paused = !game.paused;
+    }, this);
+    deathScreen = game.add.sprite(game.world.centerX, game.world.centerY, 'death_screen');
+    game.camera.follow(deathScreen);
+    deathScreen.anchor.setTo(.5, .5);
+    deathScreen.inputEnabled = true;
+    game.input.onDown.add(deathScreenHandler, this);
+}
+
+function deathScreenHandler(pointer, event) {
+    var tileworldX = pointer.worldX - (pointer.worldX);
+    var tileworldY = pointer.worldY - (pointer.worldY);
+    var tileX = Math.floor(pointer.worldX);
+    var tileY = Math.floor(pointer.worldY);
+    //retry
+    if (tileX < 860 && tileX > 744 && tileY < 808 && tileY > 764) {
+        game.paused = !game.paused;
+        button.play();
+        game.input.onDown.remove(deathScreenHandler, this);
+        switch (this.game.state.current) {
+            case "Level1":
+                button.play();
+                this.game.state.start('Level1');
+                break;
+            case "Level2":
+                button.play();
+                this.game.state.start('Level2');
+                break;
+            case "Level3":
+                button.play();
+                this.game.state.start('Level3');
+                break;
+            default:
+        }
+    }
+    //Menu
+    if (tileX < 860 && tileX > 744 && tileY < 870 && tileY > 829) {
+        game.paused = !game.paused;
+        button.play();
+        game.input.onDown.remove(deathScreenHandler, this);
+        this.game.state.start('MainMenu');
+    }
+}
+
 //writes text for boss phases, displayed for a certain time
 function writeText(text, time) {
     var style = { font: "32px Arial", fill: "#FFF", align: "center" };
@@ -1528,8 +1577,10 @@ function stunTimer(time) {
     }, 15);
     //decrements bar
     var stun = setInterval(function() {
-        if (player.stunbar != null && !game.paused) {
-            player.stunbar.width--; //100 iterations
+        if (player.stunbar != null && !game.paused && player.stunbar.width > 1.45) {
+            player.stunbar.width -= 1.45; //100 iterations
+            console.log(player.stunbar.width);
+
         }
     }, timeDecrement);
     //in $time, will clear both intervals and destroys bar

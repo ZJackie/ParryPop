@@ -105,6 +105,8 @@ Level3.prototype = {
             var heart = hearts.create(i * 30, 0, 'heart');
             heart.fixedToCamera = true;
         }
+
+        writeText("Watch out for the bombs!", 3000);
     },
 
     update: function() {
