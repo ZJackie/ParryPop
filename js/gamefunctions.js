@@ -1097,6 +1097,7 @@ function handleCerberus(enemy) {
         enemy.body.isVulnerable = false;
     }
     enemy.body.rotation = game.physics.arcade.angleBetween(enemy, player) + game.math.degToRad(-90);
+    //shoots a bullet at you so you cant just stand still
     var chance = Math.random();
     if (chance < 0.4) {
         angle = game.physics.arcade.angleBetween(enemy, player) + Math.random();
@@ -1296,7 +1297,7 @@ function handleHades(enemy) {
         angle = game.physics.arcade.angleBetween(enemy, player);
         }
         else {
-         angle = Math.random() * Math.PI * 2
+         angle = Math.random() * Math.PI * 2;
         }
         game.physics.p2.enable(voidBullet, true);
         voidBullet.enemyType = "enemyBullet";
