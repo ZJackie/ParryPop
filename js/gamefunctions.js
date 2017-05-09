@@ -1091,9 +1091,13 @@ function handleCerberus(enemy) {
     }
     enemy.body.rotation = game.physics.arcade.angleBetween(enemy, player) + game.math.degToRad(-90);
     var chance = Math.random();
-    if (chance > 0.5) {
+    if (chance < 0.4) {
         angle = game.physics.arcade.angleBetween(enemy, player) + Math.random();
-    } else {
+    } 
+    else if(chance < .6){
+          angle = game.physics.arcade.angleBetween(enemy, player);
+    }
+    else {
         angle = game.physics.arcade.angleBetween(enemy, player) - Math.random();
     }
     //Handle cerberus fire projectiles
@@ -1133,6 +1137,10 @@ function handleCerberus(enemy) {
         writeText("Cerberus is enraged!", 3000);
         game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
         enemy.phase3 = true;
+        enemy.body.static = false;
+    }
+    if(enemy.phase3 == true && enemy.health < 5) {
+        game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
         enemy.body.static = false;
     }
 }
@@ -1275,7 +1283,13 @@ function handleHades(enemy) {
         if (!hades_attack.isPlaying) {
             hades_attack.play();
         }
-        angle = Math.random() * Math.PI * 2
+        var chance = Math.random();
+        if (chance < 0.1) {
+        angle = game.physics.arcade.angleBetween(enemy, player);
+        }
+        else {
+         angle = Math.random() * Math.PI * 2
+        }
         game.physics.p2.enable(voidBullet, true);
         voidBullet.enemyType = "enemyBullet";
         voidBullet.lifespan = 2000;
