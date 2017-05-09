@@ -2,6 +2,12 @@ MainMenu = function() {};
 
 MainMenu.prototype = {
     create: function() {
+        level1_music.stop();
+        level2_music.stop();
+        level3_music.stop();
+        if(!music.isPlaying){
+            music.play();
+        }
         button = game.add.audio('button');
         this.splash = this.add.sprite(0, 0, 'menu');
         this.splash.width = 1200;

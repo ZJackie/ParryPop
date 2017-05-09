@@ -27,7 +27,12 @@ Level1 = function() {};
 Level1.prototype = {
 
     create: function() {
+        music.stop();
+        level2_music.stop();
+        level3_music.stop();
         initAudio();
+        level1_music.play();
+
         initPauseMenu();
         invulnerability = false;
         //disable right click menu

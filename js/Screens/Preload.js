@@ -59,9 +59,9 @@ Preload.prototype = {
         game.load.audio('button', 'assets/sounds/button.wav');
 
         //Level audio
-        game.load.audio('Level1_theme', 'assets/sounds/Level_1_theme.wav');
-        game.load.audio('Level2_theme', 'assets/sounds/Level_2_theme.wav');
-        game.load.audio('Level3_theme', 'assets/sounds/Level_3_theme.wav');
+        game.load.audio('Level1_music', 'assets/music/Level_1_theme.wav');
+        game.load.audio('Level2_music', 'assets/music/Level_2_theme.wav');
+        game.load.audio('Level3_music', 'assets/music/Level_3_theme.wav');
 
         //Pandora
         game.load.audio('pandora_damaged', 'assets/sounds/pandora_damaged.wav');
@@ -102,7 +102,13 @@ Preload.prototype = {
     },
     create: function() {
         music = game.add.audio('bg_music');
+        level1_music = game.add.audio('Level1_music');
+        level2_music = game.add.audio('Level2_music');
+        level3_music = game.add.audio('Level3_music');
         music.loop = true;
+        level1_music.loop = true; 
+        level2_music.loop = true; 
+        level3_music.loop = true; 
         music.volume = 0.5;
         music.play();
         setTimeout(function() {
