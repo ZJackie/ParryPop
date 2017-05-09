@@ -1188,18 +1188,21 @@ function handleHades(enemy) {
     }
     if (enemy.phase1 == false && enemy.health < 15) {
         writeText("Hades begins to teleport around the map!", 3000);
-        spawnSlimes(5, 'glitchSlime');
+        spawnSlimes(3, 'glitchSlime');
+        spawnJellyfish(3, "jelly");
         enemy.phase1 = true;
     }
     if (enemy.phase2 == false && enemy.health < 10) {
         writeText("Hades begins to teleport faster!", 3000);
-        spawnSlimes(5, 'glitchSlime');
+        spawnSlimes(3, 'glitchSlime');
+        spawnJellyfish(3, "jelly");
         enemy.tpRate = 2500;
         enemy.phase2 = true;
     }
     if (enemy.phase3 == false && enemy.health < 5) {
-        writeText("Hades unleashes the void!! Towers and slimes will keep spawning!", 4500);
+        writeText("Hades unleashes the void!! Jellyfish and slimes will keep spawning!", 4500);
         spawnSlimes(2, 'glitchSlime');
+        spawnJellyfish(2, "jelly");
         spawnTowers(3, 'voidTower', 1);
         enemy.tpRate = 1500;
         enemy.phase3 = true;
@@ -1227,8 +1230,9 @@ function handleHades(enemy) {
             writeText("Enemies Spawned!", 1000);
             void_spawn.play();
             hadesFire = game.time.now + 10000;
-            spawnSlimes(2, 'glitchSlime');
-            spawnTowers(2, 'voidTower', 1);
+            spawnSlimes(1, 'glitchSlime');
+            //spawnTowers(1, 'voidTower', 1);
+            spawnJellyfish(1, "jelly");
         }
     }
 }
