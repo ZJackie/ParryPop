@@ -2,25 +2,37 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>Parry Pop</title>
-    <link rel="stylesheet" type="text/css" href="styles/indexstyle.css">
+    <meta charset="utf-8" />
+    <title>Parry Pop Benchmark Final Version</title>
+    <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.min.js"></script>
+    <script src="js/GameFunctions.js"></script>
+    <script src="js/Screens/Boot.js"></script>
+    <script src="js/Screens/Preload.js"></script>
+    <script src="js/Screens/MainMenu.js"></script>
+    <script src="js/Screens/Levels.js"></script>
+    <script src="js/Screens/About.js"></script>
+    <script src="js/Screens/Help.js"></script>
+    <script src="js/Level1.js"></script>
+    <script src="js/Level2.js"></script>
+    <script src="js/Level3.js"></script>
+    <link rel="stylesheet" href="styles/style.css">
 </head>
 
 <body>
-    <div class=>
-        <Img class="logo" src="assets/ParryPopLogo.png">
-        <br>
-        <div class=container>
-            <p>
-                <a class=circle href="Benchmark1.html">Benchmark 1</a>
-                <a class=circle href="Benchmark2.html">Benchmark 2</a>
-                <a class=circle href="Benchmark3.html">Benchmark 3</a>
-                <a class=circle href="Final.html">Final Version</a>
-            </p>
-        </div>
-    </div>
-    <p class=text> Parry Pop Development </p>
+    <script>
+    game = new Phaser.Game(1200, 800, Phaser.AUTO, '');
+
+    game.state.add('Boot', Boot);
+    game.state.add('Preload', Preload);
+    game.state.add('MainMenu', MainMenu);
+    game.state.add('Levels', Levels);
+    game.state.add('About', About);
+    game.state.add('Help', Help);
+    game.state.add('Level1', Level1);
+    game.state.add('Level2', Level2);
+    game.state.add('Level3', Level3);
+    game.state.start('Boot');
+    </script>
 </body>
 
 </html>

@@ -1,9 +1,9 @@
-var toggle = false;
+var toggle = false; //toggle for cheats 
 
 function initPlayer() {
-    //Add my Robot player
+    //Adds player sprite
     player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
-
+    //init player animations
     player.animations.add('idle', [0, 1, 2, 3, 4], 10, true);
     player.animations.add('walk', [5, 6, 7, 8, 9], 10, false);
     player.animations.add('attack', [10, 11, 12, 13, 14], 10, false);
@@ -12,22 +12,23 @@ function initPlayer() {
     player.animations.add('shootwalk', [25, 26, 27, 28, 29], 10, false);
     player.animations.add('death', [30, 31, 32, 33, 34], 10, false);
 
-    player.bossAlive = true;
-    player.dead = 0;
-    player.ultimate = 0;
+    player.bossAlive = true; //boolean for boss
+    player.dead = 0; //player death count
+    player.ultimate = 0; //player ultimate charge
+    //init player ultimate bar
     player.ultimateBar = game.add.sprite(3, 30, 'ultimatebar');
     player.ultimateBar.height = 20;
     player.ultimateBar.width = (player.ultimate / 10) * 100;
     player.ultimateBar.fixedToCamera = true;
+    //init player ultimate bar fill
     ultimateBarInvert = game.add.sprite(3, 30, 'ultimatebarInvert');
     ultimateBarInvert.height = 20;
     ultimateBarInvert.width = 100;
     ultimateBarInvert.fixedToCamera = true;
     player.ultimateBar.bringToTop();
-    player.tentaclecount = 0;
+    player.tentaclecount = 0; //indicates number of tentacles for Level 2 Boss
     player.godmode = false;
-
-
+    //enables player physics
     game.physics.p2.enable(player, true);
     player.body.setCircle(20);
     player.health = 10;
@@ -36,6 +37,7 @@ function initPlayer() {
     game.camera.follow(player);
 }
 
+//init all game audio
 function initAudio() {
     //Level 1
     fire_tower = game.add.audio('fire_tower');
@@ -67,6 +69,7 @@ function initAudio() {
     tower_block = game.add.audio('tower_block');
 }
 
+//init enemies - different depeneding on Level
 function initEnemies(slimeName, towerName, numSlimes, numTowers) {
     enemies = game.add.group();
     //enemies.enableBody = true;
@@ -76,19 +79,21 @@ function initEnemies(slimeName, towerName, numSlimes, numTowers) {
 
 }
 
+//Spawns level 1 Boss
 function spawnCerberus() {
     enemies = game.add.group();
     enemies.physicsBodyType = Phaser.Physics.P2JS;
-
+    //creates ceberus
     var cerberus = enemies.create(game.world.centerX, game.world.centerY, 'cerberus');
     var arr = [];
+    //inits cerberus animations
     for (var j = 0; j < 6; j++) {
         arr.push(j);
     }
     cerberus.mass = 20;
     cerberus.maxhealth = 20;
     cerberus.health = 20;
-
+    //adds ceberus' health bar
     healthbar = game.add.sprite(300, 30, 'healthbar');
     healthbar.height = 10;
     healthbar.width = (cerberus.health / cerberus.maxhealth) * 500;
@@ -97,6 +102,7 @@ function spawnCerberus() {
     cerberus.healthbar = healthbar;
     cerberus.animations.add('cerberusidle', arr, 12, true);
     cerberus.currentRadius = cerberus.width;
+    //sets cerberus' hit box
     game.physics.p2.enable(cerberus, true);
     cerberus.body.setCircle(60);
     cerberus.body.setCollisionGroup(enemyCollisionGroup);
@@ -125,10 +131,11 @@ function spawnCerberus() {
     cerberus.phase3 = false;
 }
 
+//Spawns Level 2 Boss
 function spawnPersephone() {
     enemies = game.add.group();
     enemies.physicsBodyType = Phaser.Physics.P2JS;
-
+    //spawns Persephone at a random position
     var persephone = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), 'persephone');
     var arr = [];
     for (var j = 0; j < 4; j++) {
@@ -137,7 +144,7 @@ function spawnPersephone() {
     persephone.mass = 20;
     persephone.maxhealth = 20;
     persephone.health = 20;
-
+    //inits Persephone's health bar
     healthbar = game.add.sprite(300, 30, 'healthbar');
     healthbar.height = 10;
     healthbar.width = (persephone.health / persephone.maxhealth) * 500;
@@ -147,6 +154,7 @@ function spawnPersephone() {
     persephone.animations.add('persephoneidle', arr, 12, true);
     persephone.currentRadius = persephone.width;
     game.physics.p2.enable(persephone, true);
+    //Sets hitbox
     persephone.body.setCircle(60);
     persephone.body.setCollisionGroup(enemyCollisionGroup);
     persephone.body.collides(swordCollisionGroup, smackEnemies, this);
@@ -176,12 +184,14 @@ function spawnPersephone() {
     persephone.phase3 = false;
 }
 
+//Spawns Level 3 Boss
 function spawnHades() {
     enemies = game.add.group();
     enemies.physicsBodyType = Phaser.Physics.P2JS;
-
+    //Spawns Hades in the map center
     var hades = enemies.create(game.world.centerX, game.world.centerY, 'hades');
     var arr = [];
+    //inits list to hold animations
     for (var j = 0; j < 3; j++) {
         arr.push(j);
     }
@@ -189,13 +199,14 @@ function spawnHades() {
     hades.mass = 20;
     hades.maxhealth = 20;
     hades.health = 20;
-
+    //inits Hades' health bar
     healthbar = game.add.sprite(300, 30, 'healthbar');
     healthbar.height = 10;
     healthbar.width = (hades.health / hades.maxhealth) * 500;
     healthbar.fixedToCamera = true;
     hades.shield = false;
     hades.healthbar = healthbar;
+    //adds animations
     hades.animations.add('hadesidle', arr, 12, true);
     arr = [];
     for (var j = 3; j < 6; j++) {
@@ -209,6 +220,7 @@ function spawnHades() {
     hades.animations.add('hades_tp', arr, 12, true);
     hades.currentRadius = hades.width;
     game.physics.p2.enable(hades, true);
+    //sets hitbox
     hades.body.setCircle(60);
     hades.body.setCollisionGroup(enemyCollisionGroup);
     hades.body.collides(swordCollisionGroup, smackEnemies, this);
@@ -238,13 +250,17 @@ function spawnHades() {
     hades.phase3 = false;
 }
 
+//Called when enemies are damaged, body1=body to be damaged,body2=bullet sprite
 function killEnemies(body1, body2) {
-    body2.sprite.kill();
+    body2.sprite.kill(); //removes bullet
+    //only run if body to be damaged is damageable
     if (body1.isVulnerable == true) {
+        //gain ultimate on a successful hit
         if (player.ultimate < 10) {
             player.ultimate++;
             player.ultimateBar.width = (player.ultimate / 10) * 100;
         }
+        //if body1 is at 1 health, then this attack should remove them
         if (body1.sprite.health == 1) {
             body1.clearShapes();
             if (body1.sprite.enemyType == "tower") {
@@ -257,6 +273,7 @@ function killEnemies(body1, body2) {
             if (body1.sprite.enemyType == "tentacles") {
                 player.tentaclecount--;
             }
+            //If body1 is a boss with 1 health, complete the level
             if (body1.sprite.enemyType == "persephone") {
                 player.bossAlive = false;
                 body1.sprite.healthbar.kill();
@@ -278,13 +295,14 @@ function killEnemies(body1, body2) {
                     initGameCompleteMenu();
                 }, this);
             }
-            body1.sprite.destroy();
-        } else {
+            body1.sprite.destroy(); //destroys the body1 sprite
+        } else { //else if body1 has more than 1 health, simply damage them
             body1.sprite.health--;
             if (body1.sprite.enemyType == "tower") {
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 50;
-                tower_damaged.play();
+                tower_damaged.play();//tower damaged sound
             } else if (body1.sprite.enemyType == "persephone") {
+                //persephone hurt sound
                 whale_hurt.play();
                 body1.sprite.healthbar.width = (body1.sprite.health / body1.sprite.maxhealth) * 500;
             } else if (body1.sprite.enemyType == "cerberus") {
@@ -296,50 +314,58 @@ function killEnemies(body1, body2) {
             }
         }
     } else {
+        //play a different sound for slimes depending on game level
         var currentGameState = this.game.state.current;
         if (body1.sprite.enemyType == "slime") {
             switch (currentGameState) {
                 case "Game":
-                    slime_1.play();
+                    slime_1.play(); //level1 slime damaged sound
                     break;
                 case "Level2":
-                    slime_2.play();
+                    slime_2.play(); //level2 slime damaged sound
                     break;
                 case "Level3":
-                    slime_3.play();
+                    slime_3.play(); //level3 slime damaged sound
                     break;
                 default:
             }
         }
         if (body1.sprite.enemyType == "tower") {
-            tower_block.play();
+            tower_block.play(); //tower damaged sound
         }
     }
 }
 
+//damages enemies with the sword. body1=body to be damaged, body2=sword
 function smackEnemies(body1, body2) {
+    //only able to inflict damage if player sheild is > 0 
     if (shield > 0) {
+        //gain ultimate on successful hit
         if (body1.isVulnerable == true) {
             if (player.ultimate < 10) {
                 player.ultimate++;
                 player.ultimateBar.width = (player.ultimate / 10) * 100;
             }
+            //destroys body1 if health is = 1
             if (body1.sprite.health == 1) {
                 body1.clearShapes();
                 body1.sprite.destroy();
                 slime_hurt.play();
+            //else body1 sprite loses 1 health
             } else {
                 body1.sprite.health--;
             }
         }
-        shield--;
+        shield--; //lose shield on successful hit
     } else {
         player.body.removeShape(swordhitbox);
-        swung = false;
+        swung = false; 
     }
 }
 
+//sets for the bounciness for slimes, body1=slime, body2=this
 function bounce(body1, body2) {
+    //random bounce set
     var num = Math.random();
     if (num < 0.25) {
         body1.moveUp(500);
@@ -352,14 +378,17 @@ function bounce(body1, body2) {
     }
 }
 
+//handles all enemy movements
 function handleEnemies() {
     handleEnemyMovements();
 }
 
 function handleEnemyMovements() {
     enemies.forEach(function(enemy) {
+        //handles movements for slimes
         if (enemy.enemyType == "slime") {
             enemy.animations.play('slimeIdle');
+            //sets the rate at which a slime circle decreases
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
             enemy.body.setCircle(enemy.currentRadius);
             enemy.body.setCollisionGroup(enemyCollisionGroup);
@@ -368,17 +397,20 @@ function handleEnemyMovements() {
             if (enemy.currentRadius <= lowerBound) {
                 enemy.currentRadius = enemy.width;
             }
-
+            //at the lowest bound, a slime will be vulnerable
             if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
                 enemy.body.isVulnerable = true;
             } else {
                 enemy.body.isVulnerable = false;
             }
+            //slimes will chase the player if they are < 80 px away from the player
             if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 80) {
                 game.physics.arcade.moveToXY(enemy, player.body.x, player.body.y, 200);
             }
+            //handle tower actions
         } else if (enemy.enemyType == "tower") {
             enemy.animations.play('toweridle', 10);
+            //sets tower shield decrease rate
             enemy.currentRadius = enemy.currentRadius - enemy.rate;
             enemy.body.setCircle(enemy.currentRadius);
             enemy.body.setCollisionGroup(enemyCollisionGroup);
@@ -387,14 +419,17 @@ function handleEnemyMovements() {
             if (enemy.currentRadius <= lowerBound) {
                 enemy.currentRadius = enemy.width;
             }
+            //at the lowest bound, a tower will be vulnerable
             if (enemy.currentRadius >= lowerBound && enemy.currentRadius <= upperBound) {
                 enemy.body.isVulnerable = true;
             } else {
                 enemy.body.isVulnerable = false;
+                //fires bullets when players are < 500px away
                 if (game.physics.arcade.distanceToXY(enemy, player.body.x, player.body.y) < 500) {
                     fireEnemyBullet(enemy);
                 }
             }
+            //set boss handles
         } else if (enemy.enemyType == "cerberus") {
             handleCerberus(enemy);
         } else if (enemy.enemyType == "persephone" || enemy.enemyType == "tentacles") {
@@ -405,15 +440,18 @@ function handleEnemyMovements() {
     }, this);
 }
 
+//spawn towers - different depending on level
 function spawnTowers(NumberOfTowers, towerName) {
+    //creates towers
     for (var i = 0; i < NumberOfTowers; i++) {
         var towers = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), towerName);
         var arr = [];
         for (var j = 0; j < 17; j++) {
             arr.push(j);
         }
-        towers.maxhealth = 3;
+        towers.maxhealth = 3; //a tower has a max health of 3
         towers.health = 3;
+        //init tower health bar
         healthbar = game.add.sprite(towers.x - 25, towers.y - 50, 'healthbar');
         healthbar.height = 10;
         healthbar.width = (towers.health / towers.maxhealth) * 50;
@@ -423,6 +461,7 @@ function spawnTowers(NumberOfTowers, towerName) {
         towers.currentRadius = towers.width;
         game.physics.p2.enable(towers, true);
         towers.body.static = true;
+        //set tower hitbox
         towers.body.setCircle(50);
         towers.body.setCollisionGroup(enemyCollisionGroup);
         towers.body.collides(swordCollisionGroup, smackEnemies, this);
@@ -433,6 +472,7 @@ function spawnTowers(NumberOfTowers, towerName) {
         towers.bullets = game.add.group();
         towers.bullets.enableBody = true;
         towers.bullets.physicsBodyType = Phaser.Physics.P2JS;
+        //init tower bullets depending on type of tower (level)
         switch (towerName) {
             case 'bubbleTower':
                 towers.bullets.createMultiple(5, 'bubblebullet');
@@ -445,17 +485,19 @@ function spawnTowers(NumberOfTowers, towerName) {
                 break;
             default:
         }
-
+        //set bullet physics
         towers.bullets.setAll('checkWorldBounds', true);
         towers.bullets.setAll('outOfBoundsKill', true);
         towers.bullets.setAll('anchor.x', 0.5);
         towers.bullets.setAll('anchor.y', 0.5);
 
         towers.enemyType = "tower";
-        towers.rate = Math.random() * 0.4 + 0.1
+        //set a random rate for towers for shield decrease
+        towers.rate = Math.random() * 0.4 + 0.1;
     }
 }
 
+//
 function spawnSlimes(NumberOfSlimes, slimeName) {
     for (var i = 0; i < NumberOfSlimes; i++) {
         var slime = enemies.create(game.world.centerX + (-500 + Math.random() * 1000), game.world.centerY + (-500 + Math.random() * 1000), slimeName);
